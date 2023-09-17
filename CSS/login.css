@@ -1,8 +1,15 @@
 .login{
+    width: 50%;
     background-color: white;
     border-radius: 15px;
-    padding: 10% 0% 10% 0%;
+    padding: 5% 0% 5% 0%;
     margin: 5% 10%;
+}
+
+.flex-vertical{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .inputSpace {
