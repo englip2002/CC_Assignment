@@ -58,13 +58,13 @@ Requirements: Availability Zone, us-east 1a, us-east 1b, us-east 1c
 
 ## Example From Lecturer
 
-Either add "sudo" before all commands or use "sudo su" first
-Amazon Linux 2023
+# Either add "sudo" before all commands or use "sudo su" first
+# Amazon Linux 2023
 
 #!/bin/bash
-dnf install git -y
-git clone https://github.com/lowchoonkeat/aws-live.git
-cd aws-live
-dnf install python-pip -y
-pip3 install flask pymysql boto3
-python3 EmpApp.py
+# dnf install git -y
+# git clone https://github.com/lowchoonkeat/aws-live.git
+# cd aws-live
+# dnf install python-pip -y
+# pip3 install flask pymysql boto3
+# python3 EmpApp.py
