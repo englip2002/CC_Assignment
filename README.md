@@ -4,7 +4,6 @@
 1. A web page with students database contains information, such
 as each student’s personal information, progress reports etc.
 Refer: http://i2hub.tarc.edu.my:8846
-
 2. User-generated media files e.g. progress reports are stored in
 Amazon Simple Storage Service (Amazon S3), a highly available
 and durable storage service.
@@ -58,8 +57,8 @@ Requirements: Availability Zone, us-east 1a, us-east 1b, us-east 1c
 
 ## Example From Lecturer
 
-Either add "sudo" before all commands or use "sudo su" first
-Amazon Linux 2023
+# Either add "sudo" before all commands or use "sudo su" first
+# Amazon Linux 2023
 
 #!/bin/bash
 dnf install git -y
