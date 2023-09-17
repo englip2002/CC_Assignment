@@ -1,0 +1,52 @@
+body {
+    font-family: "Lato", Helvetica, Arial, sans-serif;
+    -webkit-text-size-adjust: none;
+    color: #666;
+    background: url("../public/background.jpg") repeat-x fixed;
+    font-weight: 400;
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.centerFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a {
+    text-decoration: none !important;
+    color: black;
+
+    &:hover {
+        color: gold;
+    }
+    &:active {
+        color: gold;
+    }
+}
+
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.hover-gold {
+    transition: 0.25s;
+
+    &:hover {
+        color: gold !important;
+        transition: 0.25s;
+    }
+}
+
+.myCenterContainer {
+    min-width: 500px;
+    width: 70%;
+    
+    @media (max-width: 576px) {
+        min-width: 0;
+        width: 100%;
+    }
+}
