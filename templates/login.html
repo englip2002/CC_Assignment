@@ -11,7 +11,7 @@
     crossorigin="anonymous"></script>
 
   <link rel="stylesheet" type="text/css" href="../CSS/navBar.css">
-  <link rel="stylesheet" type="text/css" href="../CSS/index.css">
+  <link rel="stylesheet" type="text/css" href="../CSS/login.css">
   <link rel="stylesheet" type="text/css" href="../CSS/global.css">
   <title>Homepage</title>
 </head>
@@ -30,7 +30,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link disabled" aria-current="page" href="#">Commitee</a>
@@ -50,27 +50,43 @@
     </div>
   </nav>
 
-  <div class="intro">
-    <h2 class="introTitle">FOCS ITP onMyFinger</h2>
-    <div class="logoAndText">
-      <img src="../public/TarumtLogo.png" width="240" , height="240" />
+
+  <div class="flex-vertical">
+    <div class="login border border-2 border-secondary">
       <div>
-        <h5>BAIT305C/AMIT3205/BMMC3205 Industrial Training Programme</h5>
-        <p>
-          <b>Industrial Training</b> is a compulsory programme that open doors for internship essentials. The programme
-          focuses on student internship attachment, as evidence of work capabilities such as expanding professional
-          network, social values, work quality and ethics.
-        </p>
+        <h1 class="title">Login to ITP</h1>
+      </div>
+      <div class="inputSpace">
+        <div class="inputText">
+          <p class="inputIndicator">Student ID: </p>
+          <div class="input-group mb-3 ">
+            <input type="text" class="form-control" placeholder="e.g., 12WMD34567" aria-label="Email"
+              aria-describedby="button-addon2">
+          </div>
+
+        </div>
+        <div class="inputText">
+          <p class="inputIndicator">Password: </p>
+          <div class="input-group mb-3 ">
+            <input type="text" class="form-control" placeholder="e.g., ********" aria-label="Email"
+              aria-describedby="button-addon2">
+          </div>
+        </div>
+        <div class="inputText">
+          <button class="btn btn-outline-secondary loginBtn" type="button" id="button-addon2">Login</button>
+        </div>
+        <div class="SignUp">
+          <a href="signUp.html">Sign Up</a>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="remark">
-    <p>This website is mainly for students from Faculty of Computing and Information Technology (FOCS) to submit their ITP related documents.</p>
   </div>
 </body>
 
 <footer>
-  
+  <div>
+      <hr>
+      <p style="margin-left: 5%;">&#169 2023 - TARUMT FOCS ITP</p>
+  </div>
 </footer>
 </html>

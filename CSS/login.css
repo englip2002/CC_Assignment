@@ -27,10 +27,11 @@
     flex-direction: row;
     align-items: center;
     width: 70%;
-
+    margin-top: 1%;
 }
 
 .loginBtn {
+    margin-top: 2%;
     width: 100%;
 }
 
@@ -42,3 +43,8 @@
 .btn {
     background-color: white;
 }
+
+.SignUp{
+    margin-top: 3%;
+}
+

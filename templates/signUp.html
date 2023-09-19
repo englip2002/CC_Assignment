@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Link to the external CSS file -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="../CSS/navBar.css">
+    <link rel="stylesheet" type="text/css" href="../CSS/signUp.css">
+    <link rel="stylesheet" type="text/css" href="../CSS/global.css">
+    <title>Sign Up</title>
+</head>
+
+<body>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="../public/tarumt-logo1.png" alt="" width="172" height="56"
+                    class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-current="page" href="#">Commitee</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-current="page" href="#">Uni Supervisor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="login.html">Student</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="flex-vertical">
+        <div>
+            <h1 class="title">Sign Up to ITP</h1>
+        </div>
+
+        <div class="signUp border border-secondary">
+            <div class="subTitle">
+                <p style="padding-left: 3%;">Academic Detail</p>
+                <hr>
+            </div>
+            <div class="flex-vertical">
+                <div class="inputText">
+                    <label class="inputIndicator" for="level">Level: </label>
+                    <select class="dropDownItem input-group" name="level" id="level">
+                        <option value="Diploma">Diploma</option>
+                        <option value="Bachelor">Bachelor</option>
+                        <option value="PhD">PhD</option>
+                    </select>
+                </div>
+                <div style="margin-top: 2.5%;"></div>
+
+                <div class="inputText">
+                    <label class="inputIndicator" for="level">Cohort: </label>
+                    <select class="dropDownItem input-group" name="cohort" id="cohort">
+                        <option value="202007">2020 July</option>
+                        <option value="202010">2020 November</option>
+                        <option value="202101">2021 Jan</option>
+                    </select>
+                </div>
+                <div style="margin-top: 2.5%;"></div>
+
+                <div class="inputText">
+                    <label class="inputIndicator" for="level">Programme: </label>
+                    <select class="dropDownItem input-group" name="programme" id="programme">
+                        <option value="rsw">RSW</option>
+                        <option value="rds">RDS</option>
+                        <option value="rst">RST</option>
+                    </select>
+                </div>
+                <div style="margin-top: 2.5%;"></div>
+
+                <div class="inputText">
+                    <p class="inputIndicator">Tutorial Group: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="number" class="form-control" placeholder="e.g., 1 - 5">
+                    </div>
+                </div>
+                <div class="inputText">
+                    <p class="inputIndicator">Student ID: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="text" class="form-control" placeholder="e.g., 99WMR9999">
+                    </div>
+                </div>
+                <div class="inputText">
+                    <p class="inputIndicator">CGPA: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="number" class="form-control" placeholder="e.g., 1.0 - 4.0">
+                    </div>
+                </div>
+                <div class="inputText">
+                    <p class="inputIndicator">UC Supervisor: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="text" class="form-control" placeholder="UC supervisor Name">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="signUp border border-secondary">
+            <div class="subTitle">
+                <p style="padding-left: 3%;">Technical Knowledge</p>
+                <hr>
+            </div>
+            <div class="flex-vertical">
+                <div class="inputText">
+                    <p class="inputIndicator">Programming Knowledge: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="text" class="form-control" placeholder="Java, C#, Python">
+                    </div>
+                </div>
+                <div class="inputText">
+                    <p class="inputIndicator">Database Knowledege: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="text" class="form-control" placeholder="Ms SQL, MySQL, MongoDB">
+                    </div>
+                </div>
+                <div class="inputText">
+                    <p class="inputIndicator">Networking Knowledge: </p>
+                    <div class="input-group mb-3 ">
+                        <input type="text" class="form-control" placeholder="CISCO">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="signUp border border-secondary">
+            <div class="subTitle">
+                <p style="padding-left: 3%;">Declaration</p>
+                <hr>
+            </div>
+            <div class="declaration">
+                <p>I UNDERSTAND THAT I MUST COMPLETE THE FULL DURATION OF THE INDUSTRIAL TRAINING PROGRAMME</p>
+
+                <div class="flex-horizontal">
+                    <button type="button" class="btn btn-success">I Accept</button>
+
+                    <button type="button" class="btn btn-danger">I Decine</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<footer>
+    <div>
+        <hr>
+        <p style="margin-left: 5%;">&#169 2023 - TARUMT FOCS ITP</p>
+    </div>
+</footer>
+
+</html>
