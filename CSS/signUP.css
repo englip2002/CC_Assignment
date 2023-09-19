@@ -3,14 +3,14 @@
     color: black;
 }
 
-.subTitle{
+.subTitle {
     /* padding-left: 2%; */
     text-align: left;
     margin-bottom: 1rem;
     border-color: #666;
 }
 
-.signUp{
+.signUp {
     width: 80%;
     background-color: white;
     border-radius: 5px;
@@ -18,14 +18,14 @@
     margin-top: 3%;
 }
 
-.flex-vertical{
+.flex-vertical {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
 
-.flex-horizontal{
+.flex-horizontal {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,6 +34,7 @@
 
 .inputIndicator {
     width: 30%;
+
 }
 
 .inputText {
@@ -41,7 +42,7 @@
     flex-direction: row;
     align-items: center;
     width: 70%;
-    /* margin-bottom: 3%; */
+    /* margin-bottom: 2%; */
 }
 
 .signUpBtn {
@@ -49,7 +50,7 @@
     width: 100%;
 }
 
-.dropDownItem{
+.dropDownItem {
     height: 40px;
     align-items: center;
     padding: 6px 12px;
@@ -58,12 +59,12 @@
     /* margin-bottom: 3%; */
 }
 
-.declaration{
+.declaration {
     text-align: justify;
     align-items: center;
     margin: 0% 5%;
 }
 
-.btn{
+.btn {
     margin-right: 5%;
 }
