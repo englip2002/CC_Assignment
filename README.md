@@ -20,37 +20,42 @@ AWS EC2 is an Infrastructure as a Service by AWS, which gives you a
 server with the desired OS, processor, and RAM. You can do anything on
 this OS, from installing software to hosting a website. Here, you have
 full control over the OS. The system will host at EC2.
+
 Requirements: Amazon Linux 2023
 
-2. Amazon Simple Storage Service (Amazon S3)
+3. Amazon Simple Storage Service (Amazon S3)
 The start-up can leverage Amazon S3 to stores application static assets
 including certain employee data such as profile images.
+
 Requirements: &lt;your full name as bucket name&gt; e.g. lowchoonkeat-
 bucket
 
-3. Amazon Relational Database Service (Amazon RDS)
+4. Amazon Relational Database Service (Amazon RDS)
 Amazon RDS is a managed SQL database service. Amazon RDS supports
 an array of database engines to store and organise data and helps with
 database management tasks, such as Migration, backup, recovery and
 patching.
+
 Requirements: MariaDB
 
-4. Amazon CloudWatch
+5. Amazon CloudWatch
 Amazon CloudWatch can be used to monitor AWS resources and
 applications real-time for e.g. EC2 and RDS. Amazon CloudWatch can
 aggregate data across the availability zone within a region.
 
-5. Amazon Auto Scaling
+6. Amazon Auto Scaling
 AWS Auto Scaling is a service that automatically monitors and adjusts
 compute resources to maintain performance for applications. As
 demand spikes, the AWS Auto Scaling service can automatically scale
 those resources, and, as demand drops, scale them back down.
-Requirements: Desired: 3, Minimum 2, Maximum 4,
+
+Requirements: Desired: 3, Minimum 2, Maximum 4, 
 Scaling Policy: Scale up when CPU > 60%
 
-6. Elastic Load Balancing
+7. Elastic Load Balancing
 Elastic Load Balancing automatically distributes your incoming
 application traffic across all the EC2 instances that you are running.
+
 Requirements: Availability Zone, us-east 1a, us-east 1b, us-east 1c 
 
 *Not allow to use elastic beanstalk in this assignment.
