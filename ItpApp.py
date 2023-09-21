@@ -4,19 +4,24 @@ import os
 import boto3
 from config import *
 
+
 app = Flask(__name__)
 
 bucket = custombucket
 region = customregion
 
-db_conn = connections.Connection(
+
+# from templete
+db_connection = connections.Connection(
     host=customhost,
     port=3306,
     user=customuser,
     password=custompass,
     db=customdb
-
 )
+
+db_cursor = db_connection.cursor()
+
 output = {}
 table = 'students'
 
@@ -27,7 +32,7 @@ def home():
 
 
 @app.route("/login", methods=['GET', 'POST'])
-def home():
+def login():
     return render_template('login.html')
 
 @app.route("/loginApi", methods=['POST'])

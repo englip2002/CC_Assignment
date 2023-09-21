@@ -34,13 +34,13 @@
 
 .inputIndicator {
     width: 30%;
-
 }
 
 .inputText {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     width: 70%;
     /* margin-bottom: 2%; */
 }
@@ -51,7 +51,7 @@
 }
 
 .dropDownItem {
-    height: 40px;
+    height: 4%;
     align-items: center;
     padding: 6px 12px;
     border-radius: 0.25rem;
@@ -60,11 +60,12 @@
 }
 
 .declaration {
+    color: darkred;
     text-align: justify;
     align-items: center;
     margin: 0% 5%;
 }
 
 .btn {
-    margin-right: 5%;
+    margin-right: 2%;
 }
