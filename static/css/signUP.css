@@ -1,0 +1,71 @@
+.title {
+    text-align: center;
+    color: black;
+}
+
+.subTitle {
+    /* padding-left: 2%; */
+    text-align: left;
+    margin-bottom: 1rem;
+    border-color: #666;
+}
+
+.signUp {
+    width: 80%;
+    background-color: white;
+    border-radius: 5px;
+    padding: 2% 0% 2% 0%;
+    margin-top: 3%;
+}
+
+.flex-vertical {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.flex-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.inputIndicator {
+    width: 30%;
+}
+
+.inputText {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    /* margin-bottom: 2%; */
+}
+
+.signUpBtn {
+    margin-top: 2%;
+    width: 100%;
+}
+
+.dropDownItem {
+    height: 4%;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 0.25rem;
+    color: #666;
+    /* margin-bottom: 3%; */
+}
+
+.declaration {
+    color: darkred;
+    text-align: justify;
+    align-items: center;
+    margin: 0% 5%;
+}
+
+.btn {
+    margin-right: 2%;
+}

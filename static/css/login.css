@@ -1,0 +1,50 @@
+.login{
+    width: 50%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 5% 0% 5% 0%;
+    margin: 5% 10%;
+}
+
+.flex-vertical{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputSpace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputIndicator {
+    width: 20%;
+}
+
+.inputText {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 70%;
+    margin-top: 1%;
+}
+
+.loginBtn {
+    margin-top: 2%;
+    width: 100%;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.btn {
+    background-color: white;
+}
+
+.SignUp{
+    margin-top: 3%;
+}
+

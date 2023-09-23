@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, send_from_directory, request
 from pymysql import connections
 import os
 import boto3
@@ -12,15 +12,15 @@ region = customregion
 
 
 # from templete
-db_connection = connections.Connection(
-    host=customhost,
-    port=3306,
-    user=customuser,
-    password=custompass,
-    db=customdb
-)
+# db_connection = connections.Connection(
+#     host=customhost,
+#     port=3306,
+#     user=customuser,
+#     password=custompass,
+#     db=customdb
+# )
 
-db_cursor = db_connection.cursor()
+# db_cursor = db_connection.cursor()
 
 output = {}
 table = 'students'
@@ -30,15 +30,26 @@ table = 'students'
 def home():
     return render_template('index.html')
 
+# Static routes
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory(app.static_folder, filename)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
 
+
+@app.route("/signUp", methods=['GET', 'POST'])
+def signUp():
+    return render_template('signUp.html')
+
 @app.route("/loginApi", methods=['POST'])
-def LoginApi():
-    student_id = request.form['student_id']
-    password = request.form['password']
+def loginApi():
+    ...
+    # student_id = request.form['student_id']
+    # password = request.form['password']
     # last_name = request.form['last_name']
     # pri_skill = request.form['pri_skill']
     # location = request.form['location']
@@ -84,3 +95,5 @@ def LoginApi():
     # print("all modification done...")
     # return render_template('AddEmpOutput.html', name=emp_name)
 
+if __name__ == '__main__':
+    app.run(debug=True)
