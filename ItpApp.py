@@ -54,10 +54,18 @@ def loginApi():
     # pri_skill = request.form['pri_skill']
     # location = request.form['location']
     # emp_image_file = request.files['emp_image_file']
+    
+    #to fetch all information
+    fetch_query = "SELECT * FROM your_table"
+    db_cursor.execute(fetch_query)
 
-    # insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s, %s)"
-    # cursor = db_conn.cursor()
-
+    student_info = db_cursor.fetchall()
+    for row in student_info:
+        column_value = row["column2_name"]  # By column name
+        print(column_value)
+        
+        
+    # insert_sql = "INSERT INTO students VALUES (%s, %s)"
     # if emp_image_file.filename == "":
     #     return "Please select a file"
 
