@@ -10,20 +10,13 @@ app = Flask(__name__)
 bucket = custombucket
 region = customregion
 
-
-# from templete
-# db_connection = connections.Connection(
-#     host=customhost,
-#     port=3306,
-#     user=customuser,
-#     password=custompass,
-#     db=customdb
-# )
-
-# db_cursor = db_connection.cursor()
-
-output = {}
-table = 'students'
+db_conn = connections.Connection(
+    host=customhost,
+    port=3306,
+    user=customuser,
+    password=custompass,
+    db=customdb
+)
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -45,6 +38,18 @@ def login():
 def signUp():
     return render_template('signUp.html')
 
+@app.route("/test", methods=["GET"])
+def test():
+    cursor = db_conn.cursor()
+    cursor.execute("select * from supervisor")
+    output = cursor.fetchall()
+    cursor.close()
+
+    print (output)
+    print(type(output))
+    return render_template('test.html', output=output)
+
+
 @app.route("/loginApi", methods=['POST'])
 def loginApi():
     ...
@@ -56,13 +61,13 @@ def loginApi():
     # emp_image_file = request.files['emp_image_file']
     
     #to fetch all information
-    fetch_query = "SELECT * FROM your_table"
-    db_cursor.execute(fetch_query)
+    # fetch_query = "SELECT * FROM your_table"
+    # db_cursor.execute(fetch_query)
 
-    student_info = db_cursor.fetchall()
-    for row in student_info:
-        column_value = row["column2_name"]  # By column name
-        print(column_value)
+    # student_info = db_cursor.fetchall()
+    # for row in student_info:
+    #     column_value = row["column2_name"]  # By column name
+    #     print(column_value)
         
         
     # insert_sql = "INSERT INTO students VALUES (%s, %s)"

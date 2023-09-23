@@ -4,3 +4,5 @@ python -m flask -app ItpApp run
 
 
 * Remember to install all required dependencies/libraries first imported in the ItpApp.py
+
+pip install flask pymysql boto3
