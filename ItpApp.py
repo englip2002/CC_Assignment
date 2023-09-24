@@ -50,15 +50,16 @@ def login():
 
 @app.route("/signUp", methods=['GET', 'POST'])
 def signUp():
-    edulevelList = selectAllFromTable("education_level")
-    cohortList = selectAllFromTable("cohort")
-    programmeList = selectAllFromTable("programme")
-    supervisorList = selectAllFromTable("supervisor")
-    return render_template('signUp.html',
-                           edulevelList=edulevelList,
-                           cohortList=cohortList,
-                           programmeList=json.dumps(programmeList),
-                           supervisorList=supervisorList)
+    # edulevelList = selectAllFromTable("education_level")
+    # cohortList = selectAllFromTable("cohort")
+    # programmeList = selectAllFromTable("programme")
+    # supervisorList = selectAllFromTable("supervisor")
+    return render_template('signUp.html')
+    # return render_template('signUp.html',
+    #                        edulevelList=edulevelList,
+    #                        cohortList=cohortList,
+    #                        programmeList=json.dumps(programmeList),
+    #                        supervisorList=supervisorList)
 
 
 @app.route("/test", methods=["GET"])
