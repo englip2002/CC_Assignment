@@ -25,6 +25,8 @@
             type="text/css"
             href="{{ url_for('static', filename='css/signUp.css') }}" />
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <title>Sign Up</title>
     </head>
 
@@ -89,145 +91,202 @@
             </div>
         </nav>
 
-        <div class="flex-vertical">
-            <div>
-                <h1 class="title">Sign Up to ITP</h1>
+        <form action="{{url_for('signupApi')}}" method="post" id="signup-form">
+            <div class="flex-vertical">
+                <div>
+                    <h1 class="title">Sign Up to ITP</h1>
+                </div>
+
+                <div class="signUp border border-secondary">
+                    <div class="subTitle" style="margin-bottom: 0%">
+                        <p style="padding-left: 3%">Academic Detail</p>
+                        <br />
+                    </div>
+
+                    <div class="flex-vertical">
+                        <div class="inputText">
+                            <p class="inputIndicator">Profile Picture:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="profile_picture"
+                                    id="profile_picture"
+                                    type="file"
+                                    class="form-control"
+                                    placeholder="e.g., 1 - 5" />
+                            </div>
+                        </div>
+
+                        <div class="inputText">
+                            <p class="inputIndicator">Student ID:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="student_id"
+                                    id="student_id"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="e.g., 20WMR12345" />
+                            </div>
+                        </div>
+
+                        <div class="inputText">
+                            <p class="inputIndicator">Tutorial Group:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="tutorial_group"
+                                    id="tutorial_group"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="e.g., 1 - 5" />
+                            </div>
+                        </div>
+
+                        <div class="inputText">
+                            <p class="inputIndicator">CGPA:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="cgpa"
+                                    id="cgpa"
+                                    step="0.01"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="e.g., 1.0 - 4.0" />
+                            </div>
+                        </div>
+
+                        <div class="inputText">
+                            <label class="inputIndicator" for="level">Level: </label>
+                            <select
+                                required
+                                class="dropDownItem input-group"
+                                name="education_level"
+                                id="level">
+                                <option value="0" selected>&nbsp;Please select one&nbsp;</option>
+                                {% for each in edulevelList %}
+                                <option value="{{each[0]}}">{{each[1]}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 2%"></div>
+
+                        <div class="inputText">
+                            <label class="inputIndicator" for="cohort">Cohort: </label>
+                            <select
+                                required
+                                class="dropDownItem input-group"
+                                name="cohort"
+                                id="cohort">
+                                <option value="0" selected>&nbsp;Please select one&nbsp;</option>
+                                {% for each in cohortList %}
+                                <option value="{{each[0]}}">{{each[1]}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 2%"></div>
+
+                        <div class="inputText">
+                            <label class="inputIndicator" for="programme">Programme: </label>
+                            <select
+                                required
+                                class="dropDownItem input-group"
+                                name="programme"
+                                id="programme"
+                                disabled="true">
+                                <option value="0" selected>&nbsp;---&nbsp;</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 2%"></div>
+
+                        <div class="inputText">
+                            <p class="inputIndicator">UC Supervisor:</p>
+                            <div class="input-group mb-3 specialInput">
+                                <select
+                                    required
+                                    class="dropDownItem input-group"
+                                    name="supervisor"
+                                    id="supervisor">
+                                    <option value="0" selected>
+                                        &nbsp;Please select one&nbsp;
+                                    </option>
+                                    {% for each in supervisorList %}
+                                    <option value="{{each[0]}}">{{each[1]}} - {{each[2]}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="signUp border border-secondary">
+                    <div class="subTitle" style="margin-bottom: 0%">
+                        <p style="padding-left: 3%">Technical Knowledge</p>
+                        <br />
+                    </div>
+                    <div class="flex-vertical">
+                        <div class="inputText">
+                            <p class="inputIndicator">Programming Knowledge:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="programming_knowledge"
+                                    id="programming_knowledge"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Java, C#, Python" />
+                            </div>
+                        </div>
+                        <div class="inputText">
+                            <p class="inputIndicator">Database Knowledege:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="database_knowledge"
+                                    id="database_knowledge"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Ms SQL, MySQL, MongoDB" />
+                            </div>
+                        </div>
+                        <div class="inputText">
+                            <p class="inputIndicator">Networking Knowledge:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="networking_knowledge"
+                                    id="networking_knowledge"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="CISCO" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="signUp border border-secondary">
+                    <div class="subTitle" style="margin-bottom: 0">
+                        <p style="padding-left: 3%">Declaration</p>
+                        <br />
+                    </div>
+                    <div class="declaration">
+                        <p>
+                            I UNDERSTAND THAT I MUST COMPLETE THE FULL DURATION OF THE INDUSTRIAL
+                            TRAINING PROGRAMME PERIOD SATISFACTORILY IN ORDER TO PASS THE BAIT305C /
+                            AMIT3205 COURSE. I AGREE TO ABIDE BY THE RULES AND REGULATIONS OF THE
+                            COMPANY CONCERNED AND I WILL ALWAYS UPHOLD THE GOOD NAME OF THE
+                            UNIVERSITY COLLEGE AT ALL TIMES DURING THE WHOLE DURATION OF THE
+                            INDUSTRIAL TRAINING PROGRAMME.
+                        </p>
+
+                        <div class="flex-horizontal">
+                            <button type="submit" class="btn btn-success">I Accept</button>
+                            <a href="{{ url_for('home') }}" class="btn btn-danger">I Decline</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="signUp border border-secondary">
-                <div class="subTitle" style="margin-bottom: 0%">
-                    <p style="padding-left: 3%">Academic Detail</p>
-                    <br />
-                </div>
-
-                <div class="flex-vertical">
-                    <div class="inputText">
-                        <p class="inputIndicator">Profile Picture:</p>
-                        <div class="input-group mb-3">
-                            <input type="file" class="form-control" placeholder="e.g., 1 - 5" />
-                        </div>
-                    </div>
-
-                    <div class="inputText">
-                        <p class="inputIndicator">Student ID:</p>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="e.g., 99WMR9999" />
-                        </div>
-                    </div>
-
-                    <div class="inputText">
-                        <p class="inputIndicator">Tutorial Group:</p>
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" placeholder="e.g., 1 - 5" />
-                        </div>
-                    </div>
-
-                    <div class="inputText">
-                        <p class="inputIndicator">CGPA:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                type="number"
-                                class="form-control"
-                                placeholder="e.g., 1.0 - 4.0" />
-                        </div>
-                    </div>
-
-                    <div class="inputText">
-                        <label class="inputIndicator" for="level">Level: </label>
-                        <select class="dropDownItem input-group" name="level" id="level">
-                            <option value="Diploma">Diploma</option>
-                            <option value="Bachelor">Bachelor</option>
-                            <option value="PhD">PhD</option>
-                        </select>
-                    </div>
-                    <div style="margin-bottom: 2%"></div>
-
-                    <div class="inputText">
-                        <label class="inputIndicator" for="level">Cohort: </label>
-                        <select class="dropDownItem input-group" name="cohort" id="cohort">
-                            <option value="202007">2020 July</option>
-                            <option value="202010">2020 November</option>
-                            <option value="202101">2021 Jan</option>
-                        </select>
-                    </div>
-                    <div style="margin-bottom: 2%"></div>
-
-                    <div class="inputText">
-                        <label class="inputIndicator" for="level">Programme: </label>
-                        <select class="dropDownItem input-group" name="programme" id="programme">
-                            <option value="rsw">RSW</option>
-                            <option value="rds">RDS</option>
-                            <option value="rst">RST</option>
-                        </select>
-                    </div>
-                    <div style="margin-bottom: 2%"></div>
-
-                    <div class="inputText">
-                        <p class="inputIndicator">UC Supervisor:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="UC supervisor Name" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="signUp border border-secondary">
-                <div class="subTitle" style="margin-bottom: 0%">
-                    <p style="padding-left: 3%">Technical Knowledge</p>
-                    <br />
-                </div>
-                <div class="flex-vertical">
-                    <div class="inputText">
-                        <p class="inputIndicator">Programming Knowledge:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Java, C#, Python" />
-                        </div>
-                    </div>
-                    <div class="inputText">
-                        <p class="inputIndicator">Database Knowledege:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Ms SQL, MySQL, MongoDB" />
-                        </div>
-                    </div>
-                    <div class="inputText">
-                        <p class="inputIndicator">Networking Knowledge:</p>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="CISCO" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="signUp border border-secondary">
-                <div class="subTitle" style="margin-bottom: 0;">
-                    <p style="padding-left: 3%">Declaration</p>
-                    <br />
-                </div>
-                <div class="declaration">
-                    <p>
-                        I UNDERSTAND THAT I MUST COMPLETE THE FULL DURATION OF THE INDUSTRIAL
-                        TRAINING PROGRAMME PERIOD SATISFACTORILY IN ORDER TO PASS THE BAIT305C /
-                        AMIT3205 COURSE. I AGREE TO ABIDE BY THE RULES AND REGULATIONS OF THE
-                        COMPANY CONCERNED AND I WILL ALWAYS UPHOLD THE GOOD NAME OF THE UNIVERSITY
-                        COLLEGE AT ALL TIMES DURING THE WHOLE DURATION OF THE INDUSTRIAL TRAINING
-                        PROGRAMME.
-                    </p>
-
-                    <div class="flex-horizontal">
-                        <button type="submit" class="btn btn-success">I Accept</button>
-                        <a href="{{ url_for('home') }}" class="btn btn-danger">I Decline</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </form>
     </body>
     <footer>
         <div>
@@ -235,4 +294,78 @@
             <p style="margin-left: 5%">&#169; 2023 - TARUMT FOCS ITP</p>
         </div>
     </footer>
+    <script>
+        var jsProgrammeList = {{programmeList | safe}}
+        var jsSupervisorList = {{supervisorList | safe}}
+        console.log(jsProgrammeList)
+        console.log(jsSupervisorList)
+
+        // Programme auto filter
+        document.querySelector('#level').addEventListener('change', e=> {
+            let selectedLevelId = e.target.value;
+
+            let programmeInput = document.querySelector('#programme')
+            programmeInput.innerHTML = "";
+            programmeInput.disabled = false;
+            jsProgrammeList.filter(each => each[3] == selectedLevelId).forEach(el => {
+                programmeInput.innerHTML += `<option value="${el[0]}">${el[2]} - ${el[1]}</option>`;
+            });
+        })
+
+        // Form submit
+        document.querySelector('#signup-form').addEventListener('submit', e => {
+            e.preventDefault();
+
+            let toBeFocused;
+            let valid = true;
+            let errorMessage;
+            
+            if (!/[0-9]{2}[A-Z]{3}[0-9]{5}/gm.test(document.querySelector('#student_id').value)) {
+                valid = false;
+                toBeFocused = "#student_id"
+                errorMessage = "Invalid Student ID format!"
+            }
+            else if (document.querySelector('#tutorial_group').value <= 0) {
+                valid = false;
+                toBeFocused = "#tutorial_group"
+                errorMessage = "Invalid Tutorial Group Number!"
+            }
+            else if (document.querySelector('#cgpa').value < 0 || document.querySelector('#cgpa') > 4) {
+                valid = false;
+                toBeFocused = "#cgpa"
+                errorMessage = "Invalid CGPA value!"
+            }
+            else if (document.querySelector('#level').value == "0") {
+                valid = false;
+                toBeFocused = "#level"
+                errorMessage = "Please choose an Education Level!"
+            }
+            else if (document.querySelector('#cohort').value == "0") {
+                valid = false;
+                toBeFocused = "#cohort"
+                errorMessage = "Please choose a Cohort!"
+            }
+            else if (document.querySelector('#programme').value == "0") {
+                valid = false;
+                toBeFocused = "#programme"
+                errorMessage = "Please choose a Programme!"
+            }
+            else if (document.querySelector('#supervisor').value == "0") {
+                valid = false;
+                toBeFocused = "#supervisor"
+                errorMessage = "Please choose a Supervisor!"
+            }
+
+            if (valid) {
+                document.querySelector('#signup-form').submit();
+            }
+            else {
+                Swal.fire("Oops..", errorMessage, "error").then(res => {
+                    document.querySelector(toBeFocused).focus();
+                });
+            }
+
+
+        })
+    </script>
 </html>
