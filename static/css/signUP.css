@@ -37,6 +37,7 @@
 }
 
 .inputIndicator {
+    text-align: right;
     width: 30%;
     font-weight: bold;
     margin-right: 2%;
