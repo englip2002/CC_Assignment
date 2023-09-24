@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, request
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for
 from pymysql import connections
 import os
 import boto3
@@ -24,10 +24,15 @@ except:
 
 
 def selectAllFromTable(tableName):
-    cursor = db_conn.cursor()
-    cursor.execute("select * from " + tableName + " WHERE deleted=0")
-    output = cursor.fetchall()
-    cursor.close()
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute("select * from " + tableName + " WHERE deleted=0")
+        output = cursor.fetchall()
+    except Exception as e:
+        cursor.close()
+        return str(e)
+    finally:
+        cursor.close()
     return output
 
 
@@ -41,11 +46,6 @@ def home():
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory(app.static_folder, filename)
-
-
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    return render_template('login.html')
 
 
 @app.route("/signUp", methods=['GET', 'POST'])
@@ -93,12 +93,15 @@ def signupApi():
 
     # Upload image to S3 first
     try:
-        pfp_filename_in_s3 = "pfp-" + str(student_id)
+        pfp_filename_in_s3 = "pfp/" +  "pfp-" + str(student_id)
+
         s3 = boto3.resource('s3')
-        s3.Bucket(custombucket).put_object(Key=pfp_filename_in_s3, Body=profile_picture)
-        bucket_location = boto3.client('s3').get_bucket_location(Bucket=custombucket)
+        s3.Bucket(custombucket).put_object(
+            Key=pfp_filename_in_s3, Body=profile_picture)
+        bucket_location = boto3.client(
+            's3').get_bucket_location(Bucket=custombucket)
         s3_location = (bucket_location['LocationConstraint'])
-    
+
         if s3_location is None:
             s3_location = ''
         else:
@@ -121,6 +124,11 @@ def signupApi():
         cursor.close()
 
     return render_template('signUpComplete.html')
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
 
 
 @app.route("/loginApi", methods=['POST'])
@@ -180,11 +188,29 @@ def loginApi():
     # print("all modification done...")
     # return render_template('AddEmpOutput.html', name=emp_name)
 
+@app.route("/adminLogin", methods=['GET'])
+def adminLogin():
+    return render_template('adminLogin.html')
 
-@app.route("/viewPortfolio", methods=['GET'])
-def viewPortfolio():
-    return render_template('viewPortfolio.html')
 
+
+@app.route("/adminLogin", methods=["POST"])
+def adminLoginApi():
+    username = request.form['username']
+    password = request.form['passwordEncrypted']
+
+    output = selectAllFromTable('admin')
+
+    for each in output:
+        if each[1] == username and each[2] == password:
+            return redirect(url_for('adminPortal'))
+
+    return render_template('adminLogin.html', invalidLogin=True)
+
+
+@app.route("/adminPortal", methods=["GET"])
+def adminPortal():
+    return "NIAMABDUICBYUVA"
 
 if __name__ == '__main__':
     app.run(debug=True)
