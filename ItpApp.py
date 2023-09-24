@@ -61,6 +61,9 @@ def signUp():
     #                        programmeList=json.dumps(programmeList),
     #                        supervisorList=supervisorList)
 
+@app.route("/studentHomepage", methods=['GET', 'POST'])
+def studentHomepage():
+    return render_template('studentHomepage.html')
 
 @app.route("/test", methods=["GET"])
 def test():

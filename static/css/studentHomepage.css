@@ -13,7 +13,6 @@
     font-weight: bolder;
 }
 
-
 .signUp {
     width: 80%;
     background-color: white;
@@ -49,11 +48,6 @@
     justify-content: center;
     width: 70%;
     /* margin-bottom: 2%; */
-}
-
-.signUpBtn {
-    margin-top: 2%;
-    width: 100%;
 }
 
 .dropDownItem {
