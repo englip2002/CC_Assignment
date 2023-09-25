@@ -10,6 +10,10 @@ app = Flask(__name__)
 bucket = custombucket
 region = customregion
 
+loginState = False
+loginNric = ""
+loginEmail = ""
+
 try:
     db_conn = connections.Connection(
         host=customhost,
@@ -122,24 +126,26 @@ def signupApi():
             s3_location = ''
         else:
             s3_location = '-' + s3_location
-
+        
         pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
             s3_location,
             custombucket,
             pfp_filename_in_s3)
-
+    except Exception as e:
+        return str(e)
+    
+    try:    
         # Insert record to sql
         cursor = db_conn.cursor()
         insert_sql = f"INSERT INTO `student` (`id`, `profile_picture_url`, `name`, `nric`, `gender`, `transport`, `health_remark`, `student_id`, `tutorial_group`, `cgpa`, `education_level_id`, `cohort_id`, `programme_id`, `supervisor_id`, `email`, `term_address`, `permanent_address`, `mobile_phone`, `fixed_phone`, `programming_knowledge`, `database_knowledge`, `networking_knowledge`, `deleted`) VALUES (NULL, '{pfp_url}', '{name}', '{nric}', '{gender}', '{transport}', '{health_remark}', '{student_id}', '{tutorial_group}', '{cgpa}', '{education_level}', '{cohort}', '{programme}', '{supervisor}', '{email}', '{term_address}', '{permanent_address}', '{mobile_phone}', '{fixed_phone}', '{programming_knowledge}', '{database_knowledge}', '{networking_knowledge}', '0');"
         cursor.execute(insert_sql)
         db_conn.commit()
-
     except Exception as e:
         return str(e)
     finally:
         cursor.close()
 
-    return render_template('signUpComplete.html')
+    return redirect(url_for('home'))
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -149,60 +155,28 @@ def login():
 
 @app.route("/loginApi", methods=['POST'])
 def loginApi():
-    ...
-    # student_id = request.form['student_id']
-    # password = request.form['password']
-    # last_name = request.form['last_name']
-    # pri_skill = request.form['pri_skill']
-    # location = request.form['location']
-    # emp_image_file = request.files['emp_image_file']
+    email = request.form['email']
+    nric = request.form['nric']
 
-    # to fetch all information
-    # fetch_query = "SELECT * FROM your_table"
-    # db_cursor.execute(fetch_query)
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute("select student_id, email from student WHERE deleted=0")
+        output = cursor.fetchall()
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
 
-    # student_info = db_cursor.fetchall()
-    # for row in student_info:
-    #     column_value = row["column2_name"]  # By column name
-    #     print(column_value)
+    for each in output:
+        if each[0] == nric and each[1] == email:
+            loginState = True
+            loginEmail = each[1]
+            loginNric = each[0]
+            return redirect(url_for('home'))
 
-    # insert_sql = "INSERT INTO students VALUES (%s, %s)"
-    # if emp_image_file.filename == "":
-    #     return "Please select a file"
+    return render_template('login.html', invalidLogin=True)
 
-    # try:
-
-    #     cursor.execute(insert_sql, (emp_id, first_name, last_name, pri_skill, location))
-    #     db_conn.commit()
-    #     emp_name = "" + first_name + " " + last_name
-    #     # Uplaod image file in S3 #
-    #     emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + "_image_file"
-    #     s3 = boto3.resource('s3')
-
-    #     try:
-    #         print("Data inserted in MySQL RDS... uploading image to S3...")
-    #         s3.Bucket(custombucket).put_object(Key=emp_image_file_name_in_s3, Body=emp_image_file)
-    #         bucket_location = boto3.client('s3').get_bucket_location(Bucket=custombucket)
-    #         s3_location = (bucket_location['LocationConstraint'])
-
-    #         if s3_location is None:
-    #             s3_location = ''
-    #         else:
-    #             s3_location = '-' + s3_location
-
-    #         object_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
-    #             s3_location,
-    #             custombucket,
-    #             emp_image_file_name_in_s3)
-
-    #     except Exception as e:
-    #         return str(e)
-
-    # finally:
-    #     cursor.close()
-
-    # print("all modification done...")
-    # return render_template('AddEmpOutput.html', name=emp_name)
+    
 
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
