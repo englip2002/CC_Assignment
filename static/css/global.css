@@ -2,8 +2,18 @@ body {
     font-family: "Lato", Helvetica, Arial, sans-serif;
     -webkit-text-size-adjust: none;
     color: #666;
-    background: url("../public/background.jpg") repeat-x fixed;
+    background: url("../images/background.jpg") repeat-x fixed;
     font-weight: 400;
     -webkit-font-smoothing: subpixel-antialiased;
     text-rendering: optimizeLegibility;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

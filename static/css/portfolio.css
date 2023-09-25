@@ -1,0 +1,71 @@
+.flex-vertical {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.flex-horizontal {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.profile-pic{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.portfolio-container{
+    display: flex;
+    justify-content: center;
+
+}
+
+.portfolio{
+    width: 80%;
+    background-color: white;
+    padding: 3%;
+}
+
+.portfolio-left{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    padding-right: 4%;
+}
+
+.vl {
+  border-left: 1px solid black;
+  height: 100%;
+}
+
+
+.portfolio-right{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    padding-left: 4%;
+}
+
+.item-container{
+    margin-top: 2%;
+}
+
+.indicator {
+    text-align: right;
+    width: 50%;
+    font-weight: bold;
+    margin-right: 3%;
+}
+
+.content{
+    width: 50%;
+    text-align: left;
+}

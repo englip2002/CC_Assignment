@@ -27,9 +27,11 @@
             href="{{ url_for('static', filename='css/login.css') }}" />
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <title>Login</title>
-    </head>
 
+        <!-- CryptoJS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+        <title>Admin Login</title>
+    </head>
     <body>
         <!-- navigation bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
@@ -60,16 +62,13 @@
                             >
                         </li>
                         <li class="nav-item">
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="{{ url_for('login') }}"
+                            <a class="nav-link" aria-current="page" href="{{ url_for('login') }}"
                                 >Student</a
                             >
                         </li>
                         <li class="nav-item">
                             <a
-                                class="nav-link"
+                                class="nav-link active"
                                 aria-current="page"
                                 href="{{ url_for('adminLogin') }}"
                                 >Admin</a
@@ -77,45 +76,46 @@
                         </li>
                     </ul>
                     <div style="margin-right: 1rem">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
+                        <a class="nav-link" aria-current="page" href="{{ url_for('adminLogin') }}"
                             >Logout</a
                         >
                     </div>
                 </div>
             </div>
         </nav>
-        <form action="{{url_for('loginApi')}}" method="POST" id="login-form">
-            <div class="flex-vertical">
-                <div class="login border border-2 border-secondary">
-                    <div>
-                        <h1 class="title">Login to ITP</h1>
-                    </div>
+
+        <div class="flex-vertical">
+            <div class="login border border-2 border-secondary">
+                <div>
+                    <h1 class="title">Admin Login to ITP</h1>
+                </div>
+                <form action="{{url_for('adminLogin')}}" method="post" id="admin-login-form">
                     <div class="inputSpace">
                         <div class="inputText">
-                            <p class="inputIndicator">Student Email:</p>
-                            <div class="input-group mb-3">
-                                <input
-                                    required
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    class="form-control"
-                                    placeholder="xxx-xx99@student.tarc.edu.my"
-                                    aria-label="Email"
-                                    aria-describedby="button-addon2" />
-                            </div>
-                        </div>
-                        <div class="inputText">
-                            <p class="inputIndicator">IC Number:</p>
+                            <p class="inputIndicator">Username:</p>
                             <div class="input-group mb-3">
                                 <input
                                     required
                                     type="text"
-                                    name="nric"
-                                    id="nric"
+                                    id="username"
+                                    name="username"
                                     class="form-control"
-                                    placeholder="999999-99-9999"
-                                    aria-label="Email"
+                                    placeholder="xxxxxx"
+                                    aria-label="Username"
+                                    aria-describedby="button-addon2" />
+                            </div>
+                        </div>
+                        <div class="inputText">
+                            <p class="inputIndicator">Password:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-control"
+                                    placeholder="******"
+                                    aria-label="Password"
                                     aria-describedby="button-addon2" />
                             </div>
                         </div>
@@ -127,13 +127,15 @@
                                 Login
                             </button>
                         </div>
-                        <div class="SignUp">
-                            <a href="{{ url_for('signUp') }}">Sign Up</a>
-                        </div>
                     </div>
-                </div>
+                    <input
+                        id="passwordEncrypted"
+                        text="text"
+                        name="passwordEncrypted"
+                        style="display: none" />
+                </form>
             </div>
-        </form>
+        </div>
 
         <footer>
             <div>
@@ -145,15 +147,41 @@
         {% if invalidLogin %}
         <div id="invalidLogin" style="display: none"></div>
         {% endif %}
-
         <script>
+            async function hashPassword(password, salt) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password + salt);
+                const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+
+                // Convert the hash to a hexadecimal string
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray
+                    .map((byte) => byte.toString(16).padStart(2, "0"))
+                    .join("");
+                return hashHex;
+            }
+
+            document.querySelector("#admin-login-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const passphrase = "cc_assignment_aws";
+                const encryptedPassword = await hashPassword(
+                    document.querySelector("#password").value,
+                    document.querySelector("#username").value.toString() + passphrase
+                ).then((res) => {
+                    return res;
+                });
+                document.querySelector("#passwordEncrypted").value = encryptedPassword;
+
+                document.querySelector("#admin-login-form").submit();
+            });
+
             if (document.querySelector("#invalidLogin")) {
                 Swal.fire(
                     "Oops..",
                     "Your login details are incorrect! Please try again.",
                     "error"
                 ).then((res) => {
-                    document.querySelector("#email").focus();
+                    document.querySelector("#username").focus();
                 });
             }
         </script>

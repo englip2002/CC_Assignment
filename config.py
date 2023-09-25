@@ -1,8 +1,8 @@
-# customhost = "database-1.cizar3lczvxa.us-east-1.rds.amazonaws.com"
-# customuser = "aws_user"
+# customhost = "database-1.chidbtnhv9jm.us-east-1.rds.amazonaws.com"
+# customuser = "admin"
 # custompass = "Bait3273"
-# customdb = "employee"
-# custombucket = "lowchoonkeat-employee1"
+# customdb = "CCAssignment"
+# custombucket = "assignment-bucket2023"
 # customregion = "us-east-1"
 
 customhost = "localhost"
