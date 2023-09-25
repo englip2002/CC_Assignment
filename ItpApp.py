@@ -10,6 +10,8 @@ app = Flask(__name__)
 bucket = custombucket
 region = customregion
 
+global loginState, loginNric, loginEmail
+
 loginState = False
 loginNric = ""
 loginEmail = ""
@@ -164,7 +166,7 @@ def loginApi():
 
     try:
         cursor = db_conn.cursor()
-        cursor.execute("select student_id, email from student WHERE deleted=0")
+        cursor.execute("select nric, email from student WHERE deleted=0")
         output = cursor.fetchall()
     except Exception as e:
         return str(e)
@@ -173,6 +175,7 @@ def loginApi():
 
     for each in output:
         if each[0] == nric and each[1] == email:
+            global loginState, loginEmail, loginNric
             loginState = True
             loginEmail = each[1]
             loginNric = each[0]
