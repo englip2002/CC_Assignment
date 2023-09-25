@@ -15,7 +15,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <title>Portfolio</title>
+    <title>Student Portfolio</title>
 </head>
 
 <body>
@@ -34,18 +34,19 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                        <a class="nav-link" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('portfolio') }}">Portfolio</a>
+                        <a class="nav-link active" aria-current="page"
+                            href="{{ url_for('studentHomepage') }}">Portfolio</a>
                     </li>
                 </ul>
                 <div style="margin-right: 1rem">
-                    <a class="nav-link" aria-current="page" href="{{ url_for('home') }}">Logout</a>
+                    <a class="nav-link" aria-current="page" href="{{ url_for('logoutApi') }}">Logout</a>
                 </div>
             </div>
         </div>
     </nav>
-
 
     <div class="flexJustify">
         <div class="flexJustify border border-2 border-secondary portfolio">
@@ -56,76 +57,76 @@
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Name: </p>
+                        <p>Name:</p>
                     </div>
                     <div class="content">
-                        <p>Tan Eng Lip</p>
+                        <p>{{studInfo.name}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Student ID: </p>
+                        <p>Student ID:</p>
                     </div>
                     <div class="content">
-                        <p>22WMR05697</p>
+                        <p>{{studInfo.student_id}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Programme: </p>
+                        <p>Programme:</p>
                     </div>
                     <div class="content">
-                        <p>Degree in Software Engineering</p>
+                        <p>{{studInfo.programme_code}} - {{studInfo.programme_name}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Email: </p>
+                        <p>Email:</p>
                     </div>
                     <div class="content">
-                        <p>tanel-wm20@student.tarc.edu.my</p>
+                        <p>{{studInfo.email}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Mobile Number: </p>
+                        <p>Mobile Number:</p>
                     </div>
                     <div class="content">
-                        <p>+6012-3456789</p>
+                        <p>{{studInfo.mobile_phone}}</p>
                     </div>
                 </div>
 
-                <div style="margin-top: 4%;">
+                <div style="margin-top: 4%">
                     <h5>Skills</h5>
                     <hr />
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Programming Knowledge: </p>
+                        <p>Programming Knowledge:</p>
                     </div>
                     <div class="content">
-                        <p>Python, Java</p>
+                        <p>{{studInfo.programming_knowledge}}</p>
                     </div>
                 </div>
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Database Knowledge: </p>
+                        <p>Database Knowledge:</p>
                     </div>
                     <div class="content">
-                        <p>MySQL</p>
+                        <p>{{studInfo.database_knowledge}}</p>
                     </div>
                 </div>
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Networking Knowledge: </p>
+                        <p>Networking Knowledge:</p>
                     </div>
                     <div class="content">
-                        <p>CISCO</p>
+                        <p>{{studInfo.networking_knowledge}}</p>
                     </div>
                 </div>
             </div>
@@ -139,96 +140,116 @@
                 </div>
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Cohort: </p>
+                        <p>Cohort:</p>
                     </div>
                     <div class="content">
-                        <p>2022 July</p>
+                        <p>{{studInfo.cohort_name}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Intern Period: </p>
+                        <p>Intern Period:</p>
                     </div>
                     <div class="content">
-                        <p>2023 Jan - 2023 July</p>
+                        <p>{{studInfo.cohort_period}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>UC Supervisor: </p>
+                        <p>UC Supervisor:</p>
                     </div>
                     <div class="content">
-                        <p>Gok Gok Gok</p>
+                        <p>{{studInfo.supervisor_name}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>UC Supervisor Email: </p>
+                        <p>UC Supervisor Email:</p>
                     </div>
                     <div class="content">
-                        <p>gok@gmail.com</p>
+                        <p>{{studInfo.supervisor_email}}</p>
                     </div>
                 </div>
 
-                <div style="margin-top: 4%;">
+                <div style="margin-top: 4%">
                     <h5>Company Information</h5>
                     <hr />
                 </div>
 
+                {% if companyInfo %}
+
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Company Name: </p>
+                        <p>Company Name:</p>
                     </div>
                     <div class="content">
-                        <p>Gok Company</p>
+                        <p>{{companyInfo.name}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Company Address: </p>
+                        <p>Company Address 1:</p>
                     </div>
                     <div class="content">
-                        <p>123, Jalan Malinda, Setapak, Kuala Lumpur</p>
+                        <p>{{companyInfo.address_1}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Monthly Allowance: </p>
+                        <p>Company Address 2:</p>
                     </div>
                     <div class="content">
-                        <p>RM 50</p>
+                        <p>{{companyInfo.address_2}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Company Supervisor Name: </p>
+                        <p>Monthly Allowance:</p>
                     </div>
                     <div class="content">
-                        <p>Gok 1</p>
+                        <p>RM {{companyInfo.monthly_allowance}}</p>
                     </div>
                 </div>
 
                 <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>Company Supervisor Email: </p>
+                        <p>Company Supervisor Name:</p>
                     </div>
                     <div class="content">
-                        <p>Gok1@gmail.com</p>
+                        <p>{{companyInfo.company_supervisor_name}}</p>
                     </div>
                 </div>
+
+                <div class="flexJustify item-container">
+                    <div class="indicator">
+                        <p>Company Supervisor Email:</p>
+                    </div>
+                    <div class="content">
+                        <p>{{companyInfo.company_supervisor_email}}</p>
+                    </div>
+                </div>
+
+                {% else %}
+
+                <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                    <p>Looks Like you haven't registered any company...</p>
+                    <a href="{{url_for('registerCompany')}}"><button class="btn btn-success">Register here</button></a>
+                </div>
+
+                {% endif %}
             </div>
         </div>
     </div>
-
-    <footer class="footer">
-        <p>&#169; 2023 - TARUMT FOCS ITP</p>
-    </footer>
 </body>
+
+<footer class="footer">
+    <p>&#169; 2023 - TARUMT FOCS ITP</p>
+</footer>
 
 </html>

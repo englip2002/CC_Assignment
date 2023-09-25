@@ -11,7 +11,7 @@ bucket = custombucket
 region = customregion
 
 global loginState, loginNric, loginEmail
-loginState = False
+loginState = True
 loginNric = ""
 loginEmail = ""
 
