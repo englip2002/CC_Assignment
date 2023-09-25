@@ -67,14 +67,6 @@
                                 >Portfolio</a
                             >
                         </li>
-                        <li class="nav-item">
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="{{ url_for('registerCompany') }}"
-                                >Register Company</a
-                            >
-                        </li>
                     </ul>
                     <div style="margin-right: 1rem">
                         <a class="nav-link" aria-current="page" href="{{ url_for('logoutApi') }}"
@@ -85,143 +77,140 @@
             </div>
         </nav>
 
-        <div class="flex-vertical">
-            <div class="title">
-                <h1>Welcome: {{name}}</h1>
-            </div>
-
-            <div class="stdHP border border-secondary">
-                <div class="subTitle" style="margin-bottom: 0%">
-                    <p style="padding-left: 3%">Company Detail</p>
-                    <p style="padding-left: 3%; color: red">
-                        *Please fill in the following details when internship company is found.
-                    </p>
-                    <hr />
-                </div>
-
-                <div class="flex-vertical">
-                    <div class="inputText">
-                        <p class="inputIndicator">Company Name:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="company_name"
-                                id="company_name"
-                                type="text"
-                                class="form-control"
-                                placeholder="Your Company Name" />
-                        </div>
+        <form action="{{url_for('registerCompanyApi')}}" method="POST" id="register-form">
+            <div class="flex-vertical">
+                <div class="stdHP border border-secondary">
+                    <div class="subTitle" style="margin-bottom: 0%">
+                        <p style="padding-left: 3%">Company Details</p>
+                        <p style="padding-left: 3%; color: red">
+                            *Please fill in the following details when internship company is found.
+                        </p>
+                        <hr />
                     </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Address 1:</p>
-                        <div class="input-group mb-3">
-                            <textarea
-                                required
-                                name="company_address_1"
-                                id="company_address_1"
-                                type="text"
-                                class="form-control">
-                            </textarea>
+                    <div class="flex-vertical">
+                        <div class="inputText">
+                            <p class="inputIndicator">Company Name:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="company_name"
+                                    id="company_name"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Your Company Name" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="inputText">
-                        <p class="inputIndicator">Address 2:</p>
-                        <div class="input-group mb-3">
-                            <textarea
-                                required
-                                name="company_address_2"
-                                id="company_address_2"
-                                type="text"
-                                class="form-control">
-                            </textarea>
-                        </div>
-                    </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Monthly Allowance:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="allowance"
-                                id="allowance"
-                                type="number"
-                                class="form-control"
-                                placeholder="0"
-                                step="1"
-                                min="0"
-                                />
+                        <div class="inputText">
+                            <p class="inputIndicator">Address 1:</p>
+                            <div class="input-group mb-3">
+                                <textarea
+                                    required
+                                    name="company_address_1"
+                                    id="company_address_1"
+                                    type="text"
+                                    class="form-control">
+                                </textarea>
+                            </div>
                         </div>
-                    </div>
+                        <div class="inputText">
+                            <p class="inputIndicator">Address 2:</p>
+                            <div class="input-group mb-3">
+                                <textarea
+                                    required
+                                    name="company_address_2"
+                                    id="company_address_2"
+                                    type="text"
+                                    class="form-control">
+                                </textarea>
+                            </div>
+                        </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Company Supervisor Name:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="company_sup_name"
-                                id="company_sup_name"
-                                type="text"
-                                class="form-control" />
+                        <div class="inputText">
+                            <p class="inputIndicator">Monthly Allowance:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="allowance"
+                                    id="allowance"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="0"
+                                    step="1"
+                                    min="0" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Company Supervisor Email:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="company_sup_email"
-                                id="company_sup_email"
-                                type="email"
-                                class="form-control" />
+                        <div class="inputText">
+                            <p class="inputIndicator">Company Supervisor Name:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="company_sup_name"
+                                    id="company_sup_name"
+                                    type="text"
+                                    class="form-control" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Company Acceptance Form:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="acceptance_form"
-                                id="acceptance_form"
-                                type="file"
-                                class="form-control"
-                                accept="application/pdf" />
+                        <div class="inputText">
+                            <p class="inputIndicator">Company Supervisor Email:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="company_sup_email"
+                                    id="company_sup_email"
+                                    type="email"
+                                    class="form-control" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Parent Acknowledgement Form:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="ack_form"
-                                id="ack_form"
-                                type="file"
-                                class="form-control"
-                                accept="application/pdf" />
+                        <div class="inputText">
+                            <p class="inputIndicator">Company Acceptance Form:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="acceptance_form"
+                                    id="acceptance_form"
+                                    type="file"
+                                    class="form-control"
+                                    accept="application/pdf" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="inputText">
-                        <p class="inputIndicator">Letter of Indemnity:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                required
-                                name="indemnity_form"
-                                id="indemnity_form"
-                                type="file"
-                                class="form-control"
-                                accept="application/pdf" />
+                        <div class="inputText">
+                            <p class="inputIndicator">Parent Acknowledgement Form:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="ack_form"
+                                    id="ack_form"
+                                    type="file"
+                                    class="form-control"
+                                    accept="application/pdf" />
+                            </div>
+                        </div>
+
+                        <div class="inputText">
+                            <p class="inputIndicator">Letter of Indemnity:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    name="indemnity_form"
+                                    id="indemnity_form"
+                                    type="file"
+                                    class="form-control"
+                                    accept="application/pdf" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex-horizontal" style="margin-top: 3%">
-                    <button type="submit" class="btn btn-success">Save And Submit</button>
+                    <div class="flex-horizontal" style="margin-top: 3%">
+                        <button type="submit" class="btn btn-success">Save And Submit</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
         <footer>
             <div>
                 <hr />
@@ -229,9 +218,15 @@
             </div>
         </footer>
         <script>
-          // Clear textarea input
+            // Clear textarea input
             document.querySelectorAll("textarea").forEach((each) => {
                 each.value = "";
+            });
+
+            document.querySelector("#register-form").addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                document.querySelector("#register-form").submit();
             });
         </script>
     </body>

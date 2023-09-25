@@ -62,7 +62,74 @@ def signUp():
                            cohortList=cohortList,
                            programmeList=json.dumps(programmeList),
                            supervisorList=supervisorList)
-    # return render_template('signUp.html')
+
+@app.route("/signupApi", methods=['POST'])
+def signupApi():
+    # Personal Data
+    profile_picture = request.form['profile_picture']
+    name = request.form['name']
+    nric = request.form['nric']
+    gender = request.form['gender']
+    transport = request.form['transport']
+    health_remark = request.form['health_remark']
+
+    # Academic Detail
+    student_id = request.form['student_id']
+    tutorial_group = request.form['tutorial_group']
+    cgpa = request.form['cgpa']
+    education_level = request.form['education_level']
+    cohort = request.form['cohort']
+    programme = request.form['programme']
+    supervisor = request.form['supervisor']
+
+    # Contact Information
+    email = request.form['email']
+    term_address = request.form['term_address']
+    permanent_address = request.form['permanent_address']
+    mobile_phone = request.form['mobile_phone']
+    fixed_phone = request.form['fixed_phone']
+
+    # Technical Knowledge
+    programming_knowledge = request.form['programming_knowledge']
+    database_knowledge = request.form['database_knowledge']
+    networking_knowledge = request.form['networking_knowledge']
+
+    # Upload image to S3 first
+    pfp_url = ""
+    try:
+        pfp_filename_in_s3 = "pfp/" +  "pfp-" + str(student_id)
+
+        s3 = boto3.resource('s3')
+        s3.Bucket(custombucket).put_object(
+            Key=pfp_filename_in_s3, Body=profile_picture)
+        bucket_location = boto3.client(
+            's3').get_bucket_location(Bucket=custombucket)
+        s3_location = (bucket_location['LocationConstraint'])
+
+        if s3_location is None:
+            s3_location = ''
+        else:
+            s3_location = '-' + s3_location
+        
+        pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            pfp_filename_in_s3)
+    except Exception as e:
+        return str(e)
+    
+    try:    
+        # Insert record to sql
+        cursor = db_conn.cursor()
+        insert_sql = f"INSERT INTO `student` (`id`, `profile_picture_url`, `name`, `nric`, `gender`, `transport`, `health_remark`, `student_id`, `tutorial_group`, `cgpa`, `education_level_id`, `cohort_id`, `programme_id`, `supervisor_id`, `email`, `term_address`, `permanent_address`, `mobile_phone`, `fixed_phone`, `programming_knowledge`, `database_knowledge`, `networking_knowledge`, `deleted`) VALUES (NULL, '{pfp_url}', '{name}', '{nric}', '{gender}', '{transport}', '{health_remark}', '{student_id}', '{tutorial_group}', '{cgpa}', '{education_level}', '{cohort}', '{programme}', '{supervisor}', '{email}', '{term_address}', '{permanent_address}', '{mobile_phone}', '{fixed_phone}', '{programming_knowledge}', '{database_knowledge}', '{networking_knowledge}', '0');"
+        cursor.execute(insert_sql)
+        db_conn.commit()
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    return redirect(url_for('studentHomepage'))
 
 @app.route("/studentHomepage", methods=['GET', 'POST'])
 def studentHomepage():
@@ -131,7 +198,109 @@ def studentHomepage():
 
 @app.route("/registerCompany", methods=['GET', 'POST'])
 def registerCompany():
+    global loginState, loginNric, loginEmail
+
+    if not loginState:
+        return redirect(url_for('home'))
+    
     return render_template('registerCompany.html')
+
+@app.route("/registerCompanyApi", methods=['GET', 'POST'])
+def registerCompanyApi():
+    global loginState, loginNric, loginEmail
+
+    if not loginState:
+        return redirect(url_for('home'))
+
+    name = request.form['company_name']
+    address_1 = request.form['company_address_1']
+    address_2 = request.form['company_address_2']
+    allowance = request.form['allowance']
+    sup_name = request.form['company_sup_name']
+    sup_email = request.form['company_sup_email']
+    acceptance_form = request.form['acceptance_form']
+    ack_form = request.form['ack_form']
+    indemnity_form = request.form['indemnity_form']
+
+    # Upload files to S3 first
+    acf_url = ""
+    ack_url = ""
+    ind_url = ""
+    try:
+        acf_filename_in_s3 = f"forms/{loginNric}/company_acceptance_form"
+        ack_filename_in_s3 = f"forms/{loginNric}/parent_acknowledgement_form"
+        ind_filename_in_s3 = f"forms/{loginNric}/letter_of_indemnity"
+
+        s3 = boto3.resource('s3')
+        s3.Bucket(custombucket).put_object(
+            Key=acf_filename_in_s3, Body=acceptance_form)
+        s3.Bucket(custombucket).put_object(
+            Key=ack_filename_in_s3, Body=ack_form)
+        s3.Bucket(custombucket).put_object(
+            Key=ind_filename_in_s3, Body=indemnity_form)
+
+        bucket_location = boto3.client(
+            's3').get_bucket_location(Bucket=custombucket)
+        s3_location = (bucket_location['LocationConstraint'])
+
+        if s3_location is None:
+            s3_location = ''
+        else:
+            s3_location = '-' + s3_location
+        
+        acf_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            acf_filename_in_s3)
+        ack_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            ack_filename_in_s3)
+        ind_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            ind_filename_in_s3)
+        
+    except Exception as e:
+        return str(e)
+
+    # Insert data to SQL/RDS
+    try:    
+        cursor = db_conn.cursor()
+        cursor.execute(f"INSERT INTO `company` (`id`, `name`, `address_1`, `address_2`, `deleted`) VALUES (NULL, '{name}', '{address_1}', '{address_2}', '0');")
+        db_conn.commit()
+
+        cursor.execute(f'''
+                        SELECT `student`.`id`
+                        FROM `student`
+                        WHERE `student`.`nric` = '{loginNric}' AND `student`.`email` = '{loginEmail}';
+                       ''')
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Invalid login!"
+
+        student_id = output[0][0]
+
+        cursor.execute(f'''
+                        SELECT `company`.`id`
+                        FROM `company`
+                        WHERE `company`.`name` = '{name}' AND `company`.`address_1` = '{address_1}' AND `company`.`address_2` = '{address_2}';
+                       ''')
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Invalid login!"
+
+        company_id = output[-1][0]
+
+        cursor.execute(f"INSERT INTO `student_company` (`id`, `student_id`, `company_id`, `monthly_allowance`, `company_supervisor_name`, `company_supervisor_email`, `company_acceptance_form_url`, `parent_acknowledgement_form_url`, `letter_of_indemnity_url`, `deleted`) VALUES (NULL, '{student_id}', '{company_id}', '{allowance}', '{sup_name}', '{sup_email}', '{acf_url}', '{ack_url}', '{ind_url}', '0');")
+        db_conn.commit()
+        
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    return redirect(url_for('studentHomepage'))
 
 @app.route("/test", methods=["GET"])
 def test():
@@ -143,74 +312,6 @@ def test():
     print(output)
     print(type(output))
     return render_template('test.html', output=output)
-
-
-@app.route("/signupApi", methods=['POST'])
-def signupApi():
-    # Personal Data
-    profile_picture = request.form['profile_picture']
-    name = request.form['name']
-    nric = request.form['nric']
-    gender = request.form['gender']
-    transport = request.form['transport']
-    health_remark = request.form['health_remark']
-
-    # Academic Detail
-    student_id = request.form['student_id']
-    tutorial_group = request.form['tutorial_group']
-    cgpa = request.form['cgpa']
-    education_level = request.form['education_level']
-    cohort = request.form['cohort']
-    programme = request.form['programme']
-    supervisor = request.form['supervisor']
-
-    # Contact Information
-    email = request.form['email']
-    term_address = request.form['term_address']
-    permanent_address = request.form['permanent_address']
-    mobile_phone = request.form['mobile_phone']
-    fixed_phone = request.form['fixed_phone']
-
-    # Technical Knowledge
-    programming_knowledge = request.form['programming_knowledge']
-    database_knowledge = request.form['database_knowledge']
-    networking_knowledge = request.form['networking_knowledge']
-
-    # Upload image to S3 first
-    try:
-        pfp_filename_in_s3 = "pfp/" +  "pfp-" + str(student_id)
-
-        s3 = boto3.resource('s3')
-        s3.Bucket(custombucket).put_object(
-            Key=pfp_filename_in_s3, Body=profile_picture)
-        bucket_location = boto3.client(
-            's3').get_bucket_location(Bucket=custombucket)
-        s3_location = (bucket_location['LocationConstraint'])
-
-        if s3_location is None:
-            s3_location = ''
-        else:
-            s3_location = '-' + s3_location
-        
-        pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
-            s3_location,
-            custombucket,
-            pfp_filename_in_s3)
-    except Exception as e:
-        return str(e)
-    
-    try:    
-        # Insert record to sql
-        cursor = db_conn.cursor()
-        insert_sql = f"INSERT INTO `student` (`id`, `profile_picture_url`, `name`, `nric`, `gender`, `transport`, `health_remark`, `student_id`, `tutorial_group`, `cgpa`, `education_level_id`, `cohort_id`, `programme_id`, `supervisor_id`, `email`, `term_address`, `permanent_address`, `mobile_phone`, `fixed_phone`, `programming_knowledge`, `database_knowledge`, `networking_knowledge`, `deleted`) VALUES (NULL, '{pfp_url}', '{name}', '{nric}', '{gender}', '{transport}', '{health_remark}', '{student_id}', '{tutorial_group}', '{cgpa}', '{education_level}', '{cohort}', '{programme}', '{supervisor}', '{email}', '{term_address}', '{permanent_address}', '{mobile_phone}', '{fixed_phone}', '{programming_knowledge}', '{database_knowledge}', '{networking_knowledge}', '0');"
-        cursor.execute(insert_sql)
-        db_conn.commit()
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-
-    return redirect(url_for('studentHomepage'))
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -276,7 +377,7 @@ def adminLoginApi():
         if each[1] == username and each[2] == password:
             global adminLoginState
             adminLoginState = True
-            return redirect(url_for('adminPortal'))
+            return redirect(url_for('adminHomepage'))
 
     return render_template('adminLogin.html', invalidLogin=True)
 
@@ -286,7 +387,7 @@ def adminLogoutApi():
     adminLoginState = False
     return redirect(url_for('home'))
 
-@app.route("/adminPortal", methods=["GET"])
+@app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
     return render_template('adminHomepage.html', invalidLogin=True)
 
