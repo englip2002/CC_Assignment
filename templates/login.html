@@ -55,19 +55,8 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="{{ url_for('home') }}"
+                            <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
                                 >Home</a
-                            >
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-current="page" href="#">Commitee</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-current="page" href="#"
-                                >Uni Supervisor</a
                             >
                         </li>
                         <li class="nav-item">
@@ -78,69 +67,96 @@
                                 >Student</a
                             >
                         </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                aria-current="page"
+                                href="{{ url_for('adminLogin') }}"
+                                >Admin</a
+                            >
+                        </li>
                     </ul>
-                    <form class="d-flex">
-                        <input
-                            class="form-control me-2"
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search" />
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                    <div style="margin-right: 1rem">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('adminLogin') }}"
+                            >Logout</a
+                        >
+                    </div>
                 </div>
             </div>
         </nav>
 
         <div class="flex-vertical">
-            <div class="login border border-2 border-secondary">
-                <div>
-                    <h1 class="title">Login to ITP</h1>
-                </div>
-                <div class="inputSpace">
-                    <div class="inputText">
-                        <p class="inputIndicator">Student ID:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                name="student_id"
-                                class="form-control"
-                                placeholder="e.g., 12WMD34567"
-                                aria-label="Email"
-                                aria-describedby="button-addon2" />
+            <form action="{{url_for('loginApi')}}" method="POST" id="login-form">
+                <div class="login border border-2 border-secondary">
+                    <div>
+                        <h1 class="title">Login to ITP</h1>
+                    </div>
+                    <div class="inputSpace">
+                        <div class="inputText">
+                            <p class="inputIndicator">Student Email:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    type="email"
+                                    name="email"
+                                    id="email"
+                                    class="form-control"
+                                    placeholder="e.g., 12WMD34567"
+                                    aria-label="Email"
+                                    aria-describedby="button-addon2" />
+                            </div>
+                        </div>
+                        <div class="inputText">
+                            <p class="inputIndicator">IC Number:</p>
+                            <div class="input-group mb-3">
+                                <input
+                                    required
+                                    type="text"
+                                    name="nric"
+                                    id="nric"
+                                    class="form-control"
+                                    placeholder="e.g., ********"
+                                    aria-label="Email"
+                                    aria-describedby="button-addon2" />
+                            </div>
+                        </div>
+                        <div class="inputText">
+                            <button
+                                class="btn btn-outline-secondary loginBtn"
+                                type="button"
+                                id="button-addon2">
+                                Login
+                            </button>
+                        </div>
+                        <div class="SignUp">
+                            <a href="{{ url_for('signUp') }}">Sign Up</a>
                         </div>
                     </div>
-                    <div class="inputText">
-                        <p class="inputIndicator">Password:</p>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                name="password"
-                                class="form-control"
-                                placeholder="e.g., ********"
-                                aria-label="Email"
-                                aria-describedby="button-addon2" />
-                        </div>
-                    </div>
-                    <div class="inputText">
-                        <button
-                            class="btn btn-outline-secondary loginBtn"
-                            type="button"
-                            id="button-addon2">
-                            Login
-                        </button>
-                    </div>
-                    <div class="SignUp">
-                        <a href="{{ url_for('signUp') }}">Sign Up</a>
-                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </body>
 
-    <footer>
-        <div>
-            <br />
-            <p style="margin-left: 5%">&#169; 2023 - TARUMT FOCS ITP</p>
-        </div>
-    </footer>
+        <footer>
+            <div>
+                <br />
+                <p style="margin-left: 5%">&#169; 2023 - TARUMT FOCS ITP</p>
+            </div>
+        </footer>
+
+        {% if invalidLogin %}
+        <div id="invalidLogin" style="display: none"></div>
+        {% endif %}
+
+        <script>
+            if (document.querySelector("#invalidLogin")) {
+                Swal.fire(
+                    "Oops..",
+                    "Your login details are incorrect! Please try again.",
+                    "error"
+                ).then((res) => {
+                    document.querySelector("#email").focus();
+                });
+            }
+        </script>
+    </body>
 </html>
