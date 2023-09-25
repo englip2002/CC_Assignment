@@ -2,240 +2,236 @@
 <html>
 
 <head>
-  <!-- Link to the external CSS file -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <!-- Link to the external CSS file -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navBar.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/portfolio.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navBar.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/portfolio.css') }}" />
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <title>Portfolio</title>
+    <title>Portfolio</title>
 </head>
 
 <body>
-  <!-- navigation bar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('home') }}">
-        <img src="{{ url_for('static', filename='images/tarumt-logo1.png') }}" alt="" width="172" height="56"
-          class="d-inline-block align-text-top" />
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('portfolio') }}">Portfolio</a>
-          </li>
-        </ul>
-        <div style="margin-right: 1rem">
-          <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
-              >Logout</a
-          >
-      </div>
-      </div>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/tarumt-logo1.png') }}" alt="" width="172" height="56"
+                    class="d-inline-block align-text-top" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('portfolio') }}">Portfolio</a>
+                    </li>
+                </ul>
+                <div style="margin-right: 1rem">
+                    <a class="nav-link" aria-current="page" href="{{ url_for('home') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="portfolio-container ">
+        <div class="flex-horizontal border border-2 border-secondary portfolio">
+            <div class="flex-vertical portfolio-left">
+                <div class="profile-pic">
+                    <img src="../static/images/TarumtLogo.png" width="150px" height="150px" />
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Name: </p>
+                    </div>
+                    <div class="content">
+                        <p>Tan Eng Lip</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Student ID: </p>
+                    </div>
+                    <div class="content">
+                        <p>22WMR05697</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Programme: </p>
+                    </div>
+                    <div class="content">
+                        <p>Degree in Software Engineering</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Email: </p>
+                    </div>
+                    <div class="content">
+                        <p>tanel-wm20@student.tarc.edu.my</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Mobile Number: </p>
+                    </div>
+                    <div class="content">
+                        <p>+6012-3456789</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 4%;">
+                    <h5>Skills</h5>
+                    <hr />
+                </div>
+
+                <div>
+                    <div class="flex-horizontal item-container">
+                        <div class="indicator">
+                            <p>Programming Knowledge: </p>
+                        </div>
+                        <div class="content">
+                            <p>Python, Java</p>
+                        </div>
+                    </div>
+                    <div class="flex-horizontal item-container">
+                        <div class="indicator">
+                            <p>Database Knowledege: </p>
+                        </div>
+                        <div class="content">
+                            <p>MySQL</p>
+                        </div>
+                    </div>
+                    <div class="flex-horizontal item-container">
+                        <div class="indicator">
+                            <p>Networking Knowledge: </p>
+                        </div>
+                        <div class="content">
+                            <p>CISCO</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="vl"></div>
+
+            <div class="flex-vertical portfolio-right">
+                <div>
+                    <h5>Internship Infromation</h5>
+                    <hr />
+                </div>
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Cohort: </p>
+                    </div>
+                    <div class="content">
+                        <p>2022 July</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Intern Period: </p>
+                    </div>
+                    <div class="content">
+                        <p>2023 Jan - 2023 July</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>TARUMT Supervisor: </p>
+                    </div>
+                    <div class="content">
+                        <p>Gok Gok Gok</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>UC Supervisor Email: </p>
+                    </div>
+                    <div class="content">
+                        <p>gok@gmail.com</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 4%;">
+                    <h5>Company Infromation</h5>
+                    <hr />
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Company Name: </p>
+                    </div>
+                    <div class="content">
+                        <p>Gok Company</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Company Address: </p>
+                    </div>
+                    <div class="content">
+                        <p>123,Jalan Malinda, Setapak, Kuala Lumpur</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Monthly Allowance: </p>
+                    </div>
+                    <div class="content">
+                        <p>RM 50</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Company Supervisor Name: </p>
+                    </div>
+                    <div class="content">
+                        <p>Gok 1</p>
+                    </div>
+                </div>
+
+                <div class="flex-horizontal item-container">
+                    <div class="indicator">
+                        <p>Company Supervisor Email: </p>
+                    </div>
+                    <div class="content">
+                        <p>Gok1@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </nav>
 
-
-  <div class="portfolio-container ">
-    <div class="flex-horizontal border border-2 border-secondary portfolio">
-      <div class="flex-vertical portfolio-left">
-        <div class="profile-pic">
-          <img src="../static/images/TarumtLogo.png" width="150px" height="150px" />
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Name: </p>
-          </div>
-          <div class="content">
-            <p>Tan Eng Lip</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Student ID: </p>
-          </div>
-          <div class="content">
-            <p>22WMR05697</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Programme: </p>
-          </div>
-          <div class="content">
-            <p>Degree in Software Engineering</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Email: </p>
-          </div>
-          <div class="content">
-            <p>tanel-wm20@student.tarc.edu.my</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Mobile Number: </p>
-          </div>
-          <div class="content">
-            <p>+6012-3456789</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 4%;">
-          <h5>Skills</h5>
-          <hr />
-        </div>
-
-        <div>
-          <div class="flex-horizontal item-container">
-            <div class="indicator">
-              <p>Programming Knowledge: </p>
-            </div>
-            <div class="content">
-              <p>Python, Java</p>
-            </div>
-          </div>
-          <div class="flex-horizontal item-container">
-            <div class="indicator">
-              <p>Database Knowledege: </p>
-            </div>
-            <div class="content">
-              <p>MySQL</p>
-            </div>
-          </div>
-          <div class="flex-horizontal item-container">
-            <div class="indicator">
-              <p>Networking Knowledge: </p>
-            </div>
-            <div class="content">
-              <p>CISCO</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="vl"></div>
-
-      <div class="flex-vertical portfolio-right">
-        <div>
-          <h5>Internship Infromation</h5>
-          <hr />
-        </div>
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Cohort: </p>
-          </div>
-          <div class="content">
-            <p>2022 July</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Intern Period: </p>
-          </div>
-          <div class="content">
-            <p>2023 Jan - 2023 July</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>TARUMT Supervisor: </p>
-          </div>
-          <div class="content">
-            <p>Gok Gok Gok</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>UC Supervisor Email: </p>
-          </div>
-          <div class="content">
-            <p>gok@gmail.com</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 4%;">
-          <h5>Company Infromation</h5>
-          <hr />
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Name: </p>
-          </div>
-          <div class="content">
-            <p>Gok Company</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Address: </p>
-          </div>
-          <div class="content">
-            <p>123,Jalan Malinda, Setapak, Kuala Lumpur</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Monthly Allowance: </p>
-          </div>
-          <div class="content">
-            <p>RM 50</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Supervisor Name: </p>
-          </div>
-          <div class="content">
-            <p>Gok 1</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Supervisor Email: </p>
-          </div>
-          <div class="content">
-            <p>Gok1@gmail.com</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
+    <footer class="footer">
+        <p>&#169; 2023 - TARUMT FOCS ITP</p>
+    </footer>
 </body>
-<footer>
-  <div>
-    <hr />
-    <p style="margin-left: 5%">&#169; 2023 - TARUMT FOCS ITP</p>
-  </div>
-</footer>
 
 </html>

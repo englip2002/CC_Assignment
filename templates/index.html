@@ -1,101 +1,63 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- Link to the external CSS file -->
-        <!-- Bootstrap -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous" />
 
-        <!-- Bootstrap CSS -->
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
+<head>
+    <!-- Link to the external CSS file -->
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
 
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="{{ url_for('static', filename='css/global.css') }}" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="{{ url_for('static', filename='css/navBar.css') }}" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="{{ url_for('static', filename='css/index.css') }}" />
-        <title>Homepage</title>
-    </head>
+    <!-- Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
-    <body>
-       <!-- navigation bar -->
-       <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navBar.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}" />
+    <title>Homepage</title>
+</head>
+
+<body>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('home') }}">
-                <img
-                    src="{{ url_for('static', filename='images/tarumt-logo1.png') }}"
-                    alt=""
-                    width="172"
-                    height="56"
+                <img src="{{ url_for('static', filename='images/tarumt-logo1.png') }}" alt="" width="172" height="56"
                     class="d-inline-block align-text-top" />
             </a>
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}"
-                            >Home</a
-                        >
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a
-                            class="nav-link "
-                            aria-current="page"
-                            href="{{ url_for('login') }}"
-                            >Student</a
-                        >
+                        <a class="nav-link " aria-current="page" href="{{ url_for('login') }}">Student</a>
                     </li>
                     <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            aria-current="page"
-                            href="{{ url_for('adminLogin') }}"
-                            >Admin</a
-                        >
+                        <a class="nav-link" aria-current="page" href="{{ url_for('adminLogin') }}">Admin</a>
                     </li>
                 </ul>
-        </div>
+            </div>
     </nav>
 
-        <div class="intro">
-            <h2 class="introTitle">FOCS ITP onMyFinger</h2>
-            <div class="logoAndText">
-                <img
-                    src="{{ url_for('static', filename='images/TarumtLogo.png') }}"
-                    width="240"
-                    ,
-                    height="240" />
-                <div>
-                    <h5>BAIT305C/AMIT3205/BMMC3205 Industrial Training Programme</h5>
-                    <p>
-                        <b>Industrial Training</b> is a compulsory programme that open doors for
-                        internship essentials. The programme focuses on student internship
-                        attachment, as evidence of work capabilities such as expanding professional
-                        network, social values, work quality and ethics.
-                    </p>
-                </div>
+    <div class="intro">
+        <h2 class="introTitle">FOCS ITP onMyFinger</h2>
+        <div class="logoAndText">
+            <img class="introLogo" src="{{ url_for('static', filename='images/TarumtLogo.png') }}" width="240" , height="240" />
+            <div class="introText">
+                <h5>BAIT305C/AMIT3205/BMMC3205 Industrial Training Programme</h5>
+                <p>
+                    <b>Industrial Training</b> is a compulsory programme that open doors for
+                    internship essentials. The programme focuses on student internship
+                    attachment, as evidence of work capabilities such as expanding professional
+                    network, social values, work quality and ethics.
+                </p>
             </div>
         </div>
 
@@ -105,12 +67,11 @@
                 Technology (FOCS) to submit their ITP related documents.
             </p>
         </div>
+    </div>
+</body>
 
-        <footer>
-            <div>
-                <br />
-                <p style="margin-left: 5%">&#169; 2023 - TARUMT FOCS ITP</p>
-            </div>
-        </footer>
-    </body>
+    <footer class="footer">
+        <p>&#169; 2023 - TARUMT FOCS ITP</p>
+    </footer>
+
 </html>
