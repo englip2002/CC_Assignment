@@ -1,3 +1,7 @@
 node_modules
 
 __pycache__
+
+__pycache/ItpApp.cpython-39.pyc
+
+__pycache/config.cpython-39.pyc
