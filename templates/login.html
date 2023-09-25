@@ -77,16 +77,15 @@
                         </li>
                     </ul>
                     <div style="margin-right: 1rem">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('adminLogin') }}"
+                        <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
                             >Logout</a
                         >
                     </div>
                 </div>
             </div>
         </nav>
-
-        <div class="flex-vertical">
-            <form action="{{url_for('loginApi')}}" method="POST" id="login-form">
+        <form action="{{url_for('loginApi')}}" method="POST" id="login-form">
+            <div class="flex-vertical">
                 <div class="login border border-2 border-secondary">
                     <div>
                         <h1 class="title">Login to ITP</h1>
@@ -101,7 +100,7 @@
                                     name="email"
                                     id="email"
                                     class="form-control"
-                                    placeholder="e.g., 12WMD34567"
+                                    placeholder="xxx-xx99@student.tarc.edu.my"
                                     aria-label="Email"
                                     aria-describedby="button-addon2" />
                             </div>
@@ -115,7 +114,7 @@
                                     name="nric"
                                     id="nric"
                                     class="form-control"
-                                    placeholder="e.g., ********"
+                                    placeholder="999999-99-9999"
                                     aria-label="Email"
                                     aria-describedby="button-addon2" />
                             </div>
@@ -133,8 +132,8 @@
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
 
         <footer>
             <div>
