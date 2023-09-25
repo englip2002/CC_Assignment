@@ -1,3 +1,8 @@
-.navBar{
+.navBar {
     margin-bottom: 50px;
+}
+
+.navBar img {
+    margin: 5px;
+    margin-left: 20px;
 }

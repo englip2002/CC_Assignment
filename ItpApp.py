@@ -287,8 +287,12 @@ def adminLogoutApi():
     return redirect(url_for('home'))
 
 @app.route("/adminPortal", methods=["GET"])
-def adminPortal():
-    return "NIAMABDUICBYUVA"
+def adminHomepage():
+    return render_template('adminHomepage.html', invalidLogin=True)
+
+@app.route("/studentDetail", methods=["GET"])
+def studentDetail():
+    return render_template('studentDetail.html', invalidLogin=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

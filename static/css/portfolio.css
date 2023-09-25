@@ -14,25 +14,25 @@
     flex-direction: row;
 }
 
-.profile-pic{
+.profile-pic {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.portfolio-container{
+.portfolio-container {
     display: flex;
     justify-content: center;
 
 }
 
-.portfolio{
+.portfolio {
     width: 80%;
     background-color: white;
     padding: 3%;
 }
 
-.portfolio-left{
+.portfolio-left {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,12 +41,12 @@
 }
 
 .vl {
-  border-left: 1px solid black;
-  height: 100%;
+    border-left: 1px solid black;
+    height: 100%;
 }
 
 
-.portfolio-right{
+.portfolio-right {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +54,7 @@
     padding-left: 4%;
 }
 
-.item-container{
+.item-container {
     margin-top: 2%;
 }
 
@@ -65,7 +65,7 @@
     margin-right: 3%;
 }
 
-.content{
+.content {
     width: 50%;
     text-align: left;
 }
