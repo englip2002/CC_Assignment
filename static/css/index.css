@@ -6,12 +6,6 @@
     margin: 0% 10% 50px 10%;
 }
 
-@media (max-height: 690px) or (max-width: 991.2px) {
-    .intro {
-        margin: 0% 10% 100px 10%;
-    }
-}
-
 .logoAndText {
     display: flex;
     flex-direction: row;

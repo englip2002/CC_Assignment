@@ -11,7 +11,7 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navBar.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/portfolio.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/studentHomepage.css') }}" />
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -47,14 +47,14 @@
     </nav>
 
 
-    <div class="portfolio-container ">
-        <div class="flex-horizontal border border-2 border-secondary portfolio">
-            <div class="flex-vertical portfolio-left">
+    <div class="flexJustify">
+        <div class="flexJustify border border-2 border-secondary portfolio">
+            <div class="flexCenter portfolio-left">
                 <div class="profile-pic">
                     <img src="../static/images/TarumtLogo.png" width="150px" height="150px" />
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Name: </p>
                     </div>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Student ID: </p>
                     </div>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Programme: </p>
                     </div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Email: </p>
                     </div>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Mobile Number: </p>
                     </div>
@@ -104,43 +104,40 @@
                     <hr />
                 </div>
 
-                <div>
-                    <div class="flex-horizontal item-container">
-                        <div class="indicator">
-                            <p>Programming Knowledge: </p>
-                        </div>
-                        <div class="content">
-                            <p>Python, Java</p>
-                        </div>
+                <div class="flexJustify item-container">
+                    <div class="indicator">
+                        <p>Programming Knowledge: </p>
                     </div>
-                    <div class="flex-horizontal item-container">
-                        <div class="indicator">
-                            <p>Database Knowledege: </p>
-                        </div>
-                        <div class="content">
-                            <p>MySQL</p>
-                        </div>
-                    </div>
-                    <div class="flex-horizontal item-container">
-                        <div class="indicator">
-                            <p>Networking Knowledge: </p>
-                        </div>
-                        <div class="content">
-                            <p>CISCO</p>
-                        </div>
+                    <div class="content">
+                        <p>Python, Java</p>
                     </div>
                 </div>
-
+                <div class="flexJustify item-container">
+                    <div class="indicator">
+                        <p>Database Knowledge: </p>
+                    </div>
+                    <div class="content">
+                        <p>MySQL</p>
+                    </div>
+                </div>
+                <div class="flexJustify item-container">
+                    <div class="indicator">
+                        <p>Networking Knowledge: </p>
+                    </div>
+                    <div class="content">
+                        <p>CISCO</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="vl"></div>
+            <div class="divider"></div>
 
-            <div class="flex-vertical portfolio-right">
+            <div class="flexCenter portfolio-right">
                 <div>
-                    <h5>Internship Infromation</h5>
+                    <h5>Internship Information</h5>
                     <hr />
                 </div>
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Cohort: </p>
                     </div>
@@ -149,7 +146,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Intern Period: </p>
                     </div>
@@ -158,16 +155,16 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
-                        <p>TARUMT Supervisor: </p>
+                        <p>UC Supervisor: </p>
                     </div>
                     <div class="content">
                         <p>Gok Gok Gok</p>
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>UC Supervisor Email: </p>
                     </div>
@@ -177,11 +174,11 @@
                 </div>
 
                 <div style="margin-top: 4%;">
-                    <h5>Company Infromation</h5>
+                    <h5>Company Information</h5>
                     <hr />
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Company Name: </p>
                     </div>
@@ -190,16 +187,16 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Company Address: </p>
                     </div>
                     <div class="content">
-                        <p>123,Jalan Malinda, Setapak, Kuala Lumpur</p>
+                        <p>123, Jalan Malinda, Setapak, Kuala Lumpur</p>
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Monthly Allowance: </p>
                     </div>
@@ -208,7 +205,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Company Supervisor Name: </p>
                     </div>
@@ -217,7 +214,7 @@
                     </div>
                 </div>
 
-                <div class="flex-horizontal item-container">
+                <div class="flexJustify item-container">
                     <div class="indicator">
                         <p>Company Supervisor Email: </p>
                     </div>
