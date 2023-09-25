@@ -65,6 +65,10 @@ def signUp():
 def studentHomepage():
     return render_template('studentHomepage.html')
 
+@app.route("/portfolio", methods=['GET', 'POST'])
+def portfolio():
+    return render_template('portfolio.html')
+
 @app.route("/test", methods=["GET"])
 def test():
     cursor = db_conn.cursor()
