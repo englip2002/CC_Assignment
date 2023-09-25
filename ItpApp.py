@@ -11,7 +11,6 @@ bucket = custombucket
 region = customregion
 
 global loginState, loginNric, loginEmail
-
 loginState = False
 loginNric = ""
 loginEmail = ""
@@ -36,7 +35,6 @@ def selectAllFromTable(tableName):
         cursor.execute("select * from " + tableName + " WHERE deleted=0")
         output = cursor.fetchall()
     except Exception as e:
-        cursor.close()
         return str(e)
     finally:
         cursor.close()
@@ -68,11 +66,72 @@ def signUp():
 
 @app.route("/studentHomepage", methods=['GET', 'POST'])
 def studentHomepage():
-    return render_template('studentHomepage.html')
+    global loginState, loginNric, loginEmail
 
-@app.route("/portfolio", methods=['GET', 'POST'])
-def portfolio():
-    return render_template('portfolio.html')
+    if not loginState:
+        return redirect(url_for('home'))
+    
+    try:
+        cursor = db_conn.cursor()
+        
+        # Student Info
+        cursor.execute(f'''
+            SELECT `student`.*, `cohort`.`name` AS `cohort.name`, `cohort`.`period` AS `cohort.period`, `education_level`.`name` AS `education_level.name`, `programme`.`name` AS `programme.name`, `programme`.`code` AS `programme.code`, `supervisor`.`name` AS `supervisor.name`, `supervisor`.`email` AS `supervisor.email`
+            FROM `student` 
+                LEFT JOIN `cohort` ON `student`.`cohort_id` = `cohort`.`id` 
+                LEFT JOIN `education_level` ON `student`.`education_level_id` = `education_level`.`id` 
+                LEFT JOIN `programme` ON `student`.`programme_id` = `programme`.`id` 
+                LEFT JOIN `supervisor` ON `student`.`supervisor_id` = `supervisor`.`id`
+            WHERE `student`.`deleted`='0';
+            ''')
+        output = cursor.fetchall()
+        
+        # Student Table Columns
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
+        columns = cursor.fetchall()
+
+        # Company Info
+        cursor.execute(f'''
+            SELECT student_company.*, company.*
+            FROM student_company
+                LEFT JOIN company ON student_company.company_id = company.id
+            WHERE student_company.student_id = '{output[0][0]}' AND student_company.deleted = '0' AND company.deleted = '0';
+            ''')
+        companyOutput = cursor.fetchall()
+
+        # Company columns
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student_company' and table_schema='{customdb}' order by ordinal_position")
+        scColumns = cursor.fetchall()
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'company' and table_schema='{customdb}' order by ordinal_position")
+        cColumns = cursor.fetchall()
+        
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    fColumns = list(map(lambda x: x[0], columns))
+    fColumns.extend(["cohort_name", "cohort_period", "education_level_name", "programme_name", "programme_code", "supervisor_name", "supervisor_email"])
+    
+    fOutput = {}
+    for i, each in enumerate(fColumns):
+        fOutput[each] = output[0][i]
+
+    companyInfo = {}
+    tempColumns = list(scColumns)
+    tempColumns.extend(list(cColumns))
+    if len(companyOutput) > 0:
+        for i, each in enumerate(tempColumns):
+            companyInfo[each[0]] = companyOutput[0][i]
+    else:
+        for i, each in enumerate(tempColumns):
+            companyInfo[each[0]] = "-"
+
+    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo)
+
+@app.route("/registerCompany", methods=['GET', 'POST'])
+def registerCompany():
+    return render_template('registerCompany.html')
 
 @app.route("/test", methods=["GET"])
 def test():
@@ -151,11 +210,16 @@ def signupApi():
     finally:
         cursor.close()
 
-    return redirect(url_for('home'))
+    return redirect(url_for('studentHomepage'))
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    global loginState, loginNric, loginEmail
+
+    if loginState:
+        return redirect(url_for('studentHomepage'))
+    
     return render_template('login.html')
 
 
@@ -179,16 +243,26 @@ def loginApi():
             loginState = True
             loginEmail = each[1]
             loginNric = each[0]
-            return redirect(url_for('home'))
+            return redirect(url_for('studentHomepage'))
 
     return render_template('login.html', invalidLogin=True)
 
-    
+
+@app.route("/logoutApi", methods=['GET', 'POST'])
+def logoutApi():
+    global loginState, loginEmail, loginNric
+    loginState = False
+    loginEmail = ""
+    loginNric = ""
+    return redirect(url_for('home'))
+
+
+global adminLoginState
+adminLoginState = False
 
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
     return render_template('adminLogin.html')
-
 
 
 @app.route("/adminLogin", methods=["POST"])
@@ -200,10 +274,17 @@ def adminLoginApi():
 
     for each in output:
         if each[1] == username and each[2] == password:
+            global adminLoginState
+            adminLoginState = True
             return redirect(url_for('adminPortal'))
 
     return render_template('adminLogin.html', invalidLogin=True)
 
+@app.route("/adminLogoutApi", methods=["GET", "POST"])
+def adminLogoutApi():
+    global adminLoginState
+    adminLoginState = False
+    return redirect(url_for('home'))
 
 @app.route("/adminPortal", methods=["GET"])
 def adminPortal():
