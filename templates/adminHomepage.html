@@ -36,10 +36,13 @@
             <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">Student</a>
+            <a class="nav-link disabled" aria-current="page" href="#">Commitee</a>
           </li>
-          <li>
-            <a class="nav-link active" aria-current="page" href="{{ url_for('portfolio') }}">View Portfolio</a>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-current="page" href="#">Uni Supervisor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">Student</a>
           </li>
         </ul>
         <form class="d-flex">
@@ -53,14 +56,128 @@
   </nav>
 
   <div class="flex-vertical">
-    <div class="title">
-      <h1>Welcome: {{name}}</h1>
+    <div>
+      <h1 class="title">Welcome: {{name}}</h1>
     </div>
 
     <div class="stdHP border border-secondary">
       <div class="subTitle" style="margin-bottom: 0%">
-        <p style="padding-left: 3%;">Company Detail</p>
-        <p style="padding-left: 3%; color: red;">*Please fill in the following details when internship company is found.</p>
+        <p style="padding-left: 3%">Summary</p>
+        <hr />
+      </div>
+
+      <div class="flex-vertical">
+        <div class="inputText">
+          <p class="inputIndicator">Cohort:</p>
+          <div class="input-group mb-3">
+            <p>{{cohort}}</p>
+          </div>
+        </div>
+
+        <div class="inputText">
+          <p class="inputIndicator">Intern Period:</p>
+          <div class="input-group mb-3">
+            <p>{{InternPeriod}}</p>
+          </div>
+        </div>
+
+        <div class="inputText">
+          <p class="inputIndicator">Status:</p>
+          <div class="input-group mb-3">
+            <p>{{Status}}</p>
+          </div>
+        </div>
+        <div class="inputText">
+          <p class="inputIndicator">Remark:</p>
+          <div class="input-group mb-3">
+            <p>{{Remark}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stdHP border border-secondary">
+      <div class="subTitle" style="margin-bottom: 0%">
+        <p style="padding-left: 3%">Student Detail</p>
+        <hr />
+      </div>
+
+      <div class="flex-vertical">
+        <div class="inputText">
+          <p class="inputIndicator">Student Name:</p>
+          <div class="input-group mb-3">
+            <p>{{name}}</p>
+          </div>
+        </div>
+
+        <div class="inputText">
+          <p class="inputIndicator">Student ID:</p>
+          <div class="input-group mb-3">
+            <p>{{studentID}}</p>
+          </div>
+        </div>
+
+        <div class="inputText">
+          <p class="inputIndicator">NRIC No.:</p>
+          <div class="input-group mb-3">
+            <p>{{NRIC}}</p>
+          </div>
+        </div>
+        <div class="inputText">
+          <p class="inputIndicator">Gender:</p>
+          <div class="input-group mb-3">
+            <p>{{Gender}}</p>
+          </div>
+        </div>
+        <div class="inputText">
+          <p class="inputIndicator">Programme:</p>
+          <div class="input-group mb-3">
+            <p>{{Programme}}</p>
+          </div>
+        </div>
+
+        <div class="inputText">
+          <p class="inputIndicator">Student Email:</p>
+          <div class="input-group mb-3">
+            <p>{{StudentEmail}}</p>
+          </div>
+        </div>
+
+        <div class="inputText">
+          <p class="inputIndicator">Mobile Number:</p>
+          <div class="input-group mb-3">
+            <p>{{MobileNumber}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="stdHP border border-secondary">
+      <div class="subTitle" style="margin-bottom: 0%">
+        <p style="padding-left: 3%">UC Supervisor</p>
+        <hr />
+      </div>
+
+      <div class="flex-vertical">
+        <div class="inputText">
+          <p class="inputIndicator">UC Supervisor Name:</p>
+          <div class="input-group mb-3">
+            <p>{{supName}}</p>
+          </div>
+        </div>
+        <div class="inputText">
+          <p class="inputIndicator">UC Supervisor Name:</p>
+          <div class="input-group mb-3">
+            <p>{{supEmail}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stdHP border border-secondary">
+      <div class="subTitle" style="margin-bottom: 0%">
+        <p style="padding-left: 3%">Company Detail</p>
         <hr />
       </div>
 

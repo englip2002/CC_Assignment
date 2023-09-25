@@ -1,7 +1,9 @@
 .title {
-    text-align: center;
+    text-align: left;
     color: black;
     font-weight: bold;
+    width: 100%;
+    padding-left: 20%;
 }
 
 .subTitle {
@@ -13,7 +15,7 @@
     font-weight: bolder;
 }
 
-.signUp {
+.stdHP {
     width: 80%;
     background-color: white;
     border-radius: 5px;
