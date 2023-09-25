@@ -19,8 +19,9 @@ try:
         db=customdb
     )
     print("Database connection success!")
-except:
+except Exception as e:
     print("Database connection failed!")
+    print(e)
 
 
 def selectAllFromTable(tableName):
