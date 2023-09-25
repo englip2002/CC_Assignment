@@ -11,11 +11,11 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}" />
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navBar.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/portfolio.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/studentHomepage.css') }}" />
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <title>Portfolio</title>
+  <title>Student Homepage</title>
 </head>
 
 <body>
@@ -36,206 +36,102 @@
             <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" aria-current="page" href="#">Commitee</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" aria-current="page" href="#">Uni Supervisor</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">Student</a>
           </li>
+          <li>
+            <a class="nav-link active" aria-current="page" href="{{ url_for('studentHomepage') }}">Student Homepage</a>
+          </li>
         </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-          <button class="btn btn-outline-success" type="submit">
-            Search
-          </button>
-        </form>
+        <div style="margin-right: 1rem">
+          <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
+              >Logout</a
+          >
+      </div>
       </div>
     </div>
   </nav>
 
+  <div class="flex-vertical">
+    <div class="title">
+      <h1>Welcome: {{name}}</h1>
+    </div>
 
-  <div class="portfolio-container ">
-    <div class="flex-horizontal border border-2 border-secondary portfolio">
-      <div class="flex-vertical portfolio-left">
-        <div class="profile-pic">
-          <img src="../static/images/TarumtLogo.png" width="150px" height="150px" />
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Name: </p>
-          </div>
-          <div class="content">
-            <p>Tan Eng Lip</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Student ID: </p>
-          </div>
-          <div class="content">
-            <p>22WMR05697</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Programme: </p>
-          </div>
-          <div class="content">
-            <p>Degree in Software Engineering</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Email: </p>
-          </div>
-          <div class="content">
-            <p>tanel-wm20@student.tarc.edu.my</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Mobile Number: </p>
-          </div>
-          <div class="content">
-            <p>+6012-3456789</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 4%;">
-          <h5>Skills</h5>
-          <hr />
-        </div>
-
-        <div>
-          <div class="flex-horizontal item-container">
-            <div class="indicator">
-              <p>Programming Knowledge: </p>
-            </div>
-            <div class="content">
-              <p>Python, Java</p>
-            </div>
-          </div>
-          <div class="flex-horizontal item-container">
-            <div class="indicator">
-              <p>Database Knowledege: </p>
-            </div>
-            <div class="content">
-              <p>MySQL</p>
-            </div>
-          </div>
-          <div class="flex-horizontal item-container">
-            <div class="indicator">
-              <p>Networking Knowledge: </p>
-            </div>
-            <div class="content">
-              <p>CISCO</p>
-            </div>
-          </div>
-        </div>
-
+    <div class="stdHP border border-secondary">
+      <div class="subTitle" style="margin-bottom: 0%">
+        <p style="padding-left: 3%;">Company Detail</p>
+        <p style="padding-left: 3%; color: red;">*Please fill in the following details when internship company is found.</p>
+        <hr />
       </div>
 
-      <div class="vl"></div>
-
-      <div class="flex-vertical portfolio-right">
-        <div>
-          <h5>Internship Infromation</h5>
-          <hr />
-        </div>
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Cohort: </p>
-          </div>
-          <div class="content">
-            <p>2022 July</p>
+      <div class="flex-vertical">
+        <div class="inputText">
+          <p class="inputIndicator">Company Name:</p>
+          <div class="input-group mb-3">
+            <input required name="company_name" id="company_name" type="text" class="form-control"
+              placeholder="Your Company Name" />
           </div>
         </div>
 
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Intern Period: </p>
+        <div class="inputText">
+          <p class="inputIndicator">Address 1:</p>
+          <div class="input-group mb-3">
+            <textarea required name="company_address_1" id="company_address_1" type="text" class="form-control">
+            </textarea>
           </div>
-          <div class="content">
-            <p>2023 Jan - 2023 July</p>
+        </div>
+        <div class="inputText">
+          <p class="inputIndicator">Address 2:</p>
+          <div class="input-group mb-3">
+            <textarea required name="company_address_2" id="company_address_2" type="text" class="form-control">
+            </textarea>
           </div>
         </div>
 
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>TARUMT Supervisor: </p>
-          </div>
-          <div class="content">
-            <p>Gok Gok Gok</p>
+        <div class="inputText">
+          <p class="inputIndicator">Monthly Allowance:</p>
+          <div class="input-group mb-3">
+            <input required name="allowance" id="allowance" type="number" class="form-control" placeholder="0" />
           </div>
         </div>
 
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>UC Supervisor Email: </p>
-          </div>
-          <div class="content">
-            <p>gok@gmail.com</p>
+        <div class="inputText">
+          <p class="inputIndicator">Company Supervisor Name:</p>
+          <div class="input-group mb-3">
+            <input required name="company_sup_name" id="company_sup_name" type="text" class="form-control" />
           </div>
         </div>
 
-        <div style="margin-top: 4%;">
-          <h5>Company Infromation</h5>
-          <hr />
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Name: </p>
-          </div>
-          <div class="content">
-            <p>Gok Company</p>
+        <div class="inputText">
+          <p class="inputIndicator">Company Supervisor Email:</p>
+          <div class="input-group mb-3">
+            <input required name="company_sup_email" id="company_sup_email" type="email" class="form-control" />
           </div>
         </div>
 
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Address: </p>
-          </div>
-          <div class="content">
-            <p>123,Jalan Malinda, Setapak, Kuala Lumpur</p>
+        <div class="inputText">
+          <p class="inputIndicator">Company Acceptance Form:</p>
+          <div class="input-group mb-3">
+            <input required name="acceptance_form" id="acceptance_form" type="file" class="form-control" accept="application/pdf"/>
           </div>
         </div>
 
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Monthly Allowance: </p>
-          </div>
-          <div class="content">
-            <p>RM 50</p>
+        <div class="inputText">
+          <p class="inputIndicator">Parent Acknowledgement Form:</p>
+          <div class="input-group mb-3">
+            <input required name="ack_form" id="ack_form" type="file" class="form-control" accept="application/pdf"/>
           </div>
         </div>
 
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Supervisor Name: </p>
+        <div class="inputText">
+          <p class="inputIndicator">Letter of Indemnity:</p>
+          <div class="input-group mb-3">
+            <input required name="indemnity_form" id="indemnity_form" type="file" class="form-control" accept="application/pdf"/>
           </div>
-          <div class="content">
-            <p>Gok 1</p>
-          </div>
-        </div>
-
-        <div class="flex-horizontal item-container">
-          <div class="indicator">
-            <p>Company Supervisor Email: </p>
-          </div>
-          <div class="content">
-            <p>Gok1@gmail.com</p>
-          </div>
-        </div>
+        </div>        
       </div>
-
+      <div class="flex-horizontal" style="margin-top: 3%;">
+        <button type="submit" class="btn btn-success">Save And Submit</button>
+    </div>
     </div>
   </div>
 </body>
