@@ -11,7 +11,6 @@ bucket = custombucket
 region = customregion
 
 global loginState, loginNric, loginEmail
-
 loginState = False
 loginNric = ""
 loginEmail = ""
@@ -36,7 +35,6 @@ def selectAllFromTable(tableName):
         cursor.execute("select * from " + tableName + " WHERE deleted=0")
         output = cursor.fetchall()
     except Exception as e:
-        cursor.close()
         return str(e)
     finally:
         cursor.close()
@@ -64,27 +62,6 @@ def signUp():
                            cohortList=cohortList,
                            programmeList=json.dumps(programmeList),
                            supervisorList=supervisorList)
-    # return render_template('signUp.html')
-
-@app.route("/studentHomepage", methods=['GET', 'POST'])
-def studentHomepage():
-    return render_template('studentHomepage.html')
-
-@app.route("/portfolio", methods=['GET', 'POST'])
-def portfolio():
-    return render_template('portfolio.html')
-
-@app.route("/test", methods=["GET"])
-def test():
-    cursor = db_conn.cursor()
-    cursor.execute("select * from supervisor")
-    output = cursor.fetchall()
-    cursor.close()
-
-    print(output)
-    print(type(output))
-    return render_template('test.html', output=output)
-
 
 @app.route("/signupApi", methods=['POST'])
 def signupApi():
@@ -118,6 +95,7 @@ def signupApi():
     networking_knowledge = request.form['networking_knowledge']
 
     # Upload image to S3 first
+    pfp_url = ""
     try:
         pfp_filename_in_s3 = "pfp/" +  "pfp-" + str(student_id)
 
@@ -151,11 +129,196 @@ def signupApi():
     finally:
         cursor.close()
 
-    return redirect(url_for('home'))
+    return redirect(url_for('studentHomepage'))
+
+@app.route("/studentHomepage", methods=['GET', 'POST'])
+def studentHomepage():
+    global loginState, loginNric, loginEmail
+
+    if not loginState:
+        return redirect(url_for('home'))
+    
+    try:
+        cursor = db_conn.cursor()
+        
+        # Student Info
+        cursor.execute(f'''
+            SELECT `student`.*, `cohort`.`name` AS `cohort.name`, `cohort`.`period` AS `cohort.period`, `education_level`.`name` AS `education_level.name`, `programme`.`name` AS `programme.name`, `programme`.`code` AS `programme.code`, `supervisor`.`name` AS `supervisor.name`, `supervisor`.`email` AS `supervisor.email`
+            FROM `student` 
+                LEFT JOIN `cohort` ON `student`.`cohort_id` = `cohort`.`id` 
+                LEFT JOIN `education_level` ON `student`.`education_level_id` = `education_level`.`id` 
+                LEFT JOIN `programme` ON `student`.`programme_id` = `programme`.`id` 
+                LEFT JOIN `supervisor` ON `student`.`supervisor_id` = `supervisor`.`id`
+            WHERE `student`.`deleted`='0';
+            ''')
+        output = cursor.fetchall()
+        
+        # Student Table Columns
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
+        columns = cursor.fetchall()
+
+        # Company Info
+        cursor.execute(f'''
+            SELECT student_company.*, company.*
+            FROM student_company
+                LEFT JOIN company ON student_company.company_id = company.id
+            WHERE student_company.student_id = '{output[0][0]}' AND student_company.deleted = '0' AND company.deleted = '0';
+            ''')
+        companyOutput = cursor.fetchall()
+
+        # Company columns
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student_company' and table_schema='{customdb}' order by ordinal_position")
+        scColumns = cursor.fetchall()
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'company' and table_schema='{customdb}' order by ordinal_position")
+        cColumns = cursor.fetchall()
+        
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    fColumns = list(map(lambda x: x[0], columns))
+    fColumns.extend(["cohort_name", "cohort_period", "education_level_name", "programme_name", "programme_code", "supervisor_name", "supervisor_email"])
+    
+    fOutput = {}
+    for i, each in enumerate(fColumns):
+        fOutput[each] = output[0][i]
+
+    companyInfo = False
+    if len(companyOutput) > 0:
+        companyInfo = {}
+        tempColumns = list(scColumns)
+        tempColumns.extend(list(cColumns))
+        for i, each in enumerate(tempColumns):
+            companyInfo[each[0]] = companyOutput[0][i]
+
+    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo)
+
+@app.route("/registerCompany", methods=['GET', 'POST'])
+def registerCompany():
+    global loginState, loginNric, loginEmail
+
+    if not loginState:
+        return redirect(url_for('home'))
+    
+    return render_template('registerCompany.html')
+
+@app.route("/registerCompanyApi", methods=['GET', 'POST'])
+def registerCompanyApi():
+    global loginState, loginNric, loginEmail
+
+    if not loginState:
+        return redirect(url_for('home'))
+
+    name = request.form['company_name']
+    address_1 = request.form['company_address_1']
+    address_2 = request.form['company_address_2']
+    allowance = request.form['allowance']
+    sup_name = request.form['company_sup_name']
+    sup_email = request.form['company_sup_email']
+    acceptance_form = request.form['acceptance_form']
+    ack_form = request.form['ack_form']
+    indemnity_form = request.form['indemnity_form']
+
+    # Upload files to S3 first
+    acf_url = ""
+    ack_url = ""
+    ind_url = ""
+    try:
+        acf_filename_in_s3 = f"forms/{loginNric}/company_acceptance_form"
+        ack_filename_in_s3 = f"forms/{loginNric}/parent_acknowledgement_form"
+        ind_filename_in_s3 = f"forms/{loginNric}/letter_of_indemnity"
+
+        s3 = boto3.resource('s3')
+        s3.Bucket(custombucket).put_object(
+            Key=acf_filename_in_s3, Body=acceptance_form)
+        s3.Bucket(custombucket).put_object(
+            Key=ack_filename_in_s3, Body=ack_form)
+        s3.Bucket(custombucket).put_object(
+            Key=ind_filename_in_s3, Body=indemnity_form)
+
+        bucket_location = boto3.client(
+            's3').get_bucket_location(Bucket=custombucket)
+        s3_location = (bucket_location['LocationConstraint'])
+
+        if s3_location is None:
+            s3_location = ''
+        else:
+            s3_location = '-' + s3_location
+        
+        acf_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            acf_filename_in_s3)
+        ack_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            ack_filename_in_s3)
+        ind_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            ind_filename_in_s3)
+        
+    except Exception as e:
+        return str(e)
+
+    # Insert data to SQL/RDS
+    try:    
+        cursor = db_conn.cursor()
+        cursor.execute(f"INSERT INTO `company` (`id`, `name`, `address_1`, `address_2`, `deleted`) VALUES (NULL, '{name}', '{address_1}', '{address_2}', '0');")
+        db_conn.commit()
+
+        cursor.execute(f'''
+                        SELECT `student`.`id`
+                        FROM `student`
+                        WHERE `student`.`nric` = '{loginNric}' AND `student`.`email` = '{loginEmail}';
+                       ''')
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Invalid login!"
+
+        student_id = output[0][0]
+
+        cursor.execute(f'''
+                        SELECT `company`.`id`
+                        FROM `company`
+                        WHERE `company`.`name` = '{name}' AND `company`.`address_1` = '{address_1}' AND `company`.`address_2` = '{address_2}';
+                       ''')
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Invalid login!"
+
+        company_id = output[-1][0]
+
+        cursor.execute(f"INSERT INTO `student_company` (`id`, `student_id`, `company_id`, `monthly_allowance`, `company_supervisor_name`, `company_supervisor_email`, `company_acceptance_form_url`, `parent_acknowledgement_form_url`, `letter_of_indemnity_url`, `deleted`) VALUES (NULL, '{student_id}', '{company_id}', '{allowance}', '{sup_name}', '{sup_email}', '{acf_url}', '{ack_url}', '{ind_url}', '0');")
+        db_conn.commit()
+        
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    return redirect(url_for('studentHomepage'))
+
+@app.route("/test", methods=["GET"])
+def test():
+    cursor = db_conn.cursor()
+    cursor.execute("select * from supervisor")
+    output = cursor.fetchall()
+    cursor.close()
+
+    print(output)
+    print(type(output))
+    return render_template('test.html', output=output)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    global loginState, loginNric, loginEmail
+
+    if loginState:
+        return redirect(url_for('studentHomepage'))
+    
     return render_template('login.html')
 
 
@@ -179,16 +342,26 @@ def loginApi():
             loginState = True
             loginEmail = each[1]
             loginNric = each[0]
-            return redirect(url_for('home'))
+            return redirect(url_for('studentHomepage'))
 
     return render_template('login.html', invalidLogin=True)
 
-    
+
+@app.route("/logoutApi", methods=['GET', 'POST'])
+def logoutApi():
+    global loginState, loginEmail, loginNric
+    loginState = False
+    loginEmail = ""
+    loginNric = ""
+    return redirect(url_for('home'))
+
+
+global adminLoginState
+adminLoginState = False
 
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
     return render_template('adminLogin.html')
-
 
 
 @app.route("/adminLogin", methods=["POST"])
@@ -200,12 +373,19 @@ def adminLoginApi():
 
     for each in output:
         if each[1] == username and each[2] == password:
-            return redirect(url_for('adminPortal'))
+            global adminLoginState
+            adminLoginState = True
+            return redirect(url_for('adminHomepage'))
 
     return render_template('adminLogin.html', invalidLogin=True)
 
+@app.route("/adminLogoutApi", methods=["GET", "POST"])
+def adminLogoutApi():
+    global adminLoginState
+    adminLoginState = False
+    return redirect(url_for('home'))
 
-@app.route("/adminPortal", methods=["GET"])
+@app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
     return render_template('adminHomepage.html', invalidLogin=True)
 
