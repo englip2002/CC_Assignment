@@ -184,15 +184,13 @@ def studentHomepage():
     for i, each in enumerate(fColumns):
         fOutput[each] = output[0][i]
 
-    companyInfo = {}
-    tempColumns = list(scColumns)
-    tempColumns.extend(list(cColumns))
+    companyInfo = False
     if len(companyOutput) > 0:
+        companyInfo = {}
+        tempColumns = list(scColumns)
+        tempColumns.extend(list(cColumns))
         for i, each in enumerate(tempColumns):
             companyInfo[each[0]] = companyOutput[0][i]
-    else:
-        for i, each in enumerate(tempColumns):
-            companyInfo[each[0]] = "-"
 
     return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo)
 
