@@ -41,8 +41,6 @@ def home():
     return render_template('index.html')
 
 # Static routes
-
-
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory(app.static_folder, filename)
@@ -50,16 +48,16 @@ def static_files(filename):
 
 @app.route("/signUp", methods=['GET', 'POST'])
 def signUp():
-    # edulevelList = selectAllFromTable("education_level")
-    # cohortList = selectAllFromTable("cohort")
-    # programmeList = selectAllFromTable("programme")
-    # supervisorList = selectAllFromTable("supervisor")
-    return render_template('signUp.html')
-    # return render_template('signUp.html',
-    #                        edulevelList=edulevelList,
-    #                        cohortList=cohortList,
-    #                        programmeList=json.dumps(programmeList),
-    #                        supervisorList=supervisorList)
+    edulevelList = selectAllFromTable("education_level")
+    cohortList = selectAllFromTable("cohort")
+    programmeList = selectAllFromTable("programme")
+    supervisorList = selectAllFromTable("supervisor")
+    return render_template('signUp.html',
+                           edulevelList=edulevelList,
+                           cohortList=cohortList,
+                           programmeList=json.dumps(programmeList),
+                           supervisorList=supervisorList)
+    # return render_template('signUp.html')
 
 @app.route("/studentHomepage", methods=['GET', 'POST'])
 def studentHomepage():
@@ -79,7 +77,15 @@ def test():
 
 @app.route("/signupApi", methods=['POST'])
 def signupApi():
+    # Personal Data
     profile_picture = request.form['profile_picture']
+    name = request.form['name']
+    nric = request.form['nric']
+    gender = request.form['gender']
+    transport = request.form['transport']
+    health_remark = request.form['health_remark']
+
+    # Academic Detail
     student_id = request.form['student_id']
     tutorial_group = request.form['tutorial_group']
     cgpa = request.form['cgpa']
@@ -87,6 +93,15 @@ def signupApi():
     cohort = request.form['cohort']
     programme = request.form['programme']
     supervisor = request.form['supervisor']
+
+    # Contact Information
+    email = request.form['email']
+    term_address = request.form['term_address']
+    permanent_address = request.form['permanent_address']
+    mobile_phone = request.form['mobile_phone']
+    fixed_phone = request.form['fixed_phone']
+
+    # Technical Knowledge
     programming_knowledge = request.form['programming_knowledge']
     database_knowledge = request.form['database_knowledge']
     networking_knowledge = request.form['networking_knowledge']
@@ -114,7 +129,7 @@ def signupApi():
 
         # Insert record to sql
         cursor = db_conn.cursor()
-        insert_sql = f"INSERT INTO `student` (`id`, `student_id`, `tutorial_group`, `cgpa`, `education_level_id`, `cohort_id`, `programme_id`, `supervisor_id`, `profile_picture_url`, `programming_knowledge`, `database_knowledge`, `networking_knowledge`, `deleted`) VALUES (NULL, '{student_id}', '{tutorial_group}', '{cgpa}', '{education_level}', '{cohort}', '{programme}', '{supervisor}', '{pfp_url}', '{programming_knowledge}', '{database_knowledge}', '{networking_knowledge}', '0')"
+        insert_sql = f"INSERT INTO `student` (`id`, `profile_picture_url`, `name`, `nric`, `gender`, `transport`, `health_remark`, `student_id`, `tutorial_group`, `cgpa`, `education_level_id`, `cohort_id`, `programme_id`, `supervisor_id`, `email`, `term_address`, `permanent_address`, `mobile_phone`, `fixed_phone`, `programming_knowledge`, `database_knowledge`, `networking_knowledge`, `deleted`) VALUES (NULL, '{pfp_url}', '{name}', '{nric}', '{gender}', '{transport}', '{health_remark}', '{student_id}', '{tutorial_group}', '{cgpa}', '{education_level}', '{cohort}', '{programme}', '{supervisor}', '{email}', '{term_address}', '{permanent_address}', '{mobile_phone}', '{fixed_phone}', '{programming_knowledge}', '{database_knowledge}', '{networking_knowledge}', '0');"
         cursor.execute(insert_sql)
         db_conn.commit()
 

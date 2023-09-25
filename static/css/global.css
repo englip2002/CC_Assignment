@@ -8,6 +8,10 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 .flexCenter {
     display: flex;
     justify-content: center;
