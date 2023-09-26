@@ -140,13 +140,12 @@
               <p class="inputIndicator">NRIC:</p>
               <div class="input-group mb-3">
                 <input
-                  required
-                  name="nric"
                   id="nric"
                   type="text"
                   class="form-control"
                   placeholder="e.g: 999999-99-9999"
                   value="{{studentInfo.nric}}"
+                  disabled
                 />
               </div>
             </div>
@@ -343,13 +342,12 @@
               <p class="inputIndicator">Personal Email:</p>
               <div class="input-group mb-3">
                 <input
-                  required
-                  name="email"
                   id="email"
                   type="email"
                   class="form-control"
                   placeholder="Any active personal email"
                   value="{{studentInfo.email}}"
+                  disabled
                 />
               </div>
             </div>
@@ -541,12 +539,7 @@
         let valid = true;
         let errorMessage;
 
-        if (!/[0-9]{6}-[0-9]{2}-[0-9]{4}/gm.test(document.querySelector('#nric').value)) {
-            valid = false;
-            toBeFocused = "#nric"
-            errorMessage = "Invalid Student IC format!"
-        }
-        else if (document.querySelector('#gender').value == "0") {
+        if (document.querySelector('#gender').value == "0") {
             valid = false;
             toBeFocused = "#gender"
             errorMessage = "Please choose a Gender!"
