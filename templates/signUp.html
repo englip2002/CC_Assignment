@@ -104,6 +104,7 @@
                         </select>
                     </div>
                     <div style="margin-bottom: 2%"></div>
+
                     <div class="inputText">
                         <p class="inputIndicator">Health Remark:</p>
                         <div class="input-group mb-3">
@@ -292,11 +293,11 @@
             </div>
         </div>
     </form>
-
-    <footer class="footer">
-        <p>&#169; 2023 - TARUMT FOCS ITP</p>
-    </footer>
 </body>
+
+<footer class="footer">
+    <p>&#169; 2023 - TARUMT FOCS ITP</p>
+</footer>
 
 <script>
     var jsProgrammeList = {{ programmeList | safe}}
@@ -316,15 +317,15 @@
         });
     })
 
-        var eduLevelInput =  document.querySelector('#level');
-        if (eduLevelInput.value != "0") {
-            let programmeInput = document.querySelector('#programme')
-            programmeInput.innerHTML = "";
-            programmeInput.disabled = false;
-            jsProgrammeList.filter(each => each[3] == eduLevelInput.value).forEach(el => {
-                programmeInput.innerHTML += `<option value="${el[0]}">${el[2]} - ${el[1]}</option>`;
-            });
-        }
+    var eduLevelInput = document.querySelector('#level');
+    if (eduLevelInput.value != "0") {
+        let programmeInput = document.querySelector('#programme')
+        programmeInput.innerHTML = "";
+        programmeInput.disabled = false;
+        jsProgrammeList.filter(each => each[3] == eduLevelInput.value).forEach(el => {
+            programmeInput.innerHTML += `<option value="${el[0]}">${el[2]} - ${el[1]}</option>`;
+        });
+    }
 
     // Textarea cleanup (in case of formatter mistake)
     document.querySelectorAll("textarea").forEach(each => {

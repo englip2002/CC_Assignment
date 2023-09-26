@@ -6,9 +6,7 @@ body {
     font-weight: 400;
     -webkit-font-smoothing: subpixel-antialiased;
     text-rendering: optimizeLegibility;
-    min-height: 100vh;
-    position: relative;
-    padding-bottom: 7rem;
+    margin-bottom: 5.5em;
 }
 
 html {
@@ -23,13 +21,13 @@ html {
 
 .footer {
     display: block;
-    position: absolute;
+    position: fixed;
     bottom: 0;
+    width: 100%;
+    padding: 1% 5%;
     text-align: left;
     background-color: black;
     color: white;
-    width: 100%;
-    padding: 1% 5%;
 }
 
 .footer p {
