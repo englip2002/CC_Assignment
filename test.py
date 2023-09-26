@@ -1,5 +1,6 @@
-x = (('id',), ('profile_picture_url',), ('name',), ('nric',), ('gender',), ('transport',), ('health_remark',), ('student_id',), ('tutorial_group',), ('cgpa',), ('education_level_id',), ('cohort_id',), ('programme_id',), ('supervisor_id',), ('email',), ('term_address',), ('permanent_address',), ('mobile_phone',), ('fixed_phone',), ('programming_knowledge',), ('database_knowledge',), ('networking_knowledge',), ('deleted',))
+x = ((1, '2022 July', '2023 January - 2023 July', 0), (2, '2022 November', '2023 May - 2023 November', 0), (3, '2023 January', '2024 July - 2025 January', 0))
 
+a, b = [(i[1], i[2]) for i in x if i[0] == 1][0]
 
-fColumns = list(map(lambda x: x[0], x))
-print(fColumns)
+print(a)
+print(b)

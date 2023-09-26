@@ -194,6 +194,57 @@ def studentHomepage():
 
     return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo)
 
+
+@app.route("/editPortfolio", methods=['GET', 'POST'])
+def editPortfolio():
+    global loginState, loginNric, loginEmail
+
+    if not loginState:
+        return redirect(url_for('home'))
+
+    edulevelList = selectAllFromTable("education_level")
+    cohortList = selectAllFromTable("cohort")
+    programmeList = selectAllFromTable("programme")
+    supervisorList = selectAllFromTable("supervisor")
+
+    try:    
+        # Insert record to sql
+        cursor = db_conn.cursor()
+        cursor.execute(f"SELECT * FROM student WHERE nric='{loginNric}' AND email='{loginEmail}' AND deleted='0';")
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Student Information not found!"
+        
+        # Student Table Columns
+        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
+        studentColumns = cursor.fetchall()
+
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    studentInfo = {}
+    for i, col in enumerate(studentColumns):
+        studentInfo[col[0]] = output[0][i]
+
+    studentInfo['education_level_name'] = [i[1] for i in edulevelList if i[0] == studentInfo['education_level_id']][0]
+    studentInfo['cohort_name'], studentInfo['cohort_period'] = [(i[1], i[2]) for i in cohortList if i[0] == studentInfo['cohort_id']][0]
+    studentInfo['programme_name'], studentInfo['programme_code'] = [(i[1], i[2]) for i in programmeList if i[0] == studentInfo['programme_id']][0]
+    studentInfo['supervisor_name'], studentInfo['supervisor_email'] = [(i[1], i[2]) for i in supervisorList if i[0] == studentInfo['supervisor_id']][0]
+
+    return render_template('editPortfolio.html',
+                           edulevelList=edulevelList,
+                           cohortList=cohortList,
+                           programmeList=programmeList,
+                           programmeListJson=json.dumps(programmeList),
+                           supervisorList=supervisorList, 
+                           studentInfo=studentInfo)
+
+@app.route("/editPortfolioApi", methods=['POST'])
+def editPortfolioApi():
+    return render_template('test.html', output=request.form)
+
 @app.route("/registerCompany", methods=['GET', 'POST'])
 def registerCompany():
     global loginState, loginNric, loginEmail
