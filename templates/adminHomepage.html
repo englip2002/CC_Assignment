@@ -75,7 +75,7 @@
     </nav>
 
     <div class="flex-display">
-        <h1 class="title">Student List</h1>
+      <h1 class="title">Student List</h1>
     </div>
 
     <div class="flex-display">
@@ -92,30 +92,26 @@
             </tr>
           </thead>
           <tbody>
+            {% for studInfoRow in studInfo %}
             <tr>
-              <th scope="row">1</th>
-              <td>22WMR12345</td>
-              <td>Sohai 1</td>
-              <td>RSW</td>
-              <td>Success</td>
-              <td class="flex-display"><button type="button" class="btn btn-success">Edit</button></td>
+              <th scope="row">{{studInfoRow[0]}}</th>
+              <td>{{studInfoRow[2]}}</td>
+              <td>{{studInfoRow[7]}}</td>
+              <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
+
+              {% for studCompanyRow in studCompany %} 
+                {% if studCompanyRow[1] == studInfoRow[0] %}
+                  <td>Submitted</td>
+                {% else %}
+                  <td>Not Submitted</td>
+                {% endif %} 
+              {% endfor %}
+
+              <td class="flex-display">
+                <button type="button" class="btn btn-success">Edit</button>
+              </td>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>22WMR12345</td>
-              <td>Sohai 2</td>
-              <td>RSW</td>
-              <td>Success</td>
-              <td class="flex-display"><button type="button" class="btn btn-success">Edit</button></td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>22WMR12345</td>
-              <td>Sohai 3</td>
-              <td>RSW</td>
-              <td>Success</td>
-              <td class="flex-display"><button type="button" class="btn btn-success">Edit</button></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

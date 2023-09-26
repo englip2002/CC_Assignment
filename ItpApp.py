@@ -542,7 +542,11 @@ def adminLogoutApi():
 
 @app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
-    return render_template('adminHomepage.html', invalidLogin=True)
+    studInfo = selectAllFromTable("student")
+    programmeInfo = selectAllFromTable("programme")
+    studCompany = selectAllFromTable("student_company")
+    # Render an HTML template with the retrieved data
+    return render_template('adminHomepage.html', invalidLogin=True, studInfo=studInfo, programmeInfo=programmeInfo, studCompany=studCompany)
 
 
 @app.route("/studentDetail", methods=["GET"])
