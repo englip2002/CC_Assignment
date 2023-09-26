@@ -11,9 +11,12 @@ bucket = custombucket
 region = customregion
 
 global loginState, loginNric, loginEmail
+# loginState = False
+# loginNric = ""
+# loginEmail = ""
 loginState = True
-loginNric = ""
-loginEmail = ""
+loginNric = "021005-14-1279"
+loginEmail = "thongsx-wm20@student.tarc.edu.my"
 
 try:
     db_conn = connections.Connection(
@@ -27,7 +30,6 @@ try:
 except Exception as e:
     print("Database connection failed!")
     print(e)
-
 
 def selectAllFromTable(tableName):
     try:
