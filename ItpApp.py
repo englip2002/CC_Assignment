@@ -31,6 +31,7 @@ except Exception as e:
     print("Database connection failed!")
     print(e)
 
+
 def selectAllFromTable(tableName):
     try:
         cursor = db_conn.cursor()
@@ -48,6 +49,8 @@ def home():
     return render_template('index.html')
 
 # Static routes
+
+
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory(app.static_folder, filename)
@@ -64,6 +67,7 @@ def signUp():
                            cohortList=cohortList,
                            programmeList=json.dumps(programmeList),
                            supervisorList=supervisorList)
+
 
 @app.route("/signupApi", methods=['POST'])
 def signupApi():
@@ -99,7 +103,7 @@ def signupApi():
     # Upload image to S3 first
     pfp_url = ""
     try:
-        pfp_filename_in_s3 = "pfp/" +  "pfp-" + str(student_id)
+        pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
 
         s3 = boto3.resource('s3')
         s3.Bucket(custombucket).put_object(
@@ -112,15 +116,15 @@ def signupApi():
             s3_location = ''
         else:
             s3_location = '-' + s3_location
-        
+
         pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
             s3_location,
             custombucket,
             pfp_filename_in_s3)
     except Exception as e:
         return str(e)
-    
-    try:    
+
+    try:
         # Insert record to sql
         cursor = db_conn.cursor()
         insert_sql = f"INSERT INTO `student` (`id`, `profile_picture_url`, `name`, `nric`, `gender`, `transport`, `health_remark`, `student_id`, `tutorial_group`, `cgpa`, `education_level_id`, `cohort_id`, `programme_id`, `supervisor_id`, `email`, `term_address`, `permanent_address`, `mobile_phone`, `fixed_phone`, `programming_knowledge`, `database_knowledge`, `networking_knowledge`, `deleted`) VALUES (NULL, '{pfp_url}', '{name}', '{nric}', '{gender}', '{transport}', '{health_remark}', '{student_id}', '{tutorial_group}', '{cgpa}', '{education_level}', '{cohort}', '{programme}', '{supervisor}', '{email}', '{term_address}', '{permanent_address}', '{mobile_phone}', '{fixed_phone}', '{programming_knowledge}', '{database_knowledge}', '{networking_knowledge}', '0');"
@@ -133,6 +137,7 @@ def signupApi():
 
     return redirect(url_for('studentHomepage'))
 
+
 @app.route("/studentHomepage", methods=['GET', 'POST'])
 def studentHomepage():
     global loginState, loginNric, loginEmail
@@ -140,9 +145,11 @@ def studentHomepage():
     if not loginState:
         return redirect(url_for('home'))
     
+    updateSuccessParam = request.args.get('updateSuccess')
+
     try:
         cursor = db_conn.cursor()
-        
+
         # Student Info
         cursor.execute(f'''
             SELECT `student`.*, `cohort`.`name` AS `cohort.name`, `cohort`.`period` AS `cohort.period`, `education_level`.`name` AS `education_level.name`, `programme`.`name` AS `programme.name`, `programme`.`code` AS `programme.code`, `supervisor`.`name` AS `supervisor.name`, `supervisor`.`email` AS `supervisor.email`
@@ -154,9 +161,10 @@ def studentHomepage():
             WHERE `student`.`deleted`='0';
             ''')
         output = cursor.fetchall()
-        
+
         # Student Table Columns
-        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
         columns = cursor.fetchall()
 
         # Company Info
@@ -169,19 +177,22 @@ def studentHomepage():
         companyOutput = cursor.fetchall()
 
         # Company columns
-        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student_company' and table_schema='{customdb}' order by ordinal_position")
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'student_company' and table_schema='{customdb}' order by ordinal_position")
         scColumns = cursor.fetchall()
-        cursor.execute(f"select column_name from information_schema.columns where table_name = N'company' and table_schema='{customdb}' order by ordinal_position")
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'company' and table_schema='{customdb}' order by ordinal_position")
         cColumns = cursor.fetchall()
-        
+
     except Exception as e:
         return str(e)
     finally:
         cursor.close()
 
     fColumns = list(map(lambda x: x[0], columns))
-    fColumns.extend(["cohort_name", "cohort_period", "education_level_name", "programme_name", "programme_code", "supervisor_name", "supervisor_email"])
-    
+    fColumns.extend(["cohort_name", "cohort_period", "education_level_name",
+                    "programme_name", "programme_code", "supervisor_name", "supervisor_email"])
+
     fOutput = {}
     for i, each in enumerate(fColumns):
         fOutput[each] = output[0][i]
@@ -194,7 +205,7 @@ def studentHomepage():
         for i, each in enumerate(tempColumns):
             companyInfo[each[0]] = companyOutput[0][i]
 
-    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo)
+    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo, updateSuccess=updateSuccessParam)
 
 
 @app.route("/editPortfolio", methods=['GET', 'POST'])
@@ -209,16 +220,18 @@ def editPortfolio():
     programmeList = selectAllFromTable("programme")
     supervisorList = selectAllFromTable("supervisor")
 
-    try:    
+    try:
         # Insert record to sql
         cursor = db_conn.cursor()
-        cursor.execute(f"SELECT * FROM student WHERE nric='{loginNric}' AND email='{loginEmail}' AND deleted='0';")
+        cursor.execute(
+            f"SELECT * FROM student WHERE nric='{loginNric}' AND email='{loginEmail}' AND deleted='0';")
         output = cursor.fetchall()
         if len(output) == 0:
             return "Student Information not found!"
-        
+
         # Student Table Columns
-        cursor.execute(f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
         studentColumns = cursor.fetchall()
 
     except Exception as e:
@@ -230,22 +243,105 @@ def editPortfolio():
     for i, col in enumerate(studentColumns):
         studentInfo[col[0]] = output[0][i]
 
-    studentInfo['education_level_name'] = [i[1] for i in edulevelList if i[0] == studentInfo['education_level_id']][0]
-    studentInfo['cohort_name'], studentInfo['cohort_period'] = [(i[1], i[2]) for i in cohortList if i[0] == studentInfo['cohort_id']][0]
-    studentInfo['programme_name'], studentInfo['programme_code'] = [(i[1], i[2]) for i in programmeList if i[0] == studentInfo['programme_id']][0]
-    studentInfo['supervisor_name'], studentInfo['supervisor_email'] = [(i[1], i[2]) for i in supervisorList if i[0] == studentInfo['supervisor_id']][0]
+    studentInfo['education_level_name'] = [i[1]
+                                           for i in edulevelList if i[0] == studentInfo['education_level_id']][0]
+    studentInfo['cohort_name'], studentInfo['cohort_period'] = [
+        (i[1], i[2]) for i in cohortList if i[0] == studentInfo['cohort_id']][0]
+    studentInfo['programme_name'], studentInfo['programme_code'] = [
+        (i[1], i[2]) for i in programmeList if i[0] == studentInfo['programme_id']][0]
+    studentInfo['supervisor_name'], studentInfo['supervisor_email'] = [
+        (i[1], i[2]) for i in supervisorList if i[0] == studentInfo['supervisor_id']][0]
 
     return render_template('editPortfolio.html',
                            edulevelList=edulevelList,
                            cohortList=cohortList,
                            programmeList=programmeList,
                            programmeListJson=json.dumps(programmeList),
-                           supervisorList=supervisorList, 
+                           supervisorList=supervisorList,
                            studentInfo=studentInfo)
+
 
 @app.route("/editPortfolioApi", methods=['POST'])
 def editPortfolioApi():
-    return render_template('test.html', output=request.form)
+    if not loginState:
+        return redirect(url_for('home'))
+
+    # Personal Data
+    profile_picture = request.form['profile_picture']
+    name = request.form['name']
+    gender = request.form['gender']
+    transport = request.form['transport']
+    health_remark = request.form['health_remark']
+
+    # Academic Detail
+    student_id = request.form['student_id']
+    tutorial_group = request.form['tutorial_group']
+    cgpa = request.form['cgpa']
+    education_level = request.form['education_level']
+    cohort = request.form['cohort']
+    programme = request.form['programme']
+    supervisor = request.form['supervisor']
+
+    # Contact Information
+    term_address = request.form['term_address']
+    permanent_address = request.form['permanent_address']
+    mobile_phone = request.form['mobile_phone']
+    fixed_phone = request.form['fixed_phone']
+
+    # Technical Knowledge
+    programming_knowledge = request.form['programming_knowledge']
+    database_knowledge = request.form['database_knowledge']
+    networking_knowledge = request.form['networking_knowledge']
+
+    # If user updated profile pic
+    pfp_url = ""
+    if (profile_picture):
+        # Upload picture to s3
+        try:
+            pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
+
+            s3 = boto3.resource('s3')
+            s3.Bucket(custombucket).put_object(
+                Key=pfp_filename_in_s3, Body=profile_picture)
+            bucket_location = boto3.client(
+                's3').get_bucket_location(Bucket=custombucket)
+            s3_location = (bucket_location['LocationConstraint'])
+
+            if s3_location is None:
+                s3_location = ''
+            else:
+                s3_location = '-' + s3_location
+
+            pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+                s3_location,
+                custombucket,
+                pfp_filename_in_s3)
+        except Exception as e:
+            return str(e)
+
+    # Update SQL
+    try:
+        cursor = db_conn.cursor()
+        insert_sql = ""
+        if (profile_picture and len(pfp_url) > 0):
+            insert_sql = f'''
+UPDATE `student` 
+SET `profile_picture_url`='{pfp_url}', `name` = '{request.form['name']}', `gender` = '{request.form['gender']}', `transport` = '{request.form['transport']}', `health_remark` = '{request.form['health_remark']}', `student_id` = '{request.form['student_id']}', `tutorial_group` = '{request.form['tutorial_group']}', `cgpa` = '{request.form['cgpa']}', `education_level_id` = '{request.form['education_level']}', `cohort_id` = '{request.form['cohort']}', `programme_id` = '{request.form['programme']}', `supervisor_id` = '{request.form['supervisor']}', `term_address` = '{request.form['term_address']}', `permanent_address` = '{request.form['permanent_address']}', `mobile_phone` = '{request.form['mobile_phone']}', `fixed_phone` = '{request.form['fixed_phone']}', `programming_knowledge` = '{request.form['programming_knowledge']}', `database_knowledge` = '{request.form['database_knowledge']}', `networking_knowledge` = '{request.form['networking_knowledge']}' 
+WHERE `student`.`email` = '{loginEmail}' AND `student`.`nric` = '{loginNric}';'''
+        else:
+            insert_sql = f'''
+UPDATE `student` 
+SET `name` = '{request.form['name']}', `gender` = '{request.form['gender']}', `transport` = '{request.form['transport']}', `health_remark` = '{request.form['health_remark']}', `student_id` = '{request.form['student_id']}', `tutorial_group` = '{request.form['tutorial_group']}', `cgpa` = '{request.form['cgpa']}', `education_level_id` = '{request.form['education_level']}', `cohort_id` = '{request.form['cohort']}', `programme_id` = '{request.form['programme']}', `supervisor_id` = '{request.form['supervisor']}', `term_address` = '{request.form['term_address']}', `permanent_address` = '{request.form['permanent_address']}', `mobile_phone` = '{request.form['mobile_phone']}', `fixed_phone` = '{request.form['fixed_phone']}', `programming_knowledge` = '{request.form['programming_knowledge']}', `database_knowledge` = '{request.form['database_knowledge']}', `networking_knowledge` = '{request.form['networking_knowledge']}' 
+WHERE `student`.`email` = '{loginEmail}' AND `student`.`nric` = '{loginNric}';'''
+        cursor.execute(insert_sql)
+        db_conn.commit()
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    return redirect(url_for('studentHomepage', updateSuccess=True))
+
 
 @app.route("/registerCompany", methods=['GET', 'POST'])
 def registerCompany():
@@ -253,8 +349,9 @@ def registerCompany():
 
     if not loginState:
         return redirect(url_for('home'))
-    
+
     return render_template('registerCompany.html')
+
 
 @app.route("/registerCompanyApi", methods=['GET', 'POST'])
 def registerCompanyApi():
@@ -298,7 +395,7 @@ def registerCompanyApi():
             s3_location = ''
         else:
             s3_location = '-' + s3_location
-        
+
         acf_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
             s3_location,
             custombucket,
@@ -311,14 +408,15 @@ def registerCompanyApi():
             s3_location,
             custombucket,
             ind_filename_in_s3)
-        
+
     except Exception as e:
         return str(e)
 
     # Insert data to SQL/RDS
-    try:    
+    try:
         cursor = db_conn.cursor()
-        cursor.execute(f"INSERT INTO `company` (`id`, `name`, `address_1`, `address_2`, `deleted`) VALUES (NULL, '{name}', '{address_1}', '{address_2}', '0');")
+        cursor.execute(
+            f"INSERT INTO `company` (`id`, `name`, `address_1`, `address_2`, `deleted`) VALUES (NULL, '{name}', '{address_1}', '{address_2}', '0');")
         db_conn.commit()
 
         cursor.execute(f'''
@@ -343,15 +441,17 @@ def registerCompanyApi():
 
         company_id = output[-1][0]
 
-        cursor.execute(f"INSERT INTO `student_company` (`id`, `student_id`, `company_id`, `monthly_allowance`, `company_supervisor_name`, `company_supervisor_email`, `company_acceptance_form_url`, `parent_acknowledgement_form_url`, `letter_of_indemnity_url`, `deleted`) VALUES (NULL, '{student_id}', '{company_id}', '{allowance}', '{sup_name}', '{sup_email}', '{acf_url}', '{ack_url}', '{ind_url}', '0');")
+        cursor.execute(
+            f"INSERT INTO `student_company` (`id`, `student_id`, `company_id`, `monthly_allowance`, `company_supervisor_name`, `company_supervisor_email`, `company_acceptance_form_url`, `parent_acknowledgement_form_url`, `letter_of_indemnity_url`, `deleted`) VALUES (NULL, '{student_id}', '{company_id}', '{allowance}', '{sup_name}', '{sup_email}', '{acf_url}', '{ack_url}', '{ind_url}', '0');")
         db_conn.commit()
-        
+
     except Exception as e:
         return str(e)
     finally:
         cursor.close()
 
     return redirect(url_for('studentHomepage'))
+
 
 @app.route("/test", methods=["GET"])
 def test():
@@ -371,7 +471,7 @@ def login():
 
     if loginState:
         return redirect(url_for('studentHomepage'))
-    
+
     return render_template('login.html')
 
 
@@ -412,6 +512,7 @@ def logoutApi():
 global adminLoginState
 adminLoginState = False
 
+
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
     return render_template('adminLogin.html')
@@ -432,19 +533,23 @@ def adminLoginApi():
 
     return render_template('adminLogin.html', invalidLogin=True)
 
+
 @app.route("/adminLogoutApi", methods=["GET", "POST"])
 def adminLogoutApi():
     global adminLoginState
     adminLoginState = False
     return redirect(url_for('home'))
 
+
 @app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
     return render_template('adminHomepage.html', invalidLogin=True)
 
+
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():
     return render_template('studentDetail.html', invalidLogin=True)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
