@@ -260,7 +260,6 @@ def editPortfolio():
                            supervisorList=supervisorList,
                            studentInfo=studentInfo)
 
-
 @app.route("/editPortfolioApi", methods=['POST'])
 def editPortfolioApi():
     if not loginState:
