@@ -1,6 +1,6 @@
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for
 from pymysql import connections
-import os
+from datetime import datetime
 import boto3
 from config import *
 import json
@@ -144,7 +144,12 @@ def signupApi():
     finally:
         cursor.close()
 
-    return redirect(url_for('studentHomepage'))
+    global loginState, loginEmail, loginNric
+    loginState = True
+    loginEmail = email
+    loginNric = nric
+
+    return redirect(url_for('studentHomepage', signUpSuccess=True))
 
 
 @app.route("/studentHomepage", methods=['GET', 'POST'])
@@ -154,6 +159,7 @@ def studentHomepage():
     if not loginState:
         return redirect(url_for('home'))
 
+    signUpSuccess = request.args.get('signUpSuccess')
     updateSuccessParam = request.args.get('updateSuccess')
 
     try:
@@ -216,7 +222,7 @@ def studentHomepage():
         for i, each in enumerate(tempColumns):
             companyInfo[each[0]] = companyOutput[0][i]
 
-    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo, updateSuccess=updateSuccessParam)
+    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo, updateSuccess=updateSuccessParam, signUpSuccess=signUpSuccess)
 
 
 @app.route("/editPortfolio", methods=['GET', 'POST'])
@@ -433,9 +439,138 @@ def registerCompanyApi():
     return redirect(url_for('studentHomepage'))
 
 
-@app.route("/studentSubmitReport", methods=["GET"])
+@app.route("/studentViewReports", methods=["GET", "POST"])
+def studentViewReports():
+    global loginState, loginEmail, loginNric
+    if not loginState:
+        return redirect(url_for('home'))
+
+    updateSuccess = request.args.get('updateSuccess')
+
+    reports = ()
+    student_id = ""
+    
+    try:
+        cursor = db_conn.cursor()
+
+        # Get Student ID (because it will be used later)
+        cursor.execute(f'''
+                        SELECT * FROM student 
+                        WHERE deleted='0' AND nric='{loginNric}' AND email='{loginEmail}';
+                        ''')
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Student data not found!"
+
+        student_id = output[0][0]
+
+        # Get student reports
+        cursor.execute(f'''
+                        SELECT * FROM student_report 
+                        WHERE deleted='0' AND student_id='{student_id}';
+                        ''')
+        reports = cursor.fetchall()
+
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    reportDatetimes = []
+    for each in reports:
+        reportDatetimes.append(datetime.fromtimestamp(each[3]).strftime('%Y-%m-%d %H:%M:%S'))
+
+    return render_template('studentViewReports.html', updateSuccess=updateSuccess, reports=reports, reportDatetimes=reportDatetimes)
+
+@app.route("/studentSubmitReport", methods=["GET", "POST"])
 def studentSubmitReport():
     return render_template('studentSubmitReport.html')
+
+@app.route("/studentSubmitReportApi", methods=["POST"])
+def studentSubmitReportApi():
+    global loginState, loginEmail, loginNric
+    if not loginState:
+        return redirect(url_for('home'))
+
+    reportType = request.form['reportType']
+    reportName = request.form['reportName']
+    reportFile = request.files['reportFile']
+
+    # Get current report number before saving to S3
+    student_id = ""
+    reportLength = 0
+    try:
+        cursor = db_conn.cursor()
+
+        # Get Student ID (because it will be used later)
+        cursor.execute(f'''
+                        SELECT * FROM student
+                        WHERE deleted='0' AND nric='{loginNric}' AND email='{loginEmail}';
+                        ''')
+        output = cursor.fetchall()
+        if len(output) == 0:
+            return "Student data not found!"
+
+        student_id = output[0][0]
+
+        # Get student reports
+        cursor.execute(f'''
+                        SELECT * FROM student_report
+                        WHERE deleted='0' AND student_id='{student_id}';
+                        ''')
+        output = cursor.fetchall()
+        reportLength = len(output)
+
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    # Upload files to S3
+    report_url = ""
+    try:
+        report_filename_in_s3 = ""
+        if (reportType == "Progress"):
+            report_filename_in_s3 = f"reports/{loginNric}/progressReport-{reportLength + 1}"
+        else:
+            report_filename_in_s3 = f"reports/{loginNric}/finalReport-{reportLength + 1}"
+
+        s3 = boto3.resource('s3')
+        s3.Bucket(custombucket).put_object(
+            Key=report_filename_in_s3, Body=reportFile, ContentType=reportFile.content_type)
+
+        bucket_location = boto3.client(
+            's3').get_bucket_location(Bucket=custombucket)
+        s3_location = (bucket_location['LocationConstraint'])
+
+        if s3_location is None:
+            s3_location = ''
+        else:
+            s3_location = '-' + s3_location
+
+        report_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            report_filename_in_s3)
+
+    except Exception as e:
+        return str(e)
+
+    # Insert data to SQL/RDS
+    try:
+        current_datetime = int(datetime.now().timestamp())
+
+        cursor = db_conn.cursor()
+        cursor.execute(
+            f"INSERT INTO `student_report` (`student_id`, `type`, `submission_date`, `report_url`, `report_name`) VALUES ('{student_id}', '{reportType}', '{current_datetime}', '{report_url}', '{reportName}');")
+        db_conn.commit()
+
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+    
+    return redirect(url_for('studentViewReports', updateSuccess=True))
 
 
 @app.route("/test", methods=["GET"])
@@ -622,7 +757,7 @@ def adminEditPortfolioApi():
 
             s3 = boto3.resource('s3')
             s3.Bucket(custombucket).put_object(
-                Key=pfp_filename_in_s3, Body=profile_picture)
+                Key=pfp_filename_in_s3, Body=profile_picture, ContentType=profile_picture.content_type)
             bucket_location = boto3.client(
                 's3').get_bucket_location(Bucket=custombucket)
             s3_location = (bucket_location['LocationConstraint'])

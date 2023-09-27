@@ -27,12 +27,12 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static', filename='css/studentHomepage.css') }}"
+      href="{{ url_for('static', filename='css/portfolio.css') }}"
     />
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <title>Student Portfolio</title>
+    <title>Submit Report</title>
   </head>
 
   <body>
@@ -71,19 +71,19 @@
             </li>
             <li class="nav-item">
               <a
-                class="nav-link active"
+                class="nav-link"
                 aria-current="page"
                 href="{{ url_for('studentHomepage') }}"
                 >Portfolio</a
               >
             </li>
-            
+
             <li class="nav-item">
               <a
-                class="nav-link active"
+                class="nav-link"
                 aria-current="page"
                 href="{{ url_for('studentSubmitReport') }}"
-                >Submit Report</a
+                >View Reports</a
               >
             </li>
           </ul>
@@ -99,341 +99,119 @@
       </div>
     </nav>
 
-    <div
-      class="flexJustify"
-      style="flex-direction: column; align-items: center; padding-bottom: 2rem"
+    <form
+      action="{{url_for('studentSubmitReportApi')}}"
+      method="POST"
+      id="register-form"
+      enctype="multipart/form-data"
     >
-      <div>
-        <h1><b>Student Portfolio</b></h1>
-      </div>
-      <div class="flex-horizontal">
-        <a href="{{url_for('editPortfolio')}}"
-          ><button class="btn btn-success">Edit Portfolio</button></a
-        >
-      </div>
-    </div>
-    <div class="flexJustify">
-      <div class="flexJustify border border-2 border-secondary portfolio">
-        <div class="flexCenter portfolio-left">
-          <div class="shadow">
-            <div class="imageFrameOuter">
-              <div class="imageFrameInner">
-                <img
-                  class="profile-pic"
-                  src="{{studInfo.profile_picture_url}}"
+      <div class="flex-vertical">
+        <div class="stdHP border border-secondary">
+          <div class="subTitle" style="margin-bottom: 0%">
+            <p style="padding-left: 3%">Submit Report</p>
+            <p style="padding-left: 3%; color: red">
+              * Note that you cannot cancel or resubmit your report after the submission was
+              done
+            </p>
+            <hr />
+          </div>
+
+          <div class="flex-vertical">
+            <div style="margin-bottom: 2%"></div>
+            <div class="inputText">
+              <label class="inputIndicator" for="reportType"
+                >Report Type:
+              </label>
+              <select
+                required
+                class="dropDownItem input-group"
+                name="reportType"
+                id="reportType"
+              >
+                <option value="0" selected disabled>
+                  &nbsp;Please select one&nbsp;
+                </option>
+                <option value="Progress">Progress Report</option>
+                <option value="Final">Final Report</option>
+              </select>
+            </div>
+            <div style="margin-bottom: 2%"></div>
+
+            <div class="inputText">
+              <p class="inputIndicator">Report Name:</p>
+              <div class="input-group mb-3">
+                <input
+                  required
+                  name="reportName"
+                  id="reportName"
+                  type="text"
+                  class="form-control"
+                  placeholder="Progress Report May 2023"
+                />
+              </div>
+            </div>
+
+            <div class="inputText">
+              <p class="inputIndicator">Report File:</p>
+              <div class="input-group mb-3">
+                <input
+                  required
+                  name="reportFile"
+                  id="reportFile"
+                  type="file"
+                  class="form-control"
+                  accept="application/pdf"
                 />
               </div>
             </div>
           </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Name:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.name}}</p>
-            </div>
+          <div class="flex-horizontal" style="margin-top: 3%">
+            <button type="submit" class="btn btn-success">Submit Report</button>
           </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>NRIC:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.nric}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Gender:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.gender}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Own Transport:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.transport}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Health Remark:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.health_remark}}</p>
-            </div>
-          </div>
-
-          <div class="sub-title">
-            <h5>Contact Information</h5>
-            <hr />
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Email:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.email}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Term Address:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.term_address}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Permanent Address:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.permanent_address}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Mobile Number / Fixed Number:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.mobile_phone}} / {{studInfo.fixed_phone}}</p>
-            </div>
-          </div>
-
-          <div class="sub-title">
-            <h5>Skills</h5>
-            <hr />
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Programming Knowledge:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.programming_knowledge}}</p>
-            </div>
-          </div>
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Database Knowledge:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.database_knowledge}}</p>
-            </div>
-          </div>
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Networking Knowledge:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.networking_knowledge}}</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="flexCenter portfolio-right">
-          <div class="sub-title">
-            <h5>Academic Detail</h5>
-            <hr />
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Student ID:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.student_id}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Tutorial Group:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.tutorial_group}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>CGPA:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.cgpa}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Level:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.education_level_name}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Programme:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.programme_code}} - {{studInfo.programme_name}}</p>
-            </div>
-          </div>
-
-          <div class="sub-title">
-            <h5>Internship Information</h5>
-            <hr />
-          </div>
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Cohort:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.cohort_name}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Intern Period:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.cohort_period}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>UC Supervisor:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.supervisor_name}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>UC Supervisor Email:</p>
-            </div>
-            <div class="content">
-              <p>{{studInfo.supervisor_email}}</p>
-            </div>
-          </div>
-
-          <div class="sub-title">
-            <h5>Company Information</h5>
-            <hr />
-          </div>
-
-          {% if companyInfo %}
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Company Name:</p>
-            </div>
-            <div class="content">
-              <p>{{companyInfo.name}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Company Address 1:</p>
-            </div>
-            <div class="content">
-              <p>{{companyInfo.address_1}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Company Address 2:</p>
-            </div>
-            <div class="content">
-              <p>{{companyInfo.address_2}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Monthly Allowance:</p>
-            </div>
-            <div class="content">
-              <p>RM {{companyInfo.monthly_allowance}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Company Supervisor Name:</p>
-            </div>
-            <div class="content">
-              <p>{{companyInfo.company_supervisor_name}}</p>
-            </div>
-          </div>
-
-          <div class="flexJustify item-container">
-            <div class="indicator">
-              <p>Company Supervisor Email:</p>
-            </div>
-            <div class="content">
-              <p>{{companyInfo.company_supervisor_email}}</p>
-            </div>
-          </div>
-
-          {% else %}
-
-          <div
-            style="
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              flex-direction: column;
-            "
-          >
-            <p>Looks Like you haven't registered any company...</p>
-            <a href="{{url_for('registerCompany')}}"
-              ><button class="btn btn-success">Register here</button></a
-            >
-          </div>
-
-          {% endif %}
         </div>
       </div>
-    </div>
-
-    <footer class="footer">
-      <p>&#169; 2023 - TARUMT FOCS ITP</p>
-    </footer>
-
-    {% if updateSuccess %}
-    <div id="updateSuccess" style="display: none"></div>
-    {% endif %}
+    </form>
 
     <script>
-      if (document.querySelector("#updateSuccess")) {
-        Swal.fire(
-          "Update Succesful!",
-          "Your details have been updated.",
-          "success"
-        );
-      }
+      document
+        .querySelector("#register-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          valid = true;
+          errorMsg = "";
+          toBeFocused = "";
+
+          if (document.querySelector("#reportType").value == "0") {
+            valid = false;
+            errorMsg = "Please choose a Report Type!";
+            toBeFocused = "reportType";
+          }
+
+          if (valid) {
+            Swal.fire({
+              title: "Are you sure?",
+              text: "You cannot cancel or resubmit your report after the submission was done",
+              icon: "warning",
+              showCancelButton: true,
+            }).then(res => {
+                if (res.isConfirmed) {
+                    document.querySelector("#register-form").submit();
+                }
+            })
+          } else {
+            Swal.fire("Oops..", errorMsg, "error").then((res) => {
+              document
+                .querySelector(toBeFocused)
+                .scrollIntoView({ behavior: "smooth" });
+              document.querySelector(toBeFocused).focus();
+            });
+          }
+        });
     </script>
   </body>
+
+  <footer class="footer">
+    <p>&#169; 2023 - TARUMT FOCS ITP</p>
+  </footer>
 </html>

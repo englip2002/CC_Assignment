@@ -80,10 +80,10 @@
             
             <li class="nav-item">
               <a
-                class="nav-link active"
+                class="nav-link"
                 aria-current="page"
-                href="{{ url_for('studentSubmitReport') }}"
-                >Submit Report</a
+                href="{{ url_for('studentViewReports') }}"
+                >View Reports</a
               >
             </li>
           </ul>
@@ -421,13 +421,24 @@
     <footer class="footer">
       <p>&#169; 2023 - TARUMT FOCS ITP</p>
     </footer>
-
+    
+    {% if signUpSuccess %}
+    <div id="signUpSuccess" style="display: none"></div>
+    {% endif %}
+    
     {% if updateSuccess %}
     <div id="updateSuccess" style="display: none"></div>
     {% endif %}
 
     <script>
-      if (document.querySelector("#updateSuccess")) {
+      if (document.querySelector("#signUpSuccess")) {
+        Swal.fire(
+          "Sign Up Succesful!",
+          "Your Account has been created successfully.",
+          "success"
+        );
+      }
+      else if (document.querySelector("#updateSuccess")) {
         Swal.fire(
           "Update Succesful!",
           "Your details have been updated.",

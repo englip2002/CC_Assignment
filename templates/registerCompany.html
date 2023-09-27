@@ -270,7 +270,26 @@
         .addEventListener("submit", (e) => {
           e.preventDefault();
 
-          document.querySelector("#register-form").submit();
+          valid = true
+          errorMsg = ""
+          toBeFocused = ""
+
+          if (document.querySelector('#company').value == "0") {
+            valid = false
+            errorMsg = "Please choose a company!"
+            toBeFocused = "company"
+          }
+
+          if (valid) {
+            document.querySelector("#register-form").submit();
+          }
+          else {
+            Swal.fire("Oops..", errorMsg, "error").then(res => {
+                document.querySelector(toBeFocused).scrollIntoView({ behavior: "smooth" });
+                document.querySelector(toBeFocused).focus();
+            });
+          }
+
         });
     </script>
   </body>
