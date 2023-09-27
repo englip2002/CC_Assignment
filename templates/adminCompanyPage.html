@@ -71,7 +71,7 @@
             </li>
             <li class="nav-item">
               <a
-                class="nav-link active"
+                class="nav-link"
                 aria-current="page"
                 href="{{ url_for('adminHomepage') }}"
                 >View Students</a
@@ -79,7 +79,7 @@
             </li>
             <li class="nav-item">
               <a
-                class="nav-link"
+                class="nav-link active"
                 aria-current="page"
                 href="{{ url_for('adminCompanyPage') }}"
                 >View Companies</a
@@ -87,14 +87,27 @@
             </li>
           </ul>
           <div style="margin-right: 1rem">
-            <a class="nav-link" aria-current="page" href="{{ url_for('adminLogoutApi') }}">Logout</a>
+            <a
+              class="nav-link"
+              aria-current="page"
+              href="{{ url_for('adminLogoutApi') }}"
+              >Logout</a
+            >
           </div>
         </div>
       </div>
     </nav>
 
     <div class="flex-display">
-      <h1 class="title">Student List</h1>
+      <h1 class="title">Company List</h1>
+    </div>
+
+    <div class="flex-display" style="padding: 1rem 0">
+      <div>
+        <a href="{{url_for('addCompany')}}"
+          ><button class="btn btn-success">Add Company</button></a
+        >
+      </div>
     </div>
 
     <div class="flex-display">
@@ -103,24 +116,25 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Student ID</th>
-              <th scope="col">Student Name</th>
-              <th scope="col">Programme</th>
-              <th scope="col">Company Status</th>
-              <th scope="col"></th>
+              <th scope="col">Company Name</th>
+              <th scope="col">Company Address 1</th>
+              <th scope="col">Company Address 2</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            {% for studInfoRow in studInfo %}
+            {% for row in companies %}
             <tr>
-              <th scope="row">{{studInfoRow[0]}}</th>
-              <td>{{studInfoRow[2]}}</td>
-              <td>{{studInfoRow[7]}}</td>
-              <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
-              <td>{{studCompanySubmitted[loop.index0]}}</td>
-
+              <th scope="row">{{loop.index0 + 1}}</th>
+              <td>{{row[1]}}</td>
+              <td>{{row[2]}}</td>
+              <td>{{row[3]}}</td>
               <td class="flex-display">
-                <button type="button" class="btn btn-success">Edit</button>
+                <a
+                  href="{{url_for('editCompany') + '?id=' + (row[0] | string)}}"
+                >
+                  <button type="button" class="btn btn-success">Edit</button>
+                </a>
               </td>
             </tr>
             {% endfor %}
@@ -128,9 +142,31 @@
         </table>
       </div>
     </div>
-  </body>
 
-  <footer class="footer">
-    <p>&#169; 2023 - TARUMT FOCS ITP</p>
-  </footer>
+    {% if invalidMsg %}
+    <div id="invalidMsg" style="display: none" data-msg="{{invalidMsg}}"></div>
+    {% endif %} {% if updateSuccess %}
+    <div id="updateSuccess" style="display: none"></div>
+    {% endif %}
+
+    <footer class="footer">
+      <p>&#169; 2023 - TARUMT FOCS ITP</p>
+    </footer>
+
+    <script>
+      if (document.querySelector("#invalidMsg")) {
+        Swal.fire(
+          "Error!",
+          document.querySelector("#invalidMsg").dataset.msg,
+          "error"
+        );
+      } else if (document.querySelector("#updateSuccess")) {
+        Swal.fire(
+          "Success!",
+          "The company details are updated successfully!",
+          "success"
+        );
+      }
+    </script>
+  </body>
 </html>
