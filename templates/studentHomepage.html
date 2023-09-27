@@ -106,12 +106,15 @@
     <div class="flexJustify">
       <div class="flexJustify border border-2 border-secondary portfolio">
         <div class="flexCenter portfolio-left">
-          <div class="profile-pic">
-            <img
-              src="../static/images/TarumtLogo.png"
-              width="150px"
-              height="150px"
-            />
+          <div class="shadow">
+            <div class="imageFrameOuter">
+              <div class="imageFrameInner">
+                <img
+                  class="profile-pic"
+                  src="{{studInfo.profile_picture_url}}"
+                />
+              </div>
+            </div>
           </div>
 
           <div class="flexJustify item-container">
@@ -125,20 +128,43 @@
 
           <div class="flexJustify item-container">
             <div class="indicator">
-              <p>Student ID:</p>
+              <p>NRIC:</p>
             </div>
             <div class="content">
-              <p>{{studInfo.student_id}}</p>
+              <p>{{studInfo.nric}}</p>
             </div>
           </div>
 
           <div class="flexJustify item-container">
             <div class="indicator">
-              <p>Programme:</p>
+              <p>Gender:</p>
             </div>
             <div class="content">
-              <p>{{studInfo.programme_code}} - {{studInfo.programme_name}}</p>
+              <p>{{studInfo.gender}}</p>
             </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Own Transport:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.transport}}</p>
+            </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Health Remark:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.health_remark}}</p>
+            </div>
+          </div>
+
+          <div class="sub-title">
+            <h5>Contact Information</h5>
+            <hr />
           </div>
 
           <div class="flexJustify item-container">
@@ -152,14 +178,32 @@
 
           <div class="flexJustify item-container">
             <div class="indicator">
-              <p>Mobile Number:</p>
+              <p>Term Address:</p>
             </div>
             <div class="content">
-              <p>{{studInfo.mobile_phone}}</p>
+              <p>{{studInfo.term_address}}</p>
             </div>
           </div>
 
-          <div style="margin-top: 4%">
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Permanent Address:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.permanent_address}}</p>
+            </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Mobile Number / Fixed Number:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.mobile_phone}} / {{studInfo.fixed_phone}}</p>
+            </div>
+          </div>
+
+          <div class="sub-title">
             <h5>Skills</h5>
             <hr />
           </div>
@@ -193,7 +237,57 @@
         <div class="divider"></div>
 
         <div class="flexCenter portfolio-right">
-          <div>
+          <div class="sub-title">
+            <h5>Academic Detail</h5>
+            <hr />
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Student ID:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.student_id}}</p>
+            </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Tutorial Group:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.tutorial_group}}</p>
+            </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>CGPA:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.cgpa}}</p>
+            </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Level:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.education_level_name}}</p>
+            </div>
+          </div>
+
+          <div class="flexJustify item-container">
+            <div class="indicator">
+              <p>Programme:</p>
+            </div>
+            <div class="content">
+              <p>{{studInfo.programme_code}} - {{studInfo.programme_name}}</p>
+            </div>
+          </div>
+
+          <div class="sub-title">
             <h5>Internship Information</h5>
             <hr />
           </div>
@@ -233,7 +327,7 @@
             </div>
           </div>
 
-          <div style="margin-top: 4%">
+          <div class="sub-title">
             <h5>Company Information</h5>
             <hr />
           </div>

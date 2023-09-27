@@ -1,10 +1,124 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <!-- Link to the external CSS file -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
 
-<body></body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
 
-<footer class="footer">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/global.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/navBar.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/adminHomepage.css') }}"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Admin Homepage</title>
+  </head>
+  <body>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+          <img
+            src="{{ url_for('static', filename='images/tarumt-logo1.png') }}"
+            alt=""
+            width="172"
+            height="56"
+            class="d-inline-block align-text-top"
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('home') }}"
+                >Home</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex-display">
+      <h1 class="title">Student List</h1>
+    </div>
+
+    <div class="flex-display">
+      <div class="studentInfoTable border border-black">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Student ID</th>
+              <th scope="col">Student Name</th>
+              <th scope="col">Programme</th>
+              <th scope="col">Company Status</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for studInfoRow in studInfo %}
+            <tr>
+              <th scope="row">{{studInfoRow[0]}}</th>
+              <td>{{studInfoRow[2]}}</td>
+              <td>{{studInfoRow[7]}}</td>
+              <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
+
+              {% for studCompanyRow in studCompany %} 
+                {% if studCompanyRow[1] == studInfoRow[0] %}
+                  <td>Submitted</td>
+                {% else %}
+                  <td>Not Submitted</td>
+                {% endif %} 
+              {% endfor %}
+
+              <td class="flex-display">
+                <button type="button" class="btn btn-success">Edit</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+
+  <footer class="footer">
     <p>&#169; 2023 - TARUMT FOCS ITP</p>
-</footer>
-
+  </footer>
 </html>

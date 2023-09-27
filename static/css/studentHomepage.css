@@ -2,6 +2,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    object-fit: cover;
+
+    width: 150px;
+    height: 150px;
+}
+
+.shadow {
+    margin: 5px 0 5px 0;
+    border-left: solid #d8d8d8 3px;
+    border-bottom: solid #b0b0b0 3px;
+}
+
+.imageFrameOuter {
+    border: solid #999 1px;
+    margin-bottom: 0px;
+}
+
+.imageFrameInner {
+    border: solid #fff 5px;
+    background-color: #fff;
 }
 
 .flexJustify {
@@ -32,6 +52,10 @@
     flex-direction: column;
     flex: 50%;
     padding-left: 4%;
+}
+
+.sub-title {
+    margin-top: 5%;
 }
 
 @media (max-width: 991.2px) {

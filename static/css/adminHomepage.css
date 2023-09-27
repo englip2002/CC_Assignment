@@ -1,0 +1,12 @@
+.flex-display{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.studentInfoTable{
+    width: 80%;
+    background-color: white;
+    border-width: 1px;
+    border-color: #666;
+}
