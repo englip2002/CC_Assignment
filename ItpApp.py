@@ -504,11 +504,14 @@ global adminLoginState
 adminLoginState = False
 
 def validateAdminLogin():
+    global adminLoginState
     if (not adminLoginState):
         return redirect(url_for('adminLogin'))
 
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
+    if adminLoginState:
+        return redirect(url_for('adminHomepage'))
     return render_template('adminLogin.html')
 
 @app.route("/adminLogin", methods=["POST"])
@@ -534,6 +537,8 @@ def adminLogoutApi():
 
 @app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
+    validateAdminLogin()
+
     studInfo = selectAllFromTable("student")
     programmeInfo = selectAllFromTable("programme")
     studCompany = selectAllFromTable("student_company")
@@ -555,6 +560,8 @@ def adminHomepage():
 
 @app.route("/adminEditPortfolio", methods=['GET', 'POST'])
 def adminEditPortfolio():
+    validateAdminLogin()
+    
     idParam = request.args.get('id')
 
     edulevelList = selectAllFromTable("education_level")
@@ -605,8 +612,7 @@ def adminEditPortfolio():
 
 @app.route("/adminEditPortfolioApi", methods=['POST'])
 def adminEditPortfolioApi():
-    if not loginState:
-        return redirect(url_for('home'))
+    validateAdminLogin()
 
     idParam = request.args.get('id')
     profile_picture = request.files['profile_picture']
@@ -663,10 +669,13 @@ WHERE `student`.`id` = '{idParam}';'''
 
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():
+    validateAdminLogin()
     return render_template('studentDetail.html', invalidLogin=True)
 
 @app.route("/adminCompanyPage", methods=["GET"])
 def adminCompanyPage():
+    validateAdminLogin()
+
     invalidMsg = request.args.get('invalid')
     updateSuccess = request.args.get('updateSuccess')
     companies = selectAllFromTable("company")
@@ -674,12 +683,16 @@ def adminCompanyPage():
 
 @app.route("/addCompany", methods=["GET", "POST"])
 def addCompany():
+    validateAdminLogin()
+
     updateSuccessParam = request.args.get('updateSuccess')
     return render_template('addCompany.html', updateSuccess=updateSuccessParam)
 
 
 @app.route("/addCompanyApi", methods=["POST"])
 def addCompanyApi():
+    validateAdminLogin()
+
     name = request.form['name']
     address_1 = request.form['address_1']
     address_2 = request.form['address_2']
@@ -702,6 +715,8 @@ def addCompanyApi():
 
 @app.route("/editCompany", methods=["GET", "POST"])
 def editCompany():
+    validateAdminLogin()
+
     companyId = request.args.get('id')
 
     if (not companyId) or companyId == "":
@@ -724,6 +739,8 @@ def editCompany():
 
 @app.route("/editCompanyApi", methods=["POST"])
 def editCompanyApi():
+    validateAdminLogin()
+    
     name = request.form['name']
     address_1 = request.form['address_1']
     address_2 = request.form['address_2']
