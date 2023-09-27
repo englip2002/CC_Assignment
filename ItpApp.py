@@ -501,10 +501,12 @@ def logoutApi():
 # ======================================================
 
 global adminLoginState
-adminLoginState = False
+adminLoginState = True
 
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
+    if adminLoginState:
+        return redirect(url_for('adminHomepage'))
     return render_template('adminLogin.html')
 
 @app.route("/adminLogin", methods=["POST"])
@@ -530,6 +532,9 @@ def adminLogoutApi():
 
 @app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+
     studInfo = selectAllFromTable("student")
     programmeInfo = selectAllFromTable("programme")
     studCompany = selectAllFromTable("student_company")
@@ -551,11 +556,10 @@ def adminHomepage():
 
 @app.route("/adminEditPortfolio", methods=['GET', 'POST'])
 def adminEditPortfolio():
-    global loginState
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+    
     idParam = request.args.get('id')
-
-    if not loginState:
-        return redirect(url_for('home'))
 
     edulevelList = selectAllFromTable("education_level")
     cohortList = selectAllFromTable("cohort")
@@ -605,8 +609,8 @@ def adminEditPortfolio():
 
 @app.route("/adminEditPortfolioApi", methods=['POST'])
 def adminEditPortfolioApi():
-    if not loginState:
-        return redirect(url_for('home'))
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
 
     idParam = request.args.get('id')
     profile_picture = request.files['profile_picture']
@@ -663,10 +667,15 @@ WHERE `student`.`id` = '{idParam}';'''
 
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
     return render_template('studentDetail.html', invalidLogin=True)
 
 @app.route("/adminCompanyPage", methods=["GET"])
 def adminCompanyPage():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+
     invalidMsg = request.args.get('invalid')
     updateSuccess = request.args.get('updateSuccess')
     companies = selectAllFromTable("company")
@@ -674,12 +683,18 @@ def adminCompanyPage():
 
 @app.route("/addCompany", methods=["GET", "POST"])
 def addCompany():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+
     updateSuccessParam = request.args.get('updateSuccess')
     return render_template('addCompany.html', updateSuccess=updateSuccessParam)
 
 
 @app.route("/addCompanyApi", methods=["POST"])
 def addCompanyApi():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+
     name = request.form['name']
     address_1 = request.form['address_1']
     address_2 = request.form['address_2']
@@ -702,6 +717,9 @@ def addCompanyApi():
 
 @app.route("/editCompany", methods=["GET", "POST"])
 def editCompany():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+
     companyId = request.args.get('id')
 
     if (not companyId) or companyId == "":
@@ -724,6 +742,9 @@ def editCompany():
 
 @app.route("/editCompanyApi", methods=["POST"])
 def editCompanyApi():
+    if not adminLoginState:
+        return redirect(url_for('adminLogin'))
+
     name = request.form['name']
     address_1 = request.form['address_1']
     address_2 = request.form['address_2']

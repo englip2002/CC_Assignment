@@ -71,10 +71,18 @@
             </li>
             <li class="nav-item">
               <a
-                class="nav-link active"
+                class="nav-link"
                 aria-current="page"
-                href="{{ url_for('studentHomepage') }}"
-                >Portfolio</a
+                href="{{ url_for('adminHomepage') }}"
+                >View Students</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('adminCompanyPage') }}"
+                >View Companies</a
               >
             </li>
           </ul>
@@ -82,7 +90,7 @@
             <a
               class="nav-link"
               aria-current="page"
-              href="{{ url_for('logoutApi') }}"
+              href="{{ url_for('adminLogoutApi') }}"
               >Logout</a
             >
           </div>
