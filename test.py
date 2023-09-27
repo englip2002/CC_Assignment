@@ -1,6 +1,29 @@
-x = ((1, '2022 July', '2023 January - 2023 July', 0), (2, '2022 November', '2023 May - 2023 November', 0), (3, '2023 January', '2024 July - 2025 January', 0))
+field = [
+    [1, 1, 0, 0, 1],
+    [0, 0, 1, 0, 1],
+    [1, 0, 0, 1, 0],
+    [0, 1, 0, 1, 0],
+    [1, 0, 1, 0, 0],
+]
 
-a, b = [(i[1], i[2]) for i in x if i[0] == 1][0]
+pos = [0, 0]
+actions = ['upLeft', 'up', 'upRight', 'left', 'center', 'right', 'downLeft', 'down', 'downRight']
 
-print(a)
-print(b)
+solutionPath = []
+
+def isGoal(thisPos):
+    return thisPos[0] == len(field) - 1
+
+def findSafeSpaces(thisPos):
+    output = []
+    for i, a in enumerate(actions):
+        tempPos = [-1 + (i % 3) + thisPos[0], -1 + int((i) / 3) + thisPos[1]]
+        if (tempPos[0] >= 0 and tempPos[0] < len(field) and tempPos[1] >= 0 and tempPos[1] < len(field[0])):
+            output.append({'action': a, 'pos': tempPos})
+    return output
+
+while (not isGoal(pos)):
+    safeSpaces = findSafeSpaces
+    for each in safeSpaces:
+        ...
+print(findSafeSpaces([0,0]))

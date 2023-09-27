@@ -144,7 +144,7 @@ def studentHomepage():
 
     if not loginState:
         return redirect(url_for('home'))
-    
+
     updateSuccessParam = request.args.get('updateSuccess')
 
     try:
@@ -259,6 +259,7 @@ def editPortfolio():
                            programmeListJson=json.dumps(programmeList),
                            supervisorList=supervisorList,
                            studentInfo=studentInfo)
+
 
 @app.route("/editPortfolioApi", methods=['POST'])
 def editPortfolioApi():
@@ -507,15 +508,28 @@ def logoutApi():
     loginNric = ""
     return redirect(url_for('home'))
 
+# ======================================================
+# COMPANY
+# ======================================================
+
+@app.route("/companySignUp", methods=['GET', 'POST'])
+def companySignUp():
+    return render_template('companySignUp.html')
+
+@app.route("/companyLogin", methods=['GET', 'POST'])
+def companyLogin():
+    return render_template('companyLogin.html')
+
+# ======================================================
+# ADMIN
+# ======================================================
 
 global adminLoginState
 adminLoginState = False
 
-
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
     return render_template('adminLogin.html')
-
 
 @app.route("/adminLogin", methods=["POST"])
 def adminLoginApi():
@@ -532,23 +546,19 @@ def adminLoginApi():
 
     return render_template('adminLogin.html', invalidLogin=True)
 
-
 @app.route("/adminLogoutApi", methods=["GET", "POST"])
 def adminLogoutApi():
     global adminLoginState
     adminLoginState = False
     return redirect(url_for('home'))
 
-
 @app.route("/adminHomepage", methods=["GET"])
 def adminHomepage():
     return render_template('adminHomepage.html', invalidLogin=True)
 
-
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():
     return render_template('studentDetail.html', invalidLogin=True)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Link to the external CSS file -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/global.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/navBar.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/signUp.css') }}"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>Sign Up</title>
+  </head>
+
+  <body>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+          <img
+            src="{{ url_for('static', filename='images/tarumt-logo1.png') }}"
+            alt=""
+            width="172"
+            height="56"
+            class="d-inline-block align-text-top"
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('home') }}"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="{{ url_for('login') }}"
+                >Student</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="{{ url_for('companyLogin') }}"
+                >Company</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('adminLogin') }}"
+                >Admin</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <form action="{{url_for('companySignUpApi')}}" method="post" id="signup-form">
+      <div class="flex-vertical">
+        <div>
+          <h1 class="title">Company Signup</h1>
+        </div>
+
+        <div class="signUp border border-secondary">
+          <div class="subTitle" style="margin-bottom: 0%">
+            <p style="padding-left: 3%">Company Details</p>
+            <hr />
+          </div>
+
+          <div class="flex-vertical">
+            <div class="inputText">
+              <p class="inputIndicator">Company Name:</p>
+              <div class="input-group mb-3">
+                <input
+                  required
+                  name="name"
+                  id="name"
+                  type="text"
+                  class="form-control"
+                  placeholder="Company Official Name"
+                />
+              </div>
+            </div>
+
+            <div class="inputText">
+              <p class="inputIndicator">Company Address 1:</p>
+              <div class="input-group mb-3">
+                <textarea
+                  required
+                  name="address_1"
+                  id="address_1"
+                  class="form-control"
+                  placeholder="Physical Address of the Company"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="inputText">
+              <p class="inputIndicator">Company Address 2 (Optional):</p>
+              <div class="input-group mb-3">
+                <textarea
+                  required
+                  name="address_2"
+                  id="address_2"
+                  class="form-control"
+                  placeholder="Second Physical Address of the Company (If any)"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="signUp border border-secondary">
+          <div class="subTitle" style="margin-bottom: 0%">
+            <p style="padding-left: 3%">Login Details</p>
+            <hr />
+          </div>
+
+          <div class="flex-vertical">
+            <div class="inputText">
+              <p class="inputIndicator">Login Email:</p>
+              <div class="input-group mb-3">
+                <input
+                  required
+                  name="email"
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  placeholder="xxx@email.com"
+                />
+              </div>
+            </div>
+
+            <div class="inputText">
+              <p class="inputIndicator">Login Password:</p>
+              <div class="input-group mb-3">
+                <input
+                  required
+                  name="password"
+                  id="password"
+                  type="password"
+                  class="form-control"
+                  placeholder="********"
+                />
+              </div>
+            </div>
+
+            <div class="inputText">
+              <p class="inputIndicator">Confirm Password:</p>
+              <div class="input-group mb-3">
+                <input
+                  required
+                  name="confirm_password"
+                  id="confirm_password"
+                  type="password"
+                  class="form-control"
+                  placeholder="********"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="signUp border border-secondary">
+          <div class="declaration">
+            <div class="flex-horizontal">
+              <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
+
+  <footer class="footer">
+    <p>&#169; 2023 - TARUMT FOCS ITP</p>
+  </footer>
+
+  <script>
+
+    // Textarea cleanup (in case of formatter mistake)
+    document.querySelectorAll("textarea").forEach(each => {
+        each.value = "";
+    })
+
+    // Form submit
+    document.querySelector('#signup-form').addEventListener('submit', e => {
+        e.preventDefault();
+
+        let toBeFocused;
+        let valid = true;
+        let errorMessage;
+
+        if (document.querySelector('#password').value != document.querySelector('#confirm_password').value) {
+            valid = false;
+            toBeFocused = "#confirm_password"
+            errorMessage = "Password and Confirm Password doesn't match!"
+        }
+
+        if (valid) {
+            document.querySelector('#signup-form').submit();
+        }
+        else {
+            Swal.fire("Oops..", errorMessage, "error").then(res => {
+                document.querySelector(toBeFocused).scrollIntoView({ behavior: "smooth" });
+                document.querySelector(toBeFocused).focus();
+            });
+        }
+    })
+  </script>
+</html>
