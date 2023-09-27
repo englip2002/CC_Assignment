@@ -503,6 +503,10 @@ def logoutApi():
 global adminLoginState
 adminLoginState = False
 
+def validateAdminLogin():
+    if (not adminLoginState):
+        return redirect(url_for('adminLogin'))
+
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
     return render_template('adminLogin.html')
@@ -551,11 +555,7 @@ def adminHomepage():
 
 @app.route("/adminEditPortfolio", methods=['GET', 'POST'])
 def adminEditPortfolio():
-    global loginState
     idParam = request.args.get('id')
-
-    if not loginState:
-        return redirect(url_for('home'))
 
     edulevelList = selectAllFromTable("education_level")
     cohortList = selectAllFromTable("cohort")
