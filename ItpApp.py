@@ -573,18 +573,6 @@ def studentSubmitReportApi():
     return redirect(url_for('studentViewReports', updateSuccess=True))
 
 
-@app.route("/test", methods=["GET"])
-def test():
-    cursor = db_conn.cursor()
-    cursor.execute("select * from supervisor")
-    output = cursor.fetchall()
-    cursor.close()
-
-    print(output)
-    print(type(output))
-    return render_template('test.html', output=output)
-
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     global loginState, loginNric, loginEmail
