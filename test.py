@@ -28,5 +28,55 @@
 #         ...
 # print(findSafeSpaces([0,0]))
 
-x = ()
-print(type(x))
+from config import *
+from pymysql import connections
+
+bucket = custombucket
+region = customregion
+
+try:
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+    print("Database connection success!")
+except Exception as e:
+    print("Database connection failed!")
+    print(e)
+
+# (('programme',), ('student',), ('company',), ('student_company',), ('supervisor',), ('cohort',), ('education_level',))
+def main():
+    sql=f'''
+        DROP TABLE admin;
+    '''
+#     sql=f'''
+#         SELECT table_name
+# FROM information_schema.tables
+# WHERE table_schema = '{customdb}'
+# ;
+#     '''
+    output = sql
+    try:
+        # Insert record to sql
+        cursor = db_conn.cursor()
+
+        print("Executing SQL")
+        cursor.execute(sql)
+
+        print("Comitting SQL")
+        # db_conn.commit()
+        output = cursor.fetchall()
+
+    except Exception as e:
+        return "Exception at SQL: " + str(e)
+    finally:
+        cursor.close()
+
+    print("Done!")
+    return str(output)
+
+x = main()
+print(x)

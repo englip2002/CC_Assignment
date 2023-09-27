@@ -11,12 +11,9 @@ bucket = custombucket
 region = customregion
 
 global loginState, loginNric, loginEmail
-# loginState = False
-# loginNric = ""
-# loginEmail = ""
-loginState = True
-loginNric = "021005-14-1279"
-loginEmail = "thongsx-wm20@student.tarc.edu.my"
+loginState = False
+loginNric = ""
+loginEmail = ""
 
 try:
     db_conn = connections.Connection(
@@ -49,12 +46,9 @@ def home():
     return render_template('index.html')
 
 # Static routes
-
-
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory(app.static_folder, filename)
-
 
 @app.route("/signUp", methods=['GET', 'POST'])
 def signUp():
@@ -104,8 +98,6 @@ def signupApi():
     programming_knowledge = request.form['programming_knowledge']
     database_knowledge = request.form['database_knowledge']
     networking_knowledge = request.form['networking_knowledge']
-
-    # pfp_url = "https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png"
 
     # Upload image to S3 first
     pfp_url = ""
@@ -621,7 +613,7 @@ def logoutApi():
 # ======================================================
 
 global adminLoginState
-adminLoginState = True
+adminLoginState = False
 
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
@@ -954,5 +946,8 @@ def editCompanyApi():
 
     return redirect(url_for('adminCompanyPage', updateSuccess=True))
 
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
