@@ -100,29 +100,31 @@ def signupApi():
     database_knowledge = request.form['database_knowledge']
     networking_knowledge = request.form['networking_knowledge']
 
-    # Upload image to S3 first
-    pfp_url = ""
-    try:
-        pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
+    pfp_url = "https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png"
 
-        s3 = boto3.resource('s3')
-        s3.Bucket(custombucket).put_object(
-            Key=pfp_filename_in_s3, Body=profile_picture)
-        bucket_location = boto3.client(
-            's3').get_bucket_location(Bucket=custombucket)
-        s3_location = (bucket_location['LocationConstraint'])
+    # # Upload image to S3 first
+    # pfp_url = ""
+    # try:
+    #     pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
 
-        if s3_location is None:
-            s3_location = ''
-        else:
-            s3_location = '-' + s3_location
+    #     s3 = boto3.resource('s3')
+    #     s3.Bucket(custombucket).put_object(
+    #         Key=pfp_filename_in_s3, Body=profile_picture)
+    #     bucket_location = boto3.client(
+    #         's3').get_bucket_location(Bucket=custombucket)
+    #     s3_location = (bucket_location['LocationConstraint'])
 
-        pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
-            s3_location,
-            custombucket,
-            pfp_filename_in_s3)
-    except Exception as e:
-        return str(e)
+    #     if s3_location is None:
+    #         s3_location = ''
+    #     else:
+    #         s3_location = '-' + s3_location
+
+    #     pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+    #         s3_location,
+    #         custombucket,
+    #         pfp_filename_in_s3)
+    # except Exception as e:
+    #     return str(e)
 
     try:
         # Insert record to sql
@@ -557,8 +559,21 @@ def adminHomepage():
     studInfo = selectAllFromTable("student")
     programmeInfo = selectAllFromTable("programme")
     studCompany = selectAllFromTable("student_company")
+
+    studCompanySubmitted = []
+    for studRow in studInfo:
+        found = False
+        for compRow in studCompany:
+            if compRow[0] == studRow[0]:
+                found = True
+                break
+        if found:
+            studCompanySubmitted.append("Submitted")
+        else:
+            studCompanySubmitted.append("Not Submitted")
+
     # Render an HTML template with the retrieved data
-    return render_template('adminHomepage.html', invalidLogin=True, studInfo=studInfo, programmeInfo=programmeInfo, studCompany=studCompany)
+    return render_template('adminHomepage.html', invalidLogin=True, studInfo=studInfo, programmeInfo=programmeInfo, studCompany=studCompany, studCompanySubmitted=studCompanySubmitted)
 
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():

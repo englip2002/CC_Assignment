@@ -99,13 +99,14 @@
               <td>{{studInfoRow[7]}}</td>
               <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
 
-              {% for studCompanyRow in studCompany %} 
+              <!-- {% for studCompanyRow in studCompany %} 
                 {% if studCompanyRow[1] == studInfoRow[0] %}
                   <td>Submitted</td>
                 {% else %}
                   <td>Not Submitted</td>
                 {% endif %} 
-              {% endfor %}
+              {% endfor %} -->
+              <td>{{studCompanySubmitted[loop.index0]}}</td>
 
               <td class="flex-display">
                 <button type="button" class="btn btn-success">Edit</button>
