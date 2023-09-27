@@ -58,6 +58,11 @@ def static_files(filename):
 
 @app.route("/signUp", methods=['GET', 'POST'])
 def signUp():
+    global loginState, loginNric, loginEmail
+
+    if loginState:
+        return redirect(url_for('studentHomepage'))
+    
     edulevelList = selectAllFromTable("education_level")
     cohortList = selectAllFromTable("cohort")
     programmeList = selectAllFromTable("programme")
@@ -490,18 +495,6 @@ def logoutApi():
     loginEmail = ""
     loginNric = ""
     return redirect(url_for('home'))
-
-# ======================================================
-# COMPANY
-# ======================================================
-
-@app.route("/companySignUp", methods=['GET', 'POST'])
-def companySignUp():
-    return render_template('companySignUp.html')
-
-@app.route("/companyLogin", methods=['GET', 'POST'])
-def companyLogin():
-    return render_template('companyLogin.html')
 
 # ======================================================
 # ADMIN
