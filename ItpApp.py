@@ -58,6 +58,11 @@ def static_files(filename):
 
 @app.route("/signUp", methods=['GET', 'POST'])
 def signUp():
+    global loginState, loginNric, loginEmail
+
+    if loginState:
+        return redirect(url_for('studentHomepage'))
+    
     edulevelList = selectAllFromTable("education_level")
     cohortList = selectAllFromTable("cohort")
     programmeList = selectAllFromTable("programme")
@@ -72,7 +77,7 @@ def signUp():
 @app.route("/signupApi", methods=['POST'])
 def signupApi():
     # Personal Data
-    profile_picture = request.form['profile_picture']
+    profile_picture = request.files['profile_picture']
     name = request.form['name']
     nric = request.form['nric']
     gender = request.form['gender']
@@ -100,31 +105,33 @@ def signupApi():
     database_knowledge = request.form['database_knowledge']
     networking_knowledge = request.form['networking_knowledge']
 
-    pfp_url = "https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png"
+    # pfp_url = "https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png"
 
-    # # Upload image to S3 first
-    # pfp_url = ""
-    # try:
-    #     pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
+    # Upload image to S3 first
+    pfp_url = ""
+    try:
+        pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
 
-    #     s3 = boto3.resource('s3')
-    #     s3.Bucket(custombucket).put_object(
-    #         Key=pfp_filename_in_s3, Body=profile_picture)
-    #     bucket_location = boto3.client(
-    #         's3').get_bucket_location(Bucket=custombucket)
-    #     s3_location = (bucket_location['LocationConstraint'])
+        s3 = boto3.resource('s3')
 
-    #     if s3_location is None:
-    #         s3_location = ''
-    #     else:
-    #         s3_location = '-' + s3_location
+        s3.Bucket(custombucket).put_object(
+            Key=pfp_filename_in_s3, Body=profile_picture, ContentType=profile_picture.content_type)
+        
+        bucket_location = boto3.client(
+            's3').get_bucket_location(Bucket=custombucket)
+        s3_location = (bucket_location['LocationConstraint'])
 
-    #     pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
-    #         s3_location,
-    #         custombucket,
-    #         pfp_filename_in_s3)
-    # except Exception as e:
-    #     return str(e)
+        if s3_location is None:
+            s3_location = ''
+        else:
+            s3_location = '-' + s3_location
+
+        pfp_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            s3_location,
+            custombucket,
+            pfp_filename_in_s3)
+    except Exception as e:
+        return "Exception at profile_picture: " + str(e)
 
     try:
         # Insert record to sql
@@ -133,7 +140,7 @@ def signupApi():
         cursor.execute(insert_sql)
         db_conn.commit()
     except Exception as e:
-        return str(e)
+        return "Exception at SQL: " + str(e)
     finally:
         cursor.close()
 
@@ -160,7 +167,9 @@ def studentHomepage():
                 LEFT JOIN `education_level` ON `student`.`education_level_id` = `education_level`.`id` 
                 LEFT JOIN `programme` ON `student`.`programme_id` = `programme`.`id` 
                 LEFT JOIN `supervisor` ON `student`.`supervisor_id` = `supervisor`.`id`
-            WHERE `student`.`deleted`='0';
+            WHERE `student`.`deleted`='0'
+                AND `student`.`email` = '{loginEmail}' 
+                AND `student`.`nric` = '{loginNric}';
             ''')
         output = cursor.fetchall()
 
@@ -269,31 +278,8 @@ def editPortfolioApi():
         return redirect(url_for('home'))
 
     # Personal Data
-    profile_picture = request.form['profile_picture']
-    name = request.form['name']
-    gender = request.form['gender']
-    transport = request.form['transport']
-    health_remark = request.form['health_remark']
-
-    # Academic Detail
+    profile_picture = request.files['profile_picture']
     student_id = request.form['student_id']
-    tutorial_group = request.form['tutorial_group']
-    cgpa = request.form['cgpa']
-    education_level = request.form['education_level']
-    cohort = request.form['cohort']
-    programme = request.form['programme']
-    supervisor = request.form['supervisor']
-
-    # Contact Information
-    term_address = request.form['term_address']
-    permanent_address = request.form['permanent_address']
-    mobile_phone = request.form['mobile_phone']
-    fixed_phone = request.form['fixed_phone']
-
-    # Technical Knowledge
-    programming_knowledge = request.form['programming_knowledge']
-    database_knowledge = request.form['database_knowledge']
-    networking_knowledge = request.form['networking_knowledge']
 
     # If user updated profile pic
     pfp_url = ""
@@ -304,7 +290,7 @@ def editPortfolioApi():
 
             s3 = boto3.resource('s3')
             s3.Bucket(custombucket).put_object(
-                Key=pfp_filename_in_s3, Body=profile_picture)
+                Key=pfp_filename_in_s3, Body=profile_picture, ContentType=profile_picture.content_type)
             bucket_location = boto3.client(
                 's3').get_bucket_location(Bucket=custombucket)
             s3_location = (bucket_location['LocationConstraint'])
@@ -509,18 +495,6 @@ def logoutApi():
     loginEmail = ""
     loginNric = ""
     return redirect(url_for('home'))
-
-# ======================================================
-# COMPANY
-# ======================================================
-
-@app.route("/companySignUp", methods=['GET', 'POST'])
-def companySignUp():
-    return render_template('companySignUp.html')
-
-@app.route("/companyLogin", methods=['GET', 'POST'])
-def companyLogin():
-    return render_template('companyLogin.html')
 
 # ======================================================
 # ADMIN
