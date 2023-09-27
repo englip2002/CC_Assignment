@@ -683,7 +683,7 @@ WHERE `student`.`id` = '{idParam}';'''
     finally:
         cursor.close()
 
-    return redirect(url_for('adminHomepage'))
+    return redirect(url_for('adminHomepage'), updateSuccess=True)
 
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():
