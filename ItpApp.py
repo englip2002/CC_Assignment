@@ -222,7 +222,7 @@ def studentHomepage():
         for i, each in enumerate(tempColumns):
             companyInfo[each[0]] = companyOutput[0][i]
 
-    return render_template('studentHomepage.html', loginInfo=(loginState, loginNric, loginEmail), studInfo=fOutput, columns=fColumns, companyInfo=companyInfo, updateSuccess=updateSuccessParam, signUpSuccess=signUpSuccess)
+    return render_template('studentHomepage.html', studInfo=fOutput, companyInfo=companyInfo, updateSuccess=updateSuccessParam, signUpSuccess=signUpSuccess)
 
 
 @app.route("/editPortfolio", methods=['GET', 'POST'])
@@ -801,7 +801,76 @@ WHERE `student`.`id` = '{idParam}';'''
 def studentDetail():
     if not adminLoginState:
         return redirect(url_for('adminLogin'))
-    return render_template('studentDetail.html', invalidLogin=True)
+    
+    idParam = request.args.get('id')
+
+    if (not idParam) or idParam == "":
+        return redirect(url_for('adminHomepage'))
+
+    try:
+        cursor = db_conn.cursor()
+
+        # Student Info
+        cursor.execute(f'''
+            SELECT `student`.*, `cohort`.`name` AS `cohort.name`, `cohort`.`period` AS `cohort.period`, `education_level`.`name` AS `education_level.name`, `programme`.`name` AS `programme.name`, `programme`.`code` AS `programme.code`, `supervisor`.`name` AS `supervisor.name`, `supervisor`.`email` AS `supervisor.email`
+            FROM `student` 
+                LEFT JOIN `cohort` ON `student`.`cohort_id` = `cohort`.`id` 
+                LEFT JOIN `education_level` ON `student`.`education_level_id` = `education_level`.`id` 
+                LEFT JOIN `programme` ON `student`.`programme_id` = `programme`.`id` 
+                LEFT JOIN `supervisor` ON `student`.`supervisor_id` = `supervisor`.`id`
+            WHERE `student`.`deleted`='0'
+                AND `student`.`id` = '{idParam}' ;
+            ''')
+        output = cursor.fetchall()
+
+        # Student Table Columns
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
+        columns = cursor.fetchall()
+
+        # Company Info
+        cursor.execute(f'''
+            SELECT student_company.*, company.*
+            FROM student_company
+                LEFT JOIN company ON student_company.company_id = company.id
+            WHERE student_company.student_id = '{idParam}' AND student_company.deleted = '0' AND company.deleted = '0';
+            ''')
+        companyOutput = cursor.fetchall()
+
+        # Company columns
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'student_company' and table_schema='{customdb}' order by ordinal_position")
+        scColumns = cursor.fetchall()
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'company' and table_schema='{customdb}' order by ordinal_position")
+        cColumns = cursor.fetchall()
+
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    fColumns = list(map(lambda x: x[0], columns))
+    fColumns.extend(["cohort_name", "cohort_period", "education_level_name",
+                    "programme_name", "programme_code", "supervisor_name", "supervisor_email"])
+
+    fOutput = {}
+    for i, each in enumerate(fColumns):
+        fOutput[each] = output[0][i]
+
+    companyInfo = False
+    if len(companyOutput) > 0:
+        companyInfo = {}
+        tempColumns = list(scColumns)
+        tempColumns.extend(list(cColumns))
+        for i, each in enumerate(tempColumns):
+            companyInfo[each[0]] = companyOutput[0][i]
+    
+    print(fOutput)
+    print(fColumns)
+    print(companyInfo)
+
+    return render_template('studentDetail.html', studInfo=fOutput, companyInfo=companyInfo)
 
 @app.route("/adminCompanyPage", methods=["GET"])
 def adminCompanyPage():

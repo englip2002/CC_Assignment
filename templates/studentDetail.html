@@ -1,250 +1,353 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <!-- Link to the external CSS file -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/global.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/navBar.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/portfolio.css') }}" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename = 'css/global.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename = 'css/navBar.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename = 'css/portfolio.css') }}"
+    />
+
+    <style>
+      .profile-pic {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        object-fit: cover;
+
+        width: 150px;
+        height: 150px;
+      }
+
+      .shadow {
+        margin: 5px 0 5px 0;
+        border-left: solid #d8d8d8 3px;
+        border-bottom: solid #b0b0b0 3px;
+      }
+
+      .imageFrameOuter {
+        border: solid #999 1px;
+        margin-bottom: 0px;
+      }
+
+      .imageFrameInner {
+        border: solid #fff 5px;
+        background-color: #fff;
+      }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>Student Homepage</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light navBar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('home') }}"><img
-                    src="{{ url_for('static', filename = 'images/tarumt-logo1.png') }}" alt="" width="172" height="56"
-                    class="d-inline-block align-text-top" /></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-current="page" href="#">Commitee</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-current="page" href="#">Uni Supervisor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">Student</a>
-                    </li>
-                </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+          <a class="navbar-brand" href="{{ url_for('home') }}">
+            <img
+              src="{{ url_for('static', filename='images/tarumt-logo1.png') }}"
+              alt=""
+              width="172"
+              height="56"
+              class="d-inline-block align-text-top"
+            />
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="{{ url_for('home') }}"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="{{ url_for('adminHomepage') }}"
+                  >View Students</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="{{ url_for('adminCompanyPage') }}"
+                  >View Companies</a
+                >
+              </li>
+            </ul>
+            <div style="margin-right: 1rem">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('adminLogoutApi') }}"
+                >Logout</a
+              >
             </div>
+          </div>
         </div>
-    </nav>
+      </nav>
 
     <div class="flex-vertical">
-        <div>
-            <h1 class="title">Welcome: {{ name }}</h1>
+      <div>
+        <h1 class="title">Welcome: {{ name }}</h1>
+      </div>
+
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Summary</p>
+          <hr />
         </div>
 
-        <div class="stdHP border border-secondary">
-            <div class="subTitle" style="margin-bottom: 0%">
-                <p style="padding-left: 3%">Summary</p>
-                <hr />
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+          <div class="inputText">
+            <p class="inputIndicator">Cohort:</p>
+            <div class="input-group">
+              <p>{{ studInfo.cohort_name }}</p>
             </div>
+          </div>
 
-            <div class="flex-vertical">
-                <div class="inputText">
-                    <p class="inputIndicator">Cohort:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ cohort }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Intern Period:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ InternPeriod }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Status:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ Status }}</p>
-                    </div>
-                </div>
-                <div class="inputText">
-                    <p class="inputIndicator">Remark:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ Remark }}</p>
-                    </div>
-                </div>
+          <div class="inputText">
+            <p class="inputIndicator">Intern Period:</p>
+            <div class="input-group">
+              <p>{{ studInfo.cohort_period }}</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Student Detail</p>
+          <hr />
         </div>
 
-        <div class="stdHP border border-secondary">
-            <div class="subTitle" style="margin-bottom: 0%">
-                <p style="padding-left: 3%">Student Detail</p>
-                <hr />
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Student Profile Picture:</p>
+            <div class="input-group">
+              <div class="shadow">
+                <div class="imageFrameOuter">
+                  <div class="imageFrameInner">
+                    <img
+                      class="profile-pic"
+                      src="{{studInfo.profile_picture_url}}"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="mb-3"></div>
 
-            <div class="flex-vertical">
-                <div class="inputText">
-                    <p class="inputIndicator">Student Name:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ name }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Student ID:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ studentID }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">NRIC No.:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ NRIC }}</p>
-                    </div>
-                </div>
-                <div class="inputText">
-                    <p class="inputIndicator">Gender:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ Gender }}</p>
-                    </div>
-                </div>
-                <div class="inputText">
-                    <p class="inputIndicator">Programme:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ Programme }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Student Email:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ StudentEmail }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Mobile Number:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ MobileNumber }}</p>
-                    </div>
-                </div>
+          <div class="inputText">
+            <p class="inputIndicator">Student Name:</p>
+            <div class="input-group">
+              <p>{{ studInfo.name }}</p>
             </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Student ID:</p>
+            <div class="input-group">
+              <p>{{ studInfo.student_id }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">NRIC No.:</p>
+            <div class="input-group">
+              <p>{{ studInfo.nric }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Gender:</p>
+            <div class="input-group">
+              <p>{{ studInfo.gender }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Programme:</p>
+            <div class="input-group">
+              <p>
+                {{ studInfo.programme_code }} - {{ studInfo.programme_name }}
+              </p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Student Email:</p>
+            <div class="input-group">
+              <p>{{ studInfo.email }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Mobile Number:</p>
+            <div class="input-group">
+              <p>{{ studInfo.mobile_phone }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">UC Supervisor</p>
+          <hr />
         </div>
 
-        <div class="stdHP border border-secondary">
-            <div class="subTitle" style="margin-bottom: 0%">
-                <p style="padding-left: 3%">UC Supervisor</p>
-                <hr />
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+          <div class="inputText">
+            <p class="inputIndicator">UC Supervisor Name:</p>
+            <div class="input-group">
+              <p>{{ studInfo.supervisor_name }}</p>
             </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">UC Supervisor Name:</p>
+            <div class="input-group">
+              <p>{{ studInfo.supervisor_email }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="flex-vertical">
-                <div class="inputText">
-                    <p class="inputIndicator">UC Supervisor Name:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ supName }}</p>
-                    </div>
-                </div>
-                <div class="inputText">
-                    <p class="inputIndicator">UC Supervisor Name:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ supEmail }}</p>
-                    </div>
-                </div>
-            </div>
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Company Detail</p>
+          <hr />
         </div>
 
-        <div class="stdHP border border-secondary">
-            <div class="subTitle" style="margin-bottom: 0%">
-                <p style="padding-left: 3%">Company Detail</p>
-                <hr />
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+          <div class="inputText">
+            <p class="inputIndicator">Company Name:</p>
+            <div class="input-group">
+              <p>{{ companyInfo.name }}</p>
             </div>
+          </div>
 
-            <div class="flex-vertical">
-                <div class="inputText">
-                    <p class="inputIndicator">Company Name:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ companyName }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Address 1:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ compAddress1 }}</p>
-                    </div>
-                </div>
-                <div class="inputText">
-                    <p class="inputIndicator">Address 2:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ compAddress2 }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Monthly Allowance:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ allowance }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Company Supervisor Name:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ compSupName }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Company Supervisor Email:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ compSupMail }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Company Acceptance Form:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ compAcceptFormUrl }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Parent Acknowledgement Form:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ parAckFormUrl }}</p>
-                    </div>
-                </div>
-
-                <div class="inputText">
-                    <p class="inputIndicator">Letter of Indemnity:</p>
-                    <div class="input-group mb-3">
-                        <p>{{ letOfIndemUrl }}</p>
-                    </div>
-                </div>
+          <div class="inputText">
+            <p class="inputIndicator">Address 1:</p>
+            <div class="input-group">
+              <p>{{ companyInfo.address_1 }}</p>
             </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Address 2:</p>
+            <div class="input-group">
+              <p>{{ companyInfo.address_2 }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Monthly Allowance:</p>
+            <div class="input-group">
+              <p>RM {{ companyInfo.monthly_allowance }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Company Supervisor Name:</p>
+            <div class="input-group">
+              <p>{{ companyInfo.company_supervisor_name }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Company Supervisor Email:</p>
+            <div class="input-group">
+              <p>{{ companyInfo.company_supervisor_email }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Company Acceptance Form:</p>
+            <div class="input-group">
+              <p>
+                <a
+                  href="{{ companyInfo.company_acceptance_form_url }}"
+                  target="_blank"
+                  >Click here to view</a
+                >
+              </p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Parent Acknowledgement Form:</p>
+            <div class="input-group">
+              <p>
+                <a
+                  href="{{ companyInfo.parent_acknowledgement_form_url }}"
+                  target="_blank"
+                  >Click here to view</a
+                >
+              </p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Letter of Indemnity:</p>
+            <div class="input-group">
+              <p>
+                <a
+                  href="{{ companyInfo.letter_of_indemnity_url }}"
+                  target="_blank"
+                  >Click here to view</a
+                >
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 
-<footer class="footer">
+  <footer class="footer">
     <p>&#169; 2023 - TARUMT FOCS ITP</p>
-</footer>
-
+  </footer>
 </html>
