@@ -114,13 +114,18 @@
             {% for studInfoRow in studInfo %}
             <tr>
               <th scope="row">{{studInfoRow[0]}}</th>
-              <td>{{studInfoRow[2]}}</td>
               <td>{{studInfoRow[7]}}</td>
+              <td>{{studInfoRow[2]}}</td>
               <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
               <td>{{studCompanySubmitted[loop.index0]}}</td>
 
               <td class="flex-display">
-                <button type="button" class="btn btn-success">Edit</button>
+                <a
+                  href="{{url_for('adminEditPortfolio') + '?id='+(studInfoRow[0] | string)}}"
+                  ><button type="button" class="btn btn-success">
+                    Edit
+                  </button></a
+                >
               </td>
             </tr>
             {% endfor %}
