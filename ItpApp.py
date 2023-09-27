@@ -354,9 +354,9 @@ def registerCompanyApi():
     allowance = request.form['allowance']
     sup_name = request.form['company_sup_name']
     sup_email = request.form['company_sup_email']
-    acceptance_form = request.form['acceptance_form']
-    ack_form = request.form['ack_form']
-    indemnity_form = request.form['indemnity_form']
+    acceptance_form = request.files['acceptance_form']
+    ack_form = request.files['ack_form']
+    indemnity_form = request.files['indemnity_form']
 
     # Upload files to S3 first
     acf_url = ""
@@ -609,32 +609,8 @@ def adminEditPortfolioApi():
         return redirect(url_for('home'))
 
     idParam = request.args.get('id')
-    # Personal Data
-    profile_picture = request.form['profile_picture']
-    name = request.form['name']
-    gender = request.form['gender']
-    transport = request.form['transport']
-    health_remark = request.form['health_remark']
-
-    # Academic Detail
+    profile_picture = request.files['profile_picture']
     student_id = request.form['student_id']
-    tutorial_group = request.form['tutorial_group']
-    cgpa = request.form['cgpa']
-    education_level = request.form['education_level']
-    cohort = request.form['cohort']
-    programme = request.form['programme']
-    supervisor = request.form['supervisor']
-
-    # Contact Information
-    term_address = request.form['term_address']
-    permanent_address = request.form['permanent_address']
-    mobile_phone = request.form['mobile_phone']
-    fixed_phone = request.form['fixed_phone']
-
-    # Technical Knowledge
-    programming_knowledge = request.form['programming_knowledge']
-    database_knowledge = request.form['database_knowledge']
-    networking_knowledge = request.form['networking_knowledge']
 
     # If user updated profile pic
     pfp_url = ""
@@ -688,6 +664,85 @@ WHERE `student`.`id` = '{idParam}';'''
 @app.route("/studentDetail", methods=["GET"])
 def studentDetail():
     return render_template('studentDetail.html', invalidLogin=True)
+
+@app.route("/adminCompanyPage", methods=["GET"])
+def adminCompanyPage():
+    invalidMsg = request.args.get('invalid')
+    updateSuccess = request.args.get('updateSuccess')
+    companies = selectAllFromTable("company")
+    return render_template('adminCompanyPage.html', companies=companies, invalidMsg=invalidMsg, updateSuccess=updateSuccess)
+
+@app.route("/addCompany", methods=["GET", "POST"])
+def addCompany():
+    updateSuccessParam = request.args.get('updateSuccess')
+    return render_template('addCompany.html', updateSuccess=updateSuccessParam)
+
+
+@app.route("/addCompanyApi", methods=["POST"])
+def addCompanyApi():
+    name = request.form['name']
+    address_1 = request.form['address_1']
+    address_2 = request.form['address_2']
+
+    if address_2 == "":
+        address_2 = " - "
+    try:
+        # Insert record to sql
+        cursor = db_conn.cursor()
+        insert_sql = f"INSERT INTO `company` (`name`, `address_1`, `address_2`) VALUES ('{name}', '{address_1}', '{address_2}');"
+        cursor.execute(insert_sql)
+        db_conn.commit()
+    except Exception as e:
+        return "Exception at SQL: " + str(e)
+    finally:
+        cursor.close()
+
+    return redirect(url_for('addCompany', updateSuccess=True))
+
+
+@app.route("/editCompany", methods=["GET", "POST"])
+def editCompany():
+    companyId = request.args.get('id')
+
+    if (not companyId) or companyId == "":
+        return redirect(url_for('adminCompanyPage', invalid='Invalid Company ID'))
+    
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute(f"SELECT * FROM company WHERE deleted = 0 AND id = {companyId}")
+        output = cursor.fetchall()
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+
+    if len(output) == 0:
+        return redirect(url_for('adminCompanyPage', invalid='Company data not found!'))
+    
+    return render_template('editCompany.html', companyInfo=output[0])
+
+
+@app.route("/editCompanyApi", methods=["POST"])
+def editCompanyApi():
+    name = request.form['name']
+    address_1 = request.form['address_1']
+    address_2 = request.form['address_2']
+    companyId = request.form['companyId']
+
+    if address_2 == "":
+        address_2 = " - "
+    try:
+        # Insert record to sql
+        cursor = db_conn.cursor()
+        sql = f"UPDATE company SET `name`='{name}', `address_1`='{address_1}', `address_2`='{address_2}' WHERE deleted=0 AND id={companyId}"
+        cursor.execute(sql)
+        db_conn.commit()
+    except Exception as e:
+        return "Exception at SQL: " + str(e)
+    finally:
+        cursor.close()
+
+    return redirect(url_for('adminCompanyPage', updateSuccess=True))
 
 if __name__ == '__main__':
     app.run(debug=True)

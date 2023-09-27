@@ -98,10 +98,10 @@
       </div>
     </nav>
 
-    <form action="{{url_for('addCompanyApi')}}" method="post" id="signup-form">
+    <form action="{{url_for('editCompanyApi')}}" method="post" id="signup-form">
       <div class="flex-vertical">
         <div>
-          <h1 class="title">Add Company</h1>
+          <h1 class="title">Edit Company</h1>
         </div>
 
         <div class="signUp border border-secondary">
@@ -121,6 +121,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Official Registered Name of the Company"
+                  value="{{companyInfo[1]}}"
                 />
               </div>
             </div>
@@ -134,7 +135,9 @@
                   id="address_1"
                   class="form-control"
                   placeholder="Enter physical address of the company"
-                ></textarea>
+                >
+{{companyInfo[2]}}</textarea
+                >
               </div>
             </div>
 
@@ -146,7 +149,9 @@
                   id="address_2"
                   class="form-control"
                   placeholder="Enter physical address of the company's second location (If any)"
-                ></textarea>
+                >
+{{companyInfo[3]}}</textarea
+                >
               </div>
             </div>
           </div>
@@ -166,6 +171,8 @@
           </div>
         </div>
       </div>
+ 
+      <input id="id" name="companyId" value="{{companyInfo[0]}}" style="display: none;" />
     </form>
 
     <footer class="footer">
@@ -181,35 +188,5 @@
     if (document.querySelector("#updateSuccess")) {
       Swal.fire("Success!", "The company is added successfully!", "success");
     }
-
-    document.querySelector("#signup-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      valid = true;
-      errorMsg = "";
-      toBeFocused = "";
-
-      if (document.querySelector("#name").value == "") {
-        valid = false;
-        errorMsg = "Name is required!";
-        toBeFocused = "name";
-      }
-      else if (document.querySelector("#address_1").value == "") {
-        valid = false;
-        errorMsg = "Address 1 is required!";
-        toBeFocused = "address_1";
-      }
-
-      if (valid) {
-          document.querySelector("#signup-form").submit();
-
-      }
-      else {
-        Swal.fire("Oops..", errorMsg, "error").then(res => {
-            document.querySelector(toBeFocused).scrollIntoView({ behavior: "smooth" });
-            document.querySelector(toBeFocused).focus();
-        })
-      }
-    });
   </script>
 </html>
