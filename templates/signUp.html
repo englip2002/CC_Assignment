@@ -87,7 +87,7 @@
                     <div class="inputText">
                         <label class="inputIndicator" for="gender">Gender: </label>
                         <select required class="dropDownItem input-group" name="gender" id="gender">
-                            <option value="0" selected>&nbsp;Please select one&nbsp;</option>
+                            <option value="0" selected disabled>&nbsp;Please select one&nbsp;</option>
                             <option value="Male">&nbsp;Male&nbsp;</option>
                             <option value="Female">&nbsp;Female&nbsp;</option>
                             <option value="DontKnow">&nbsp;Gay&nbsp;</option>
@@ -98,7 +98,7 @@
                     <div class="inputText">
                         <label class="inputIndicator" for="transport">Own Transport: </label>
                         <select required class="dropDownItem input-group" name="transport" id="transport">
-                            <option value="0" selected>&nbsp;Please select one&nbsp;</option>
+                            <option value="0" selected disabled>&nbsp;Please select one&nbsp;</option>
                             <option value="Yes">&nbsp;Yes&nbsp;</option>
                             <option value="No">&nbsp;No&nbsp;</option>
                         </select>
@@ -149,7 +149,7 @@
                     <div class="inputText">
                         <label class="inputIndicator" for="level">Level: </label>
                         <select required class="dropDownItem input-group" name="education_level" id="level">
-                            <option value="0" selected>&nbsp;Please select one&nbsp;</option>
+                            <option value="0" selected disabled>&nbsp;Please select one&nbsp;</option>
                             {% for each in edulevelList %}
                             <option value="{{each[0]}}">{{each[1]}}</option>
                             {% endfor %}
@@ -160,7 +160,7 @@
                     <div class="inputText">
                         <label class="inputIndicator" for="cohort">Cohort: </label>
                         <select required class="dropDownItem input-group" name="cohort" id="cohort">
-                            <option value="0" selected>&nbsp;Please select one&nbsp;</option>
+                            <option value="0" selected disabled>&nbsp;Please select one&nbsp;</option>
                             {% for each in cohortList %}
                             <option value="{{each[0]}}">{{each[1]}}</option>
                             {% endfor %}
@@ -171,7 +171,7 @@
                     <div class="inputText">
                         <label class="inputIndicator" for="programme">Programme: </label>
                         <select required class="dropDownItem input-group" name="programme" id="programme" disabled>
-                            <option value="0" selected>&nbsp;---&nbsp;</option>
+                            <option value="0" selected disabled>&nbsp;---&nbsp;</option>
                         </select>
                     </div>
                     <div style="margin-bottom: 2%"></div>
@@ -180,7 +180,7 @@
                         <p class="inputIndicator">UC Supervisor:</p>
                         <div class="input-group mb-3 specialInput">
                             <select required class="dropDownItem input-group" name="supervisor" id="supervisor">
-                                <option value="0" selected>
+                                <option value="0" selected disabled>
                                     &nbsp;Please select one&nbsp;
                                 </option>
                                 {% for each in supervisorList %}
@@ -322,8 +322,15 @@
         let programmeInput = document.querySelector('#programme')
         programmeInput.innerHTML = "";
         programmeInput.disabled = false;
+        let first = true;
         jsProgrammeList.filter(each => each[3] == eduLevelInput.value).forEach(el => {
-            programmeInput.innerHTML += `<option value="${el[0]}">${el[2]} - ${el[1]}</option>`;
+            if (first){
+                programmeInput.innerHTML += `<option selected value="${el[0]}">${el[2]} - ${el[1]}</option>`;
+                first = false;
+            }
+            else {
+                programmeInput.innerHTML += `<option value="${el[0]}">${el[2]} - ${el[1]}</option>`;
+            }
         });
     }
 

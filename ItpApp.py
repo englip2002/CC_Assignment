@@ -337,8 +337,17 @@ def registerCompany():
 
     if not loginState:
         return redirect(url_for('home'))
+    
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute("select * from company WHERE deleted=0 order by name")
+        companies = cursor.fetchall()
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
 
-    return render_template('registerCompany.html')
+    return render_template('registerCompany.html', companies=companies)
 
 
 @app.route("/registerCompanyApi", methods=['GET', 'POST'])
@@ -348,9 +357,7 @@ def registerCompanyApi():
     if not loginState:
         return redirect(url_for('home'))
 
-    name = request.form['company_name']
-    address_1 = request.form['company_address_1']
-    address_2 = request.form['company_address_2']
+    companyId = request.form['company']
     allowance = request.form['allowance']
     sup_name = request.form['company_sup_name']
     sup_email = request.form['company_sup_email']
@@ -369,11 +376,11 @@ def registerCompanyApi():
 
         s3 = boto3.resource('s3')
         s3.Bucket(custombucket).put_object(
-            Key=acf_filename_in_s3, Body=acceptance_form)
+            Key=acf_filename_in_s3, Body=acceptance_form, ContentType=acceptance_form.content_type)
         s3.Bucket(custombucket).put_object(
-            Key=ack_filename_in_s3, Body=ack_form)
+            Key=ack_filename_in_s3, Body=ack_form, ContentType=ack_form.content_type)
         s3.Bucket(custombucket).put_object(
-            Key=ind_filename_in_s3, Body=indemnity_form)
+            Key=ind_filename_in_s3, Body=indemnity_form, ContentType=indemnity_form.content_type)
 
         bucket_location = boto3.client(
             's3').get_bucket_location(Bucket=custombucket)
@@ -403,34 +410,19 @@ def registerCompanyApi():
     # Insert data to SQL/RDS
     try:
         cursor = db_conn.cursor()
-        cursor.execute(
-            f"INSERT INTO `company` (`id`, `name`, `address_1`, `address_2`, `deleted`) VALUES (NULL, '{name}', '{address_1}', '{address_2}', '0');")
-        db_conn.commit()
-
         cursor.execute(f'''
                         SELECT `student`.`id`
                         FROM `student`
-                        WHERE `student`.`nric` = '{loginNric}' AND `student`.`email` = '{loginEmail}';
+                        WHERE `student`.`nric` = '{loginNric}' AND `student`.`email` = '{loginEmail}' AND `deleted` = '0';
                        ''')
         output = cursor.fetchall()
         if len(output) == 0:
-            return "Invalid login!"
+            return "Student data not found!"
 
         student_id = output[0][0]
 
-        cursor.execute(f'''
-                        SELECT `company`.`id`
-                        FROM `company`
-                        WHERE `company`.`name` = '{name}' AND `company`.`address_1` = '{address_1}' AND `company`.`address_2` = '{address_2}';
-                       ''')
-        output = cursor.fetchall()
-        if len(output) == 0:
-            return "Invalid login!"
-
-        company_id = output[-1][0]
-
         cursor.execute(
-            f"INSERT INTO `student_company` (`id`, `student_id`, `company_id`, `monthly_allowance`, `company_supervisor_name`, `company_supervisor_email`, `company_acceptance_form_url`, `parent_acknowledgement_form_url`, `letter_of_indemnity_url`, `deleted`) VALUES (NULL, '{student_id}', '{company_id}', '{allowance}', '{sup_name}', '{sup_email}', '{acf_url}', '{ack_url}', '{ind_url}', '0');")
+            f"INSERT INTO `student_company` (`id`, `student_id`, `company_id`, `monthly_allowance`, `company_supervisor_name`, `company_supervisor_email`, `company_acceptance_form_url`, `parent_acknowledgement_form_url`, `letter_of_indemnity_url`, `deleted`) VALUES (NULL, '{student_id}', '{companyId}', '{allowance}', '{sup_name}', '{sup_email}', '{acf_url}', '{ack_url}', '{ind_url}', '0');")
         db_conn.commit()
 
     except Exception as e:
@@ -439,6 +431,11 @@ def registerCompanyApi():
         cursor.close()
 
     return redirect(url_for('studentHomepage'))
+
+
+@app.route("/studentSubmitReport", methods=["GET"])
+def studentSubmitReport():
+    return render_template('studentSubmitReport.html')
 
 
 @app.route("/test", methods=["GET"])
