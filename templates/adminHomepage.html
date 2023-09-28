@@ -124,15 +124,14 @@
               <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
               <td>{{studCompanySubmitted[loop.index0]}}</td>
 
-              <td class="flex-display" style="justify-content: left;">
+              <td class="flex-display" style="justify-content: center">
                 <a
                   href="{{url_for('studentDetail') + '?id='+(studInfoRow[0] | string)}}"
                   ><button type="button" class="btn btn-success">
                     View
                   </button></a
                 >
-                &nbsp;
-                &nbsp;
+                &nbsp; &nbsp;
                 <a
                   href="{{url_for('adminEditPortfolio') + '?id='+(studInfoRow[0] | string)}}"
                   ><button type="button" class="btn btn-success">
@@ -146,9 +145,25 @@
         </table>
       </div>
     </div>
+    
+    <footer class="footer">
+      <p>&#169; 2023 - TARUMT FOCS ITP</p>
+    </footer>
+
+    {% if updateSuccess %}
+    <div id="updateSuccess" style="display: none"></div>
+    {% endif %}
+    
+  
+    <script>
+      if (document.querySelector("#updateSuccess")) {
+        Swal.fire(
+          "Update Successful!",
+          "The student details have been updated.",
+          "success"
+        );
+      }
+    </script>
   </body>
 
-  <footer class="footer">
-    <p>&#169; 2023 - TARUMT FOCS ITP</p>
-  </footer>
 </html>

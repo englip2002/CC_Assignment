@@ -525,6 +525,7 @@
           </div>
         </div>
       </div>
+      <input style="display: none;" name="idp" id="idp" />
     </form>
 
     <footer class="footer">
@@ -536,6 +537,8 @@
 
     var jsStudentInfo = {{studentInfo | safe}}
     var jsProgrammeList = {{ programmeListJson | safe}}
+
+    var idParam = {{idParam | safe}}
 
     // Filter programme based on selected education level
     const filterProgrammes = (selectedLevelId) => {
@@ -641,6 +644,7 @@
       }
 
       if (valid) {
+        document.querySelector('#idp').value = idParam;
         document.querySelector("#edit-form").submit();
       } else {
         Swal.fire("Oops..", errorMessage, "error").then((res) => {

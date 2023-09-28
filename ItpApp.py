@@ -685,6 +685,8 @@ def adminHomepage():
     programmeInfo = selectAllFromTable("programme")
     studCompany = selectAllFromTable("student_company")
 
+    updateSuccess = request.args.get('updateSuccess')
+
     studCompanySubmitted = []
     for studRow in studInfo:
         found = False
@@ -698,7 +700,7 @@ def adminHomepage():
             studCompanySubmitted.append("Not Submitted")
 
     # Render an HTML template with the retrieved data
-    return render_template('adminHomepage.html', invalidLogin=True, studInfo=studInfo, programmeInfo=programmeInfo, studCompanySubmitted=studCompanySubmitted)
+    return render_template('adminHomepage.html', invalidLogin=True, studInfo=studInfo, programmeInfo=programmeInfo, studCompanySubmitted=studCompanySubmitted, updateSuccess=updateSuccess)
 
 @app.route("/adminEditPortfolio", methods=['GET', 'POST'])
 @requireAdminLogin
@@ -755,7 +757,7 @@ def adminEditPortfolio():
 @requireAdminLogin
 def adminEditPortfolioApi():
 
-    idParam = request.args.get('id')
+    idParam = request.form['idp']
     profile_picture = request.files['profile_picture']
     student_id = request.form['student_id']
 
@@ -806,7 +808,7 @@ WHERE `student`.`id` = '{idParam}';'''
     finally:
         cursor.close()
 
-    return redirect(url_for('adminHomepage'))
+    return redirect(url_for('adminHomepage',updateSuccess=True))
 
 @app.route("/studentDetail", methods=["GET"])
 @requireAdminLogin
@@ -855,6 +857,20 @@ def studentDetail():
             f"select column_name from information_schema.columns where table_name = N'company' and table_schema='{customdb}' order by ordinal_position")
         cColumns = cursor.fetchall()
 
+        # Student Reports
+        cursor.execute(f'''
+            SELECT * FROM student_report 
+            WHERE deleted='0' 
+                AND student_id = '{idParam};' 
+            ''')
+        studentReportOutput = cursor.fetchall()
+        print(studentReportOutput)
+
+        # Student Reports Column
+        cursor.execute(
+            f"select column_name from information_schema.columns where table_name = N'student_report' and table_schema='{customdb}' order by ordinal_position")
+        srColumns = cursor.fetchall()
+
     except Exception as e:
         return str(e)
     finally:
@@ -876,11 +892,17 @@ def studentDetail():
         for i, each in enumerate(tempColumns):
             companyInfo[each[0]] = companyOutput[0][i]
     
-    print(fOutput)
-    print(fColumns)
-    print(companyInfo)
+    studentReports = False
+    if len(studentReportOutput) > 0:
+        studentReports = []
+        for row in studentReportOutput:
+            temp = {}
+            for i, col in enumerate(srColumns):
+                temp[col[0]] = row[i]
+            temp['fDatetime'] = datetime.fromtimestamp(row[3]).strftime('%Y-%m-%d %H:%M:%S')
+            studentReports.append(temp)
 
-    return render_template('studentDetail.html', studInfo=fOutput, companyInfo=companyInfo)
+    return render_template('studentDetail.html', studInfo=fOutput, companyInfo=companyInfo, studentReports=studentReports)
 
 @app.route("/adminCompanyPage", methods=["GET"])
 @requireAdminLogin
