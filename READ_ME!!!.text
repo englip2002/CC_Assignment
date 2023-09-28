@@ -1,6 +1,6 @@
 To run the flask app, do this:
 
-python -m flask -app ItpApp run
+python -m flask --app ItpApp run
 
 
 * Remember to install all required dependencies/libraries first imported in the ItpApp.py
