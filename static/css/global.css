@@ -33,3 +33,15 @@ html {
 .footer p {
     margin-bottom: 0;
 }
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #4f67ff;
+    transition: 0.15s;
+}
+
+a:hover {
+    transition: 0.15s;
+    color: darkblue;
+}

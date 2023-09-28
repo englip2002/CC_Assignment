@@ -69,18 +69,23 @@
                         </div>
                     </div>
                     <div class="inputText">
-                        <button class="btn btn-outline-secondary loginBtn" type="submit" id="button-addon2">
+                        <button class="btn btn-outline-secondary loginBtn" type="submit" id="button-addon2" style="font-size: 1.35em;">
                             Login
                         </button>
                     </div>
-                    <div class="SignUp">
-                        <a href="{{ url_for('signUp') }}">Sign Up</a>
+                    <div class="SignUp" style="text-align: center;">
+                        <div class="mb-1"><span>Don't have an account?</span></div>
+                        <a style="font-size: 1.35em;" href="{{ url_for('signUp') }}">Sign Up</a>
                     </div>
                 </div>
             </div>
         </div>
     </form>
 
+    {% if notLoggedInWarning %}
+    <div id="notLoggedInWarning" style="display: none"></div>
+    {% endif %}
+    
     {% if invalidLogin %}
     <div id="invalidLogin" style="display: none"></div>
     {% endif %}
@@ -92,6 +97,17 @@
                 "Your login details are incorrect! Please try again.",
                 "error"
             ).then((res) => {
+                document.querySelector('#email').scrollIntoView({ behavior: "smooth" });
+                document.querySelector("#email").focus();
+            });
+        }
+        else if (document.querySelector("#notLoggedInWarning")) {
+            Swal.fire(
+                "You're not logged in!",
+                "Please log into your student account, or sign up for one.",
+                "error"
+            ).then((res) => {
+                document.querySelector('#email').scrollIntoView({ behavior: "smooth" });
                 document.querySelector("#email").focus();
             });
         }

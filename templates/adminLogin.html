@@ -77,49 +77,42 @@
                         </button>
                     </div>
                 </div>
-                <input id="passwordEncrypted" type="text" name="passwordEncrypted" style="display: none" />
             </form>
         </div>
     </div>
+
+    {% if notLoggedInWarning %}
+    <div id="notLoggedInWarning" style="display: none"></div>
+    {% endif %}
 
     {% if invalidLogin %}
     <div id="invalidLogin" style="display: none"></div>
     {% endif %}
 
     <script>
-        async function hashPassword(password, salt) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password + salt);
-            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-
-            // Convert the hash to a hexadecimal string
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray
-                .map((byte) => byte.toString(16).padStart(2, "0"))
-                .join("");
-            return hashHex;
-        }
 
         document.querySelector("#admin-login-form").addEventListener("submit", async (e) => {
             e.preventDefault();
-            const passphrase = "cc_assignment_aws";
-            const encryptedPassword = await hashPassword(
-                document.querySelector("#password").value,
-                document.querySelector("#username").value.toString() + passphrase
-            ).then((res) => {
-                return res;
-            });
-            document.querySelector("#passwordEncrypted").value = encryptedPassword;
 
             document.querySelector("#admin-login-form").submit();
         });
-
         if (document.querySelector("#invalidLogin")) {
             Swal.fire(
                 "Oops..",
                 "Your login details are incorrect! Please try again.",
                 "error"
             ).then((res) => {
+                document.querySelector('#username').scrollIntoView({ behavior: "smooth" });
+                document.querySelector("#username").focus();
+            });
+        }
+        else if (document.querySelector("#notLoggedInWarning")) {
+            Swal.fire(
+                "You're not logged in!",
+                "Please log into your student account, or sign up for one.",
+                "error"
+            ).then((res) => {
+                document.querySelector('#username').scrollIntoView({ behavior: "smooth" });
                 document.querySelector("#username").focus();
             });
         }

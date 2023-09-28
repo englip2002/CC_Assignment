@@ -259,6 +259,9 @@
 
         <div class="flex-vertical">
           <div class="mb-3"></div>
+
+          {% if companyInfo %}
+
           <div class="inputText">
             <p class="inputIndicator">Company Name:</p>
             <div class="input-group">
@@ -338,6 +341,14 @@
               </p>
             </div>
           </div>
+
+          {% else %}
+
+          <div class="lead">
+            <b>This student has not submitted any company details yet...</b>
+          </div>
+
+          {% endif %}
         </div>
       </div>
     </div>
