@@ -321,7 +321,7 @@ def editPortfolioApi():
 
     # If user updated profile pic
     pfp_url = ""
-    if (profile_picture):
+    if (profile_picture.filename != ""):
         # Upload picture to s3
         try:
             pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
@@ -761,7 +761,7 @@ def adminEditPortfolioApi():
 
     # If user updated profile pic
     pfp_url = ""
-    if (profile_picture):
+    if (profile_picture.filename != ""):
         # Upload picture to s3
         try:
             pfp_filename_in_s3 = "pfp/" + "pfp-" + str(student_id)
