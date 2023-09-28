@@ -28,55 +28,80 @@
 #         ...
 # print(findSafeSpaces([0,0]))
 
-from config import *
-from pymysql import connections
+import hashlib
+def hash_plaintext(plaintext, salt):
+    # Concatenate the salt and plaintext
+    salted_password = salt + plaintext
 
-bucket = custombucket
-region = customregion
+    # Create a new SHA-256 hash object
+    sha256 = hashlib.sha256()
 
-try:
-    db_conn = connections.Connection(
-        host=customhost,
-        port=3306,
-        user=customuser,
-        password=custompass,
-        db=customdb
-    )
-    print("Database connection success!")
-except Exception as e:
-    print("Database connection failed!")
-    print(e)
+    # Update the hash object with the salted password bytes
+    sha256.update(salted_password.encode('utf-8'))
 
-# (('programme',), ('student',), ('company',), ('student_company',), ('supervisor',), ('cohort',), ('education_level',))
-def main():
-    sql=f'''
-        DROP TABLE admin;
-    '''
+    # Get the hexadecimal representation of the hash
+    hashed_password = sha256.hexdigest()
+
+    return hashed_password
+
+def hash_student_nric(nric):
+    return hash_plaintext(nric, 'cc~ASSignment_AWS=nr1c')
+
+def hash_admin_password(password):
+    return hash_plaintext(password, 'AWS_admin-CC~assignment')
+
+
+print(hash_student_nric('123456-12-1234'))
+
+# from config import *
+# from pymysql import connections
+
+# bucket = custombucket
+# region = customregion
+
+# try:
+#     db_conn = connections.Connection(
+#         host=customhost,
+#         port=3306,
+#         user=customuser,
+#         password=custompass,
+#         db=customdb
+#     )
+#     print("Database connection success!")
+# except Exception as e:
+#     print("Database connection failed!")
+#     print(e)
+
+# # (('programme',), ('student',), ('company',), ('student_company',), ('supervisor',), ('cohort',), ('education_level',))
+# def main():
 #     sql=f'''
-#         SELECT table_name
-# FROM information_schema.tables
-# WHERE table_schema = '{customdb}'
-# ;
+#         DROP TABLE admin;
 #     '''
-    output = sql
-    try:
-        # Insert record to sql
-        cursor = db_conn.cursor()
+# #     sql=f'''
+# #         SELECT table_name
+# # FROM information_schema.tables
+# # WHERE table_schema = '{customdb}'
+# # ;
+# #     '''
+#     output = sql
+#     try:
+#         # Insert record to sql
+#         cursor = db_conn.cursor()
 
-        print("Executing SQL")
-        cursor.execute(sql)
+#         print("Executing SQL")
+#         cursor.execute(sql)
 
-        print("Comitting SQL")
-        # db_conn.commit()
-        output = cursor.fetchall()
+#         print("Comitting SQL")
+#         # db_conn.commit()
+#         output = cursor.fetchall()
 
-    except Exception as e:
-        return "Exception at SQL: " + str(e)
-    finally:
-        cursor.close()
+#     except Exception as e:
+#         return "Exception at SQL: " + str(e)
+#     finally:
+#         cursor.close()
 
-    print("Done!")
-    return str(output)
+#     print("Done!")
+#     return str(output)
 
-x = main()
-print(x)
+# x = main()
+# print(x)

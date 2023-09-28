@@ -1,19 +1,17 @@
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, session
 from pymysql import connections
 from datetime import datetime
 import boto3
 from config import *
 import json
+from functools import wraps
+import hashlib
 
 app = Flask(__name__)
+app.secret_key = "b148f8d1e53eb3b4378f5c7438335965"     # 16 byte secret key
 
 bucket = custombucket
 region = customregion
-
-global loginState, loginNric, loginEmail
-loginState = False
-loginNric = ""
-loginEmail = ""
 
 try:
     db_conn = connections.Connection(
@@ -40,6 +38,41 @@ def selectAllFromTable(tableName):
         cursor.close()
     return output
 
+def requireStudentLogin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            return redirect(url_for('login', notLoggedInWarning = True))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def requireAdminLogin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            return redirect(url_for('adminLogin', notLoggedInWarning = True))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def hash_plaintext(plaintext, salt):
+    # Concatenate the salt and plaintext
+    salted_password = salt + plaintext
+
+    # Create a new SHA-256 hash object
+    sha256 = hashlib.sha256()
+
+    # Update the hash object with the salted password bytes
+    sha256.update(salted_password.encode('utf-8'))
+
+    # Get the hexadecimal representation of the hash
+    hashed_password = sha256.hexdigest()
+
+    return hashed_password
+
+def hash_admin_password(password):
+    return hash_plaintext(password, 'AWS_admin-CC~assignment')
+
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -52,10 +85,11 @@ def static_files(filename):
 
 @app.route("/signUp", methods=['GET', 'POST'])
 def signUp():
-    global loginState, loginNric, loginEmail
-
-    if loginState:
+    if session.get('logged_in'):
         return redirect(url_for('studentHomepage'))
+    
+    
+    recordAlreadyExist = request.args.get('recordAlreadyExist')
     
     edulevelList = selectAllFromTable("education_level")
     cohortList = selectAllFromTable("cohort")
@@ -65,7 +99,8 @@ def signUp():
                            edulevelList=edulevelList,
                            cohortList=cohortList,
                            programmeList=json.dumps(programmeList),
-                           supervisorList=supervisorList)
+                           supervisorList=supervisorList, 
+                           recordAlreadyExist=recordAlreadyExist)
 
 
 @app.route("/signupApi", methods=['POST'])
@@ -98,6 +133,19 @@ def signupApi():
     programming_knowledge = request.form['programming_knowledge']
     database_knowledge = request.form['database_knowledge']
     networking_knowledge = request.form['networking_knowledge']
+
+    # Check if record already exist
+    try:
+        # Insert record to sql
+        cursor = db_conn.cursor()
+        cursor.execute(f"SELECT * FROM student WHERE deleted='0' AND nric='{nric}' AND email='{email}'")
+        recordExist = cursor.fetchone()
+    except Exception as e:
+        return "Exception at SQL: " + str(e)
+    finally:
+        cursor.close()
+    if recordExist != None:
+        return redirect(url_for('signup', recordAlreadyExist=True))
 
     # Upload image to S3 first
     pfp_url = ""
@@ -136,20 +184,16 @@ def signupApi():
     finally:
         cursor.close()
 
-    global loginState, loginEmail, loginNric
-    loginState = True
-    loginEmail = email
-    loginNric = nric
+    session['logged_in'] = True
+    session['email'] = email
+    session['nric'] = nric
 
     return redirect(url_for('studentHomepage', signUpSuccess=True))
 
 
 @app.route("/studentHomepage", methods=['GET', 'POST'])
+@requireStudentLogin
 def studentHomepage():
-    global loginState, loginNric, loginEmail
-
-    if not loginState:
-        return redirect(url_for('home'))
 
     signUpSuccess = request.args.get('signUpSuccess')
     updateSuccessParam = request.args.get('updateSuccess')
@@ -166,8 +210,8 @@ def studentHomepage():
                 LEFT JOIN `programme` ON `student`.`programme_id` = `programme`.`id` 
                 LEFT JOIN `supervisor` ON `student`.`supervisor_id` = `supervisor`.`id`
             WHERE `student`.`deleted`='0'
-                AND `student`.`email` = '{loginEmail}' 
-                AND `student`.`nric` = '{loginNric}';
+                AND `student`.`email` = '{session.get('email')}' 
+                AND `student`.`nric` = '{session.get('nric')}';
             ''')
         output = cursor.fetchall()
 
@@ -218,11 +262,8 @@ def studentHomepage():
 
 
 @app.route("/editPortfolio", methods=['GET', 'POST'])
+@requireStudentLogin
 def editPortfolio():
-    global loginState, loginNric, loginEmail
-
-    if not loginState:
-        return redirect(url_for('home'))
 
     edulevelList = selectAllFromTable("education_level")
     cohortList = selectAllFromTable("cohort")
@@ -233,7 +274,7 @@ def editPortfolio():
         # Insert record to sql
         cursor = db_conn.cursor()
         cursor.execute(
-            f"SELECT * FROM student WHERE nric='{loginNric}' AND email='{loginEmail}' AND deleted='0';")
+            f"SELECT * FROM student WHERE nric='{session.get('nric')}' AND email='{session.get('email')}' AND deleted='0';")
         output = cursor.fetchall()
         if len(output) == 0:
             return "Student Information not found!"
@@ -271,9 +312,8 @@ def editPortfolio():
 
 
 @app.route("/editPortfolioApi", methods=['POST'])
+@requireStudentLogin
 def editPortfolioApi():
-    if not loginState:
-        return redirect(url_for('home'))
 
     # Personal Data
     profile_picture = request.files['profile_picture']
@@ -313,12 +353,12 @@ def editPortfolioApi():
             insert_sql = f'''
 UPDATE `student` 
 SET `profile_picture_url`='{pfp_url}', `name` = '{request.form['name']}', `gender` = '{request.form['gender']}', `transport` = '{request.form['transport']}', `health_remark` = '{request.form['health_remark']}', `student_id` = '{request.form['student_id']}', `tutorial_group` = '{request.form['tutorial_group']}', `cgpa` = '{request.form['cgpa']}', `education_level_id` = '{request.form['education_level']}', `cohort_id` = '{request.form['cohort']}', `programme_id` = '{request.form['programme']}', `supervisor_id` = '{request.form['supervisor']}', `term_address` = '{request.form['term_address']}', `permanent_address` = '{request.form['permanent_address']}', `mobile_phone` = '{request.form['mobile_phone']}', `fixed_phone` = '{request.form['fixed_phone']}', `programming_knowledge` = '{request.form['programming_knowledge']}', `database_knowledge` = '{request.form['database_knowledge']}', `networking_knowledge` = '{request.form['networking_knowledge']}' 
-WHERE `student`.`email` = '{loginEmail}' AND `student`.`nric` = '{loginNric}';'''
+WHERE `student`.`email` = '{session.get('email')}' AND `student`.`nric` = '{session.get('nric')}';'''
         else:
             insert_sql = f'''
 UPDATE `student` 
 SET `name` = '{request.form['name']}', `gender` = '{request.form['gender']}', `transport` = '{request.form['transport']}', `health_remark` = '{request.form['health_remark']}', `student_id` = '{request.form['student_id']}', `tutorial_group` = '{request.form['tutorial_group']}', `cgpa` = '{request.form['cgpa']}', `education_level_id` = '{request.form['education_level']}', `cohort_id` = '{request.form['cohort']}', `programme_id` = '{request.form['programme']}', `supervisor_id` = '{request.form['supervisor']}', `term_address` = '{request.form['term_address']}', `permanent_address` = '{request.form['permanent_address']}', `mobile_phone` = '{request.form['mobile_phone']}', `fixed_phone` = '{request.form['fixed_phone']}', `programming_knowledge` = '{request.form['programming_knowledge']}', `database_knowledge` = '{request.form['database_knowledge']}', `networking_knowledge` = '{request.form['networking_knowledge']}' 
-WHERE `student`.`email` = '{loginEmail}' AND `student`.`nric` = '{loginNric}';'''
+WHERE `student`.`email` = '{session.get('email')}' AND `student`.`nric` = '{session.get('nric')}';'''
         cursor.execute(insert_sql)
         db_conn.commit()
     except Exception as e:
@@ -330,11 +370,8 @@ WHERE `student`.`email` = '{loginEmail}' AND `student`.`nric` = '{loginNric}';''
 
 
 @app.route("/registerCompany", methods=['GET', 'POST'])
+@requireStudentLogin
 def registerCompany():
-    global loginState, loginNric, loginEmail
-
-    if not loginState:
-        return redirect(url_for('home'))
     
     try:
         cursor = db_conn.cursor()
@@ -349,11 +386,8 @@ def registerCompany():
 
 
 @app.route("/registerCompanyApi", methods=['GET', 'POST'])
+@requireStudentLogin
 def registerCompanyApi():
-    global loginState, loginNric, loginEmail
-
-    if not loginState:
-        return redirect(url_for('home'))
 
     companyId = request.form['company']
     allowance = request.form['allowance']
@@ -368,9 +402,9 @@ def registerCompanyApi():
     ack_url = ""
     ind_url = ""
     try:
-        acf_filename_in_s3 = f"forms/{loginNric}/company_acceptance_form"
-        ack_filename_in_s3 = f"forms/{loginNric}/parent_acknowledgement_form"
-        ind_filename_in_s3 = f"forms/{loginNric}/letter_of_indemnity"
+        acf_filename_in_s3 = f"forms/{session.get('nric')}/company_acceptance_form"
+        ack_filename_in_s3 = f"forms/{session.get('nric')}/parent_acknowledgement_form"
+        ind_filename_in_s3 = f"forms/{session.get('nric')}/letter_of_indemnity"
 
         s3 = boto3.resource('s3')
         s3.Bucket(custombucket).put_object(
@@ -411,7 +445,7 @@ def registerCompanyApi():
         cursor.execute(f'''
                         SELECT `student`.`id`
                         FROM `student`
-                        WHERE `student`.`nric` = '{loginNric}' AND `student`.`email` = '{loginEmail}' AND `deleted` = '0';
+                        WHERE `student`.`nric` = '{session.get('nric')}' AND `student`.`email` = '{session.get('email')}' AND `deleted` = '0';
                        ''')
         output = cursor.fetchall()
         if len(output) == 0:
@@ -432,10 +466,8 @@ def registerCompanyApi():
 
 
 @app.route("/studentViewReports", methods=["GET", "POST"])
+@requireStudentLogin
 def studentViewReports():
-    global loginState, loginEmail, loginNric
-    if not loginState:
-        return redirect(url_for('home'))
 
     updateSuccess = request.args.get('updateSuccess')
 
@@ -448,7 +480,7 @@ def studentViewReports():
         # Get Student ID (because it will be used later)
         cursor.execute(f'''
                         SELECT * FROM student 
-                        WHERE deleted='0' AND nric='{loginNric}' AND email='{loginEmail}';
+                        WHERE deleted='0' AND nric='{session.get('nric')}' AND email='{session.get('email')}';
                         ''')
         output = cursor.fetchall()
         if len(output) == 0:
@@ -475,14 +507,13 @@ def studentViewReports():
     return render_template('studentViewReports.html', updateSuccess=updateSuccess, reports=reports, reportDatetimes=reportDatetimes)
 
 @app.route("/studentSubmitReport", methods=["GET", "POST"])
+@requireStudentLogin
 def studentSubmitReport():
     return render_template('studentSubmitReport.html')
 
 @app.route("/studentSubmitReportApi", methods=["POST"])
+@requireStudentLogin
 def studentSubmitReportApi():
-    global loginState, loginEmail, loginNric
-    if not loginState:
-        return redirect(url_for('home'))
 
     reportType = request.form['reportType']
     reportName = request.form['reportName']
@@ -497,7 +528,7 @@ def studentSubmitReportApi():
         # Get Student ID (because it will be used later)
         cursor.execute(f'''
                         SELECT * FROM student
-                        WHERE deleted='0' AND nric='{loginNric}' AND email='{loginEmail}';
+                        WHERE deleted='0' AND nric='{session.get('nric')}' AND email='{session.get('email')}';
                         ''')
         output = cursor.fetchall()
         if len(output) == 0:
@@ -523,9 +554,9 @@ def studentSubmitReportApi():
     try:
         report_filename_in_s3 = ""
         if (reportType == "Progress"):
-            report_filename_in_s3 = f"reports/{loginNric}/progressReport-{reportLength + 1}"
+            report_filename_in_s3 = f"reports/{session.get('nric')}/progressReport-{reportLength + 1}"
         else:
-            report_filename_in_s3 = f"reports/{loginNric}/finalReport-{reportLength + 1}"
+            report_filename_in_s3 = f"reports/{session.get('nric')}/finalReport-{reportLength + 1}"
 
         s3 = boto3.resource('s3')
         s3.Bucket(custombucket).put_object(
@@ -567,12 +598,13 @@ def studentSubmitReportApi():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    global loginState, loginNric, loginEmail
-
-    if loginState:
+    if session.get('logged_in'):
         return redirect(url_for('studentHomepage'))
 
-    return render_template('login.html')
+    invalidLogin = request.args.get('invalidLogin')
+    notLoggedInWarning = request.args.get('notLoggedInWarning')
+
+    return render_template('login.html', notLoggedInWarning = notLoggedInWarning, invalidLogin=invalidLogin)
 
 
 @app.route("/loginApi", methods=['POST'])
@@ -582,71 +614,72 @@ def loginApi():
 
     try:
         cursor = db_conn.cursor()
-        cursor.execute("select nric, email from student WHERE deleted=0")
-        output = cursor.fetchall()
+        cursor.execute(f"select nric, email from student WHERE deleted=0 AND email='{email}' AND nric='{nric}'")
+        output = cursor.fetchone()
     except Exception as e:
         return str(e)
     finally:
         cursor.close()
 
-    for each in output:
-        if each[0] == nric and each[1] == email:
-            global loginState, loginEmail, loginNric
-            loginState = True
-            loginEmail = each[1]
-            loginNric = each[0]
-            return redirect(url_for('studentHomepage'))
+    if output != None:
+        session['logged_in'] = True
+        session['email'] = email
+        session['nric'] = nric
+        return redirect(url_for('studentHomepage'))
 
     return render_template('login.html', invalidLogin=True)
 
 
 @app.route("/logoutApi", methods=['GET', 'POST'])
 def logoutApi():
-    global loginState, loginEmail, loginNric
-    loginState = False
-    loginEmail = ""
-    loginNric = ""
+    session["logged_in"] = False
+    session["email"] = ""
+    session["nric"] = ""
     return redirect(url_for('home'))
 
 # ======================================================
 # ADMIN
 # ======================================================
 
-global adminLoginState
-adminLoginState = False
-
 @app.route("/adminLogin", methods=['GET'])
 def adminLogin():
-    if adminLoginState:
+    if session.get('admin_logged_in'):
         return redirect(url_for('adminHomepage'))
-    return render_template('adminLogin.html')
+    
+    notLoggedInWarning = request.args.get('notLoggedInWarning')
+    invalidLogin = request.args.get('invalidLogin')
+    return render_template('adminLogin.html', notLoggedInWarning=notLoggedInWarning, invalidLogin=invalidLogin)
 
 @app.route("/adminLogin", methods=["POST"])
 def adminLoginApi():
     username = request.form['username']
-    password = request.form['passwordEncrypted']
+    password = request.form['password']
 
-    output = selectAllFromTable('admin')
+    encryptedPassword = hash_admin_password(password)
 
-    for each in output:
-        if each[1] == username and each[2] == password:
-            global adminLoginState
-            adminLoginState = True
-            return redirect(url_for('adminHomepage'))
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute(f"SELECT id FROM admin WHERE deleted='0' AND username='{username}' AND password='{encryptedPassword}';")
+        output = cursor.fetchone()
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+    
+    if (output != None):
+        session['admin_logged_in'] = True
+        return redirect(url_for('adminHomepage'))
 
     return render_template('adminLogin.html', invalidLogin=True)
 
 @app.route("/adminLogoutApi", methods=["GET", "POST"])
 def adminLogoutApi():
-    global adminLoginState
-    adminLoginState = False
+    session['admin_logged_in'] = False
     return redirect(url_for('home'))
 
 @app.route("/adminHomepage", methods=["GET"])
+@requireAdminLogin
 def adminHomepage():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
-
     studInfo = selectAllFromTable("student")
     programmeInfo = selectAllFromTable("programme")
     studCompany = selectAllFromTable("student_company")
@@ -667,10 +700,8 @@ def adminHomepage():
     return render_template('adminHomepage.html', invalidLogin=True, studInfo=studInfo, programmeInfo=programmeInfo, studCompanySubmitted=studCompanySubmitted)
 
 @app.route("/adminEditPortfolio", methods=['GET', 'POST'])
+@requireAdminLogin
 def adminEditPortfolio():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
-    
     idParam = request.args.get('id')
 
     edulevelList = selectAllFromTable("education_level")
@@ -720,9 +751,8 @@ def adminEditPortfolio():
 
 
 @app.route("/adminEditPortfolioApi", methods=['POST'])
+@requireAdminLogin
 def adminEditPortfolioApi():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
 
     idParam = request.args.get('id')
     profile_picture = request.files['profile_picture']
@@ -778,9 +808,8 @@ WHERE `student`.`id` = '{idParam}';'''
     return redirect(url_for('adminHomepage'))
 
 @app.route("/studentDetail", methods=["GET"])
+@requireAdminLogin
 def studentDetail():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
     
     idParam = request.args.get('id')
 
@@ -853,9 +882,8 @@ def studentDetail():
     return render_template('studentDetail.html', studInfo=fOutput, companyInfo=companyInfo)
 
 @app.route("/adminCompanyPage", methods=["GET"])
+@requireAdminLogin
 def adminCompanyPage():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
 
     invalidMsg = request.args.get('invalid')
     updateSuccess = request.args.get('updateSuccess')
@@ -863,18 +891,16 @@ def adminCompanyPage():
     return render_template('adminCompanyPage.html', companies=companies, invalidMsg=invalidMsg, updateSuccess=updateSuccess)
 
 @app.route("/addCompany", methods=["GET", "POST"])
+@requireAdminLogin
 def addCompany():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
 
     updateSuccessParam = request.args.get('updateSuccess')
     return render_template('addCompany.html', updateSuccess=updateSuccessParam)
 
 
 @app.route("/addCompanyApi", methods=["POST"])
+@requireAdminLogin
 def addCompanyApi():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
 
     name = request.form['name']
     address_1 = request.form['address_1']
@@ -897,9 +923,8 @@ def addCompanyApi():
 
 
 @app.route("/editCompany", methods=["GET", "POST"])
+@requireAdminLogin
 def editCompany():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
 
     companyId = request.args.get('id')
 
@@ -922,9 +947,8 @@ def editCompany():
 
 
 @app.route("/editCompanyApi", methods=["POST"])
+@requireAdminLogin
 def editCompanyApi():
-    if not adminLoginState:
-        return redirect(url_for('adminLogin'))
 
     name = request.form['name']
     address_1 = request.form['address_1']
@@ -945,9 +969,6 @@ def editCompanyApi():
         cursor.close()
 
     return redirect(url_for('adminCompanyPage', updateSuccess=True))
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)

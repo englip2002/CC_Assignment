@@ -292,6 +292,10 @@
             </div>
         </div>
     </form>
+
+    {% if recordAlreadyExist %}
+    <div id="recordAlreadyExist" style="display: none;"></div>
+    {% endif %}
 </body>
 
 <footer class="footer">
@@ -301,8 +305,6 @@
 <script>
     var jsProgrammeList = {{ programmeList | safe}}
     var jsSupervisorList = {{ supervisorList | safe}}
-    console.log(jsProgrammeList)
-    console.log(jsSupervisorList)
 
     // Programme auto filter
     document.querySelector('#level').addEventListener('change', e => {
@@ -416,9 +418,11 @@
                 document.querySelector(toBeFocused).focus();
             });
         }
-
-
     })
+
+    if (document.querySelector('#recordAlreadyExist')) {
+        Swal.fire('Student already exist!', 'The student account with the associated email and NRIC was already signed up.', 'error')
+    }
 </script>
 
 </html>

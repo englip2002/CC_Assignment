@@ -32,6 +32,35 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+    <style>
+      .profile-pic {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        object-fit: cover;
+
+        width: 150px;
+        height: 150px;
+      }
+
+      .shadow {
+        margin: 5px 0 5px 0;
+        border-left: solid #d8d8d8 3px;
+        border-bottom: solid #b0b0b0 3px;
+      }
+
+      .imageFrameOuter {
+        border: solid #999 1px;
+        margin-bottom: 0px;
+      }
+
+      .imageFrameInner {
+        border: solid #fff 5px;
+        background-color: #fff;
+      }
+    </style>
+    
     <title>Edit Portfolio</title>
   </head>
 
@@ -111,6 +140,20 @@
           </div>
 
           <div class="flex-vertical">
+            
+            <div class="inputText mb-3">
+              <div class="shadow">
+                <div class="imageFrameOuter">
+                  <div class="imageFrameInner">
+                    <img
+                      class="profile-pic"
+                      src="{{studentInfo.profile_picture_url}}"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="inputText">
               <p class="inputIndicator">Profile Picture:</p>
               <div class="input-group mb-3">
@@ -493,8 +536,6 @@
 
     var jsStudentInfo = {{studentInfo | safe}}
     var jsProgrammeList = {{ programmeListJson | safe}}
-    console.log(jsProgrammeList)
-    console.log(jsStudentInfo)
 
     // Filter programme based on selected education level
     const filterProgrammes = (selectedLevelId) => {
