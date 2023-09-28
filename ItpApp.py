@@ -691,7 +691,7 @@ def adminHomepage():
     for studRow in studInfo:
         found = False
         for compRow in studCompany:
-            if compRow[0] == studRow[0]:
+            if compRow[1] == studRow[0]:
                 found = True
                 break
         if found:
