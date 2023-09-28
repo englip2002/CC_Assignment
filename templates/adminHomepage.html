@@ -118,7 +118,7 @@
           <tbody>
             {% for studInfoRow in studInfo %}
             <tr>
-              <th scope="row">{{studInfoRow[0]}}</th>
+              <th scope="row">{{loop.index0 + 1}}</th>
               <td>{{studInfoRow[7]}}</td>
               <td>{{studInfoRow[2]}}</td>
               <td>{{programmeInfo[studInfoRow[12]][2]}}</td>
