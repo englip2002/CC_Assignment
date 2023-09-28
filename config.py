@@ -1,8 +1,15 @@
-customhost = "database-1.chidbtnhv9jm.us-east-1.rds.amazonaws.com"
-customuser = "aws_user"
+# customhost = "database-1.chidbtnhv9jm.us-east-1.rds.amazonaws.com"
+# customuser = "aws_user"
+# custompass = "Bait3273"
+# customdb = "CCAssignment"
+# custombucket = "assignment-bucket2023"
+# customregion = "us-east-1"
+
+customhost = "itp-database.chidbtnhv9jm.us-east-1.rds.amazonaws.com"
+customuser = "admin"
 custompass = "Bait3273"
 customdb = "CCAssignment"
-custombucket = "assignment-bucket2023"
+custombucket = "fooseanron-bucket"
 customregion = "us-east-1"
 
 # customhost = "localhost"
