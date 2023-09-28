@@ -5,9 +5,9 @@
 # custombucket = "assignment-bucket2023"
 # customregion = "us-east-1"
 
-customhost = "itp-database.chidbtnhv9jm.us-east-1.rds.amazonaws.com"
+customhost = "internship-database.chidbtnhv9jm.us-east-1.rds.amazonaws.com"
 customuser = "admin"
-custompass = "Bait3273"
+custompass = "admin123"
 customdb = "CCAssignment"
 custombucket = "fooseanron-bucket"
 customregion = "us-east-1"
