@@ -77,7 +77,8 @@ def hash_admin_password(password):
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('index.html')
+    invalidMsg=request.args.get('invalidMsg')
+    return render_template('index.html', invalidMsg=invalidMsg)
 
 # Static routes
 @app.route('/static/<path:filename>')
@@ -221,6 +222,9 @@ def studentHomepage():
             f"select column_name from information_schema.columns where table_name = N'student' and table_schema='{customdb}' order by ordinal_position")
         columns = cursor.fetchall()
 
+        if len(output) == 0:
+            return redirect(url_for('home', invalidMsg="Something went wrong in the data fetching!"))
+
         # Company Info
         cursor.execute(f'''
             SELECT student_company.*, company.*
@@ -239,7 +243,7 @@ def studentHomepage():
         cColumns = cursor.fetchall()
 
     except Exception as e:
-        return str(e)
+        return "Exception at fetching data: " + str(e)
     finally:
         cursor.close()
 
