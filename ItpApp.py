@@ -545,7 +545,7 @@ def studentSubmitReportApi():
         reportLength = len(output)
 
     except Exception as e:
-        return str(e)
+        return "Exception at getting student information: " + str(e)
     finally:
         cursor.close()
 
@@ -577,7 +577,7 @@ def studentSubmitReportApi():
             report_filename_in_s3)
 
     except Exception as e:
-        return str(e)
+        return "Exception at uploading to S3: " + str(e)
 
     # Insert data to SQL/RDS
     try:
@@ -589,7 +589,7 @@ def studentSubmitReportApi():
         db_conn.commit()
 
     except Exception as e:
-        return str(e)
+        return "Exception at inserting into SQL: " + str(e)
     finally:
         cursor.close()
     
@@ -636,6 +636,7 @@ def logoutApi():
     session["email"] = ""
     session["nric"] = ""
     return redirect(url_for('home'))
+
 
 # ======================================================
 # ADMIN
