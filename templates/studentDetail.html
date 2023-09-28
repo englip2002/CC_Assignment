@@ -135,42 +135,16 @@
 
     <div class="flex-vertical">
       <div>
-        <h1><b>Student Details</b></h1>
+        <h1><b>Personal Data</b></h1>
       </div>
 
       <div class="stdHP border border-secondary">
         <div class="subTitle" style="margin-bottom: 0%">
-          <p style="padding-left: 3%">Summary</p>
+          <p style="padding-left: 3%">Personal Data</p>
           <hr />
         </div>
-
+        
         <div class="flex-vertical">
-          <div class="mb-3"></div>
-          <div class="inputText">
-            <p class="inputIndicator">Cohort:</p>
-            <div class="input-group">
-              <p>{{ studInfo.cohort_name }}</p>
-            </div>
-          </div>
-
-          <div class="inputText">
-            <p class="inputIndicator">Intern Period:</p>
-            <div class="input-group">
-              <p>{{ studInfo.cohort_period }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="stdHP border border-secondary">
-        <div class="subTitle" style="margin-bottom: 0%">
-          <p style="padding-left: 3%">Student Detail</p>
-          <hr />
-        </div>
-
-        <div class="flex-vertical">
-          <div class="mb-3"></div>
-
           <div class="inputText">
             <p class="inputIndicator">Student Profile Picture:</p>
             <div class="input-group">
@@ -187,27 +161,19 @@
             </div>
           </div>
           <div class="mb-3"></div>
-
           <div class="inputText">
             <p class="inputIndicator">Student Name:</p>
             <div class="input-group">
               <p>{{ studInfo.name }}</p>
             </div>
           </div>
-
           <div class="inputText">
-            <p class="inputIndicator">Student ID:</p>
-            <div class="input-group">
-              <p>{{ studInfo.student_id }}</p>
-            </div>
-          </div>
-
-          <div class="inputText">
-            <p class="inputIndicator">NRIC No.:</p>
+            <p class="inputIndicator">NRIC:</p>
             <div class="input-group">
               <p>{{ studInfo.nric }}</p>
             </div>
           </div>
+
           <div class="inputText">
             <p class="inputIndicator">Gender:</p>
             <div class="input-group">
@@ -215,25 +181,78 @@
             </div>
           </div>
           <div class="inputText">
+            <p class="inputIndicator">Own Transport:</p>
+            <div class="input-group">
+              <p>{{ studInfo.transport }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Health Remark:</p>
+            <div class="input-group">
+              <p>{{ studInfo.health_remark }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Academic Detail</p>
+          <hr />
+        </div>
+        
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Tutorial Group:</p>
+            <div class="input-group">
+              <p>{{ studInfo.tutorial_group }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">CGPA:</p>
+            <div class="input-group">
+              <p>{{ studInfo.cgpa }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
+            <p class="inputIndicator">Education Level:</p>
+            <div class="input-group">
+              <p>{{ studInfo.education_level_name }}</p>
+            </div>
+          </div>
+          
+          <div class="inputText">
+            <p class="inputIndicator">Cohort:</p>
+            <div class="input-group">
+              <p>{{ studInfo.cohort_name }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Intern Period:</p>
+            <div class="input-group">
+              <p>{{ studInfo.cohort_period }}</p>
+            </div>
+          </div>
+
+          <div class="inputText">
             <p class="inputIndicator">Programme:</p>
             <div class="input-group">
-              <p>
-                {{ studInfo.programme_code }} - {{ studInfo.programme_name }}
-              </p>
+              <p>{{ studInfo.programme_code }} - {{ studInfo.programme_name }}</p>
             </div>
           </div>
-
           <div class="inputText">
-            <p class="inputIndicator">Student Email:</p>
+            <p class="inputIndicator">Own Transport:</p>
             <div class="input-group">
-              <p>{{ studInfo.email }}</p>
+              <p>{{ studInfo.transport }}</p>
             </div>
           </div>
-
           <div class="inputText">
-            <p class="inputIndicator">Mobile Number:</p>
+            <p class="inputIndicator">Health Remark:</p>
             <div class="input-group">
-              <p>{{ studInfo.mobile_phone }}</p>
+              <p>{{ studInfo.health_remark }}</p>
             </div>
           </div>
         </div>
@@ -261,6 +280,119 @@
           </div>
         </div>
       </div>
+
+      
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Contact Information</p>
+          <hr />
+        </div>
+
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+          <div class="inputText">
+            <p class="inputIndicator">Personal Email:</p>
+            <div class="input-group">
+              <p>{{ studInfo.email }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Term Address:</p>
+            <div class="input-group">
+              <p>{{ studInfo.term_address }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Permanent Address:</p>
+            <div class="input-group">
+              <p>{{ studInfo.permanent_address }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Mobile Phone:</p>
+            <div class="input-group">
+              <p>{{ studInfo.mobile_phone }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Fixed Phone:</p>
+            <div class="input-group">
+              <p>{{ studInfo.fixed_phone }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Contact Information</p>
+          <hr />
+        </div>
+
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+          <div class="inputText">
+            <p class="inputIndicator">Personal Email:</p>
+            <div class="input-group">
+              <p>{{ studInfo.email }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Term Address:</p>
+            <div class="input-group">
+              <p>{{ studInfo.term_address }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Permanent Address:</p>
+            <div class="input-group">
+              <p>{{ studInfo.permanent_address }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Mobile Phone:</p>
+            <div class="input-group">
+              <p>{{ studInfo.mobile_phone }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Fixed Phone:</p>
+            <div class="input-group">
+              <p>{{ studInfo.fixed_phone }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stdHP border border-secondary">
+        <div class="subTitle" style="margin-bottom: 0%">
+          <p style="padding-left: 3%">Technical Knowledge</p>
+          <hr />
+        </div>
+
+        <div class="flex-vertical">
+          <div class="mb-3"></div>
+          <div class="inputText">
+            <p class="inputIndicator">Programming Knowledge:</p>
+            <div class="input-group">
+              <p>{{ studInfo.programming_knowledge }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Database Knowledge:</p>
+            <div class="input-group">
+              <p>{{ studInfo.database_knowledge }}</p>
+            </div>
+          </div>
+          <div class="inputText">
+            <p class="inputIndicator">Networking Knowledge:</p>
+            <div class="input-group">
+              <p>{{ studInfo.networking_knowledge }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="stdHP border border-secondary">
         <div class="subTitle" style="margin-bottom: 0%">
