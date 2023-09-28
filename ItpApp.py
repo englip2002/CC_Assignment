@@ -223,6 +223,9 @@ def studentHomepage():
         columns = cursor.fetchall()
 
         if len(output) == 0:
+            session["logged_in"] = False
+            session["email"] = ""
+            session["nric"] = ""
             return redirect(url_for('home', invalidMsg="Something went wrong in the data fetching!"))
 
         # Company Info
