@@ -74,6 +74,10 @@ def hash_plaintext(plaintext, salt):
 def hash_admin_password(password):
     return hash_plaintext(password, 'AWS_admin-CC~assignment')
 
+def sessionLogout():
+    session["logged_in"] = False
+    session["email"] = ""
+    session["nric"] = ""
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -223,9 +227,7 @@ def studentHomepage():
         columns = cursor.fetchall()
 
         if len(output) == 0:
-            session["logged_in"] = False
-            session["email"] = ""
-            session["nric"] = ""
+            sessionLogout()
             return redirect(url_for('home', invalidMsg="Something went wrong in the data fetching!"))
 
         # Company Info
@@ -285,6 +287,7 @@ def editPortfolio():
             f"SELECT * FROM student WHERE nric='{session.get('nric')}' AND email='{session.get('email')}' AND deleted='0';")
         output = cursor.fetchall()
         if len(output) == 0:
+            sessionLogout()
             return "Student Information not found!"
 
         # Student Table Columns
@@ -456,7 +459,9 @@ def registerCompanyApi():
                         WHERE `student`.`nric` = '{session.get('nric')}' AND `student`.`email` = '{session.get('email')}' AND `deleted` = '0';
                        ''')
         output = cursor.fetchall()
+        
         if len(output) == 0:
+            sessionLogout()
             return "Student data not found!"
 
         student_id = output[0][0]
@@ -491,7 +496,9 @@ def studentViewReports():
                         WHERE deleted='0' AND nric='{session.get('nric')}' AND email='{session.get('email')}';
                         ''')
         output = cursor.fetchall()
+
         if len(output) == 0:
+            sessionLogout()
             return "Student data not found!"
 
         student_id = output[0][0]
@@ -540,6 +547,7 @@ def studentSubmitReportApi():
                         ''')
         output = cursor.fetchall()
         if len(output) == 0:
+            sessionLogout()
             return "Student data not found!"
 
         student_id = output[0][0]
@@ -640,9 +648,7 @@ def loginApi():
 
 @app.route("/logoutApi", methods=['GET', 'POST'])
 def logoutApi():
-    session["logged_in"] = False
-    session["email"] = ""
-    session["nric"] = ""
+    sessionLogout()
     return redirect(url_for('home'))
 
 
